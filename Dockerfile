@@ -59,6 +59,7 @@ RUN \
     npm prune --production && \
     # Verify dist folders still exist after prune
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas dist removed by prune!" && exit 1) && \
+    test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider dist removed by prune!" && exit 1) && \
     npm cache clean --force
 
 # Node API setup
