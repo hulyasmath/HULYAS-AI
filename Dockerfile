@@ -39,9 +39,26 @@ RUN \
 COPY --chown=node:node . .
 
 RUN \
+    # Build all packages explicitly first
+    echo "Building data-schemas..." && \
+    npm run build:data-schemas && \
+    test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas build failed!" && exit 1) && \
+    echo "Building data-provider..." && \
+    npm run build:data-provider && \
+    echo "Building api package..." && \
+    npm run build:api && \
+    echo "Building client-package..." && \
+    npm run build:client-package && \
     # React client build
-    NODE_OPTIONS="--max-old-space-size=2048" npm run frontend; \
-    npm prune --production; \
+    echo "Building React client..." && \
+    NODE_OPTIONS="--max-old-space-size=2048" npm run build:client && \
+    # Verify critical packages are built before pruning
+    test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas missing after build!" && exit 1) && \
+    test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider missing after build!" && exit 1) && \
+    # Prune dev dependencies (but keep built dist folders)
+    npm prune --production && \
+    # Verify dist folders still exist after prune
+    test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas dist removed by prune!" && exit 1) && \
     npm cache clean --force
 
 # Node API setup
