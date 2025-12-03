@@ -23,7 +23,7 @@ export * from './flow/manager';
 /* Middleware */
 export * from './middleware';
 /* Memory */
-export * from './memory';
+export * from './memory/config';
 /* Agents */
 export * from './agents';
 /* Prompts */
