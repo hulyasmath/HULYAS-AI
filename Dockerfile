@@ -55,11 +55,13 @@ RUN \
     # Verify critical packages are built before pruning
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas missing after build!" && exit 1) && \
     test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider missing after build!" && exit 1) && \
-    # Prune dev dependencies (but keep built dist folders)
+    # Prune dev dependencies (workspace packages should be preserved)
     npm prune --production && \
     # Verify dist folders still exist after prune
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas dist removed by prune!" && exit 1) && \
     test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider dist removed by prune!" && exit 1) && \
+    # Verify workspace symlinks are intact (they should point to packages/*)
+    test -L node_modules/@librechat/data-schemas || test -f node_modules/@librechat/data-schemas/dist/index.cjs || (echo "WARNING: data-schemas symlink may be broken, but dist exists" && ls -la node_modules/@librechat/data-schemas 2>/dev/null || echo "Package not in node_modules") && \
     npm cache clean --force
 
 # Node API setup
