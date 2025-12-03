@@ -52,16 +52,13 @@ RUN \
     # React client build
     echo "Building React client..." && \
     NODE_OPTIONS="--max-old-space-size=2048" npm run build:client && \
-    # Verify critical packages are built before pruning
+    # Verify critical packages are built
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas missing after build!" && exit 1) && \
     test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider missing after build!" && exit 1) && \
-    # Prune dev dependencies (workspace packages should be preserved)
-    npm prune --production && \
-    # Verify dist folders still exist after prune
-    test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas dist removed by prune!" && exit 1) && \
-    test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider dist removed by prune!" && exit 1) && \
-    # Verify workspace symlinks are intact (they should point to packages/*)
-    test -L node_modules/@librechat/data-schemas || test -f node_modules/@librechat/data-schemas/dist/index.cjs || (echo "WARNING: data-schemas symlink may be broken, but dist exists" && ls -la node_modules/@librechat/data-schemas 2>/dev/null || echo "Package not in node_modules") && \
+    # Skip npm prune to preserve workspace symlinks - dev deps are acceptable in production Docker image
+    # The built dist files are what matter for runtime, and workspace packages need their symlinks intact
+    # Verify workspace packages are accessible
+    test -f node_modules/@librechat/data-schemas/dist/index.cjs || test -L node_modules/@librechat/data-schemas || (echo "ERROR: data-schemas not accessible!" && exit 1) && \
     npm cache clean --force
 
 # Node API setup
