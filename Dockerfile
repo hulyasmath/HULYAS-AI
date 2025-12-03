@@ -57,10 +57,11 @@ RUN \
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas missing after build!" && exit 1) && \
     test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider missing after build!" && exit 1) && \
     test -f packages/api/dist/index.js || (echo "ERROR: api package missing after build!" && exit 1) && \
-    # Skip npm prune to preserve workspace symlinks - dev deps are acceptable in production Docker image
-    # The built dist files are what matter for runtime, and workspace packages need their symlinks intact
-    # Verify workspace packages are accessible
-    test -f node_modules/@librechat/data-schemas/dist/index.cjs || test -L node_modules/@librechat/data-schemas || (echo "ERROR: data-schemas not accessible!" && exit 1) && \
+    # Ensure workspace packages are properly linked (reinstall to fix any broken symlinks)
+    npm install --no-save --legacy-peer-deps && \
+    # Verify workspace packages are accessible via symlinks
+    test -f node_modules/@librechat/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas not accessible!" && ls -la node_modules/@librechat/ 2>/dev/null || echo "node_modules/@librechat/ does not exist" && exit 1) && \
+    test -f node_modules/@librechat/api/dist/index.js || (echo "ERROR: api package not accessible!" && ls -la node_modules/@librechat/api/ 2>/dev/null || echo "node_modules/@librechat/api/ does not exist" && exit 1) && \
     npm cache clean --force
 
 # Node API setup
