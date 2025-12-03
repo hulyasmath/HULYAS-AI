@@ -47,6 +47,7 @@ RUN \
     npm run build:data-provider && \
     echo "Building api package..." && \
     npm run build:api && \
+    test -f packages/api/dist/index.js || (echo "ERROR: api package build failed!" && exit 1) && \
     echo "Building client-package..." && \
     npm run build:client-package && \
     # React client build
@@ -55,6 +56,7 @@ RUN \
     # Verify critical packages are built
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas missing after build!" && exit 1) && \
     test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider missing after build!" && exit 1) && \
+    test -f packages/api/dist/index.js || (echo "ERROR: api package missing after build!" && exit 1) && \
     # Skip npm prune to preserve workspace symlinks - dev deps are acceptable in production Docker image
     # The built dist files are what matter for runtime, and workspace packages need their symlinks intact
     # Verify workspace packages are accessible
