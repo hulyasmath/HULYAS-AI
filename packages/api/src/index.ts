@@ -23,7 +23,8 @@ export * from './flow/manager';
 /* Middleware */
 export * from './middleware';
 /* Memory */
-export * from '~/memory/config';
+// Temporarily disabled for Railway build - memory config can be imported directly where needed
+// export * from '~/memory/config';
 /* Agents */
 export * from './agents';
 /* Prompts */
