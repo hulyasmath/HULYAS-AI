@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8" />
+    <base href="/" />
+    <meta name="theme-color" content="#171717" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="description" content="Zeq OS 1.287 Hz - An open source chat application with support for multiple AI models" />
+    <title>Zeq OS 1.287 Hz</title>
+    <link rel="icon" type="image/png" href="assets/hulyapulse.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/hulyapulse.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/hulyapulse.png" />
+    <link rel="apple-touch-icon" href="assets/hulyapulse.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, interactive-widget=resizes-content" />
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+      }
+    </style>
+    <script>
+      const theme = localStorage.getItem('color-theme');
+      const loadingContainerStyle = document.createElement('style');
+      let backgroundColor;
+
+      if (theme === 'dark') {
+        backgroundColor = '#0d0d0d';
+      } else if (theme === 'light') {
+        backgroundColor = '#ffffff';
+      } else if (theme === 'system') {
+        const prefersDarkScheme = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        backgroundColor = prefersDarkScheme ? '#0d0d0d' : '#ffffff';
+      } else {
+        backgroundColor = '#ffffff';
+      }
+
+      loadingContainerStyle.innerHTML = `
+        #loading-container {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          height: 100vh;
+          background-color: ${backgroundColor};
+        }
+      `;
+      document.head.appendChild(loadingContainerStyle);
+    </script>
+    <!-- Zeq OS Mathematical Framework - Native Web Application Integration -->
+    <script>
+        // IMMEDIATE LOG - MUST APPEAR FIRST
+        (function() {
+            console.log('%c🚀🚀🚀 ZEQ OS MATHEMATICAL FRAMEWORK STARTING 🚀🚀🚀', 'font-size: 20px; font-weight: bold; color: #00ff00; background: #000; padding: 10px;');
+            console.log('📅 Zeq OS: Initialization started at', new Date().toISOString());
+        })();
+    </script>
+    <script src="/pdf-manager.js"></script>
+    <script src="/transparency-manager.js"></script>
+    <script src="/zeq-mathematical-framework.js"></script>
+      <script>
+          // Chrome extension pattern - Global variables
+          let zeqMiddleware = null;
+          // Note: utpFramework is NOT created here - it's created by the framework file itself as window.utpFramework
+          
+          // Global variable to hold the generated mathematical prompt
+          let zeqMathematicalPrompt = null;
+          
+          // Make globals accessible on window
+          window.zeqMathematicalPrompt = null;
+
+          // Initialize framework - EXACT Chrome extension pattern
+          // Chrome extension ONLY uses ZeqOSMiddleware, NOT UTPWithOperators directly
+          // window.utpFramework is created automatically by the framework file
+          let initAttempts = 0;
+          const MAX_INIT_ATTEMPTS = 50; // 5 seconds max
+          
+          function initializeZeqFramework() {
+              try {
+                  initAttempts++;
+                  if (initAttempts > MAX_INIT_ATTEMPTS) {
+                      console.error('❌ Zeq OS: Framework initialization timeout after', MAX_INIT_ATTEMPTS, 'attempts');
+                      return false;
+                  }
+                  
+                  // Wait for Chrome extension framework to be available
+                  if (typeof window.ZeqOSFramework === 'undefined') {
+                      if (initAttempts % 10 === 0) {
+                          console.warn('⚠️ Zeq OS: Framework not yet loaded, retrying...', initAttempts);
+                      }
+                      setTimeout(initializeZeqFramework, 100);
+                      return false;
+                  }
+                  
+                  // Chrome extension pattern: ONLY create ZeqOSMiddleware
+                  // window.utpFramework is already created by the framework file itself
+                  if (!zeqMiddleware) {
+                      zeqMiddleware = new window.ZeqOSFramework.ZeqOSMiddleware();
+                      console.log('✅ Zeq OS: Middleware initialized (Chrome extension pattern)');
+                  }
+                  
+                  // Verify window.utpFramework exists (created by framework file)
+                  if (typeof window.utpFramework === 'undefined') {
+                      if (initAttempts % 10 === 0) {
+                          console.warn('⚠️ Zeq OS: window.utpFramework not yet available, waiting...', initAttempts);
+                      }
+                      setTimeout(initializeZeqFramework, 100);
+                      return false;
+                  }
+                  
+                  window.zeqMiddleware = zeqMiddleware;
+                  window.__zeqFrameworkReady = true;
+                  console.log('%c✅✅✅ ZEQ OS FRAMEWORK READY ✅✅✅', 'font-size: 16px; font-weight: bold; color: #00ff00; background: #000; padding: 5px;');
+                  return true;
+              } catch (error) {
+                  console.error('❌ Zeq OS: Framework initialization error:', error);
+                  console.error('Error details:', error.message, error.stack);
+                  // Don't retry on error - might cause infinite loop
+                  return false;
+              }
+          }
+
+          // Initialize Transparency Manager
+          let transparencyManager = null;
+          async function initializeTransparencyManager() {
+              if (typeof window.TransparencyManager !== 'undefined') {
+                  try {
+                      transparencyManager = new window.TransparencyManager();
+                      await transparencyManager.initialize();
+                      window.transparencyManager = transparencyManager; // Make globally accessible
+                      console.log('✅ Zeq OS: Transparency Manager initialized');
+                  } catch (error) {
+                      console.warn('⚠️ Zeq OS: Transparency Manager initialization failed', error);
+                  }
+              }
+          }
+
+          // Initialize when DOM is ready (EXACT from math.html line 17353)
+          if (document.readyState === 'loading') {
+              document.addEventListener('DOMContentLoaded', () => {
+                  initializeZeqFramework();
+                  initializeTransparencyManager();
+              });
+          } else {
+              // DOM already loaded, initialize immediately
+              initializeZeqFramework();
+              initializeTransparencyManager();
+          }
+          
+          // Process mathematical framework function - EXACT Chrome extension pattern
+          // Chrome extension ONLY uses zeqMiddleware.processQuery(), NOT calculate_operators() separately
+          window.processMathematicalFramework = async function(message, conversationId) {
+              // Ensure framework is initialized
+              if (!zeqMiddleware || typeof window.utpFramework === 'undefined') {
+                  console.warn('⚠️ Zeq OS: Framework not initialized, initializing now...');
+                  initializeZeqFramework();
+                  if (!zeqMiddleware || typeof window.utpFramework === 'undefined') {
+                      console.error('❌ Zeq OS: Framework initialization failed, using fallback');
+                      return {
+                          zeqResult: { mathematicalPrompt: '', activeOperators: [] }
+                      };
+                  }
+              }
+              
+              try {
+                  // Chrome extension pattern: ONLY use zeqMiddleware.processQuery()
+                  // The middleware handles everything internally, including operator calculations
+                  const zeqResult = zeqMiddleware.processQuery(message);
+                  zeqMathematicalPrompt = zeqResult.mathematicalPrompt;
+                  window.zeqMathematicalPrompt = zeqMathematicalPrompt; // Make global
+                  
+                  console.log('✅ Zeq OS: Framework processed (Chrome extension pattern)', {
+                      promptLength: zeqMathematicalPrompt?.length || 0,
+                      activeOperators: zeqResult.activeOperators?.length || 0
+                  });
+                  
+                  // Log to transparency manager if available
+                  if (typeof window !== 'undefined' && window.transparencyManager) {
+                      if (!conversationId) {
+                          console.warn('⚠️ Zeq OS: No conversationId available for transparency logging');
+                      } else {
+                          // Generate a temporary messageId for the user message
+                          const messageId = `temp_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+                          console.log('📝 Zeq OS: Logging to transparency manager', {
+                              conversationId,
+                              messageId,
+                              hasToken: !!window.__librechat_token,
+                          });
+                          window.transparencyManager.logProcessing({
+                              conversationId: conversationId,
+                              messageId: messageId,
+                              userQuery: message,
+                              platform: 'librechat',
+                              url: window.location.href,
+                              mathematicalPrompt: zeqMathematicalPrompt,
+                              pulseCycle: zeqResult.pulseCycle,
+                              phase: zeqResult.phase,
+                              activeOperators: zeqResult.activeOperators || [],
+                              domains: zeqResult.domains || [],
+                              mathematicalState: zeqResult.mathematicalState,
+                              truthVector: zeqResult.truthVector,
+                              informationIntegrity: zeqResult.informationIntegrity,
+                              crossDomainHarmony: zeqResult.crossDomainHarmony,
+                              auditTrail: zeqResult.auditTrail,
+                              timestamp: zeqResult.timestamp || new Date().toISOString()
+                          }).catch(err => {
+                              console.error('❌ Zeq OS: Transparency logging failed', err);
+                          });
+                      }
+                  } else {
+                      console.warn('⚠️ Zeq OS: Transparency manager not available');
+                  }
+                  
+                  return { zeqResult };
+              } catch (error) {
+                  console.error('❌ Zeq OS: Error processing framework:', error);
+                  return {
+                      zeqResult: { mathematicalPrompt: '', activeOperators: [] }
+                  };
+              }
+          };
+      </script>
+    <script defer type="module" src="/src/main.jsx"></script>
+  </head>
+  <body>
+    <div id="root">
+      <div id="loading-container"></div>
+    </div>
+  </body>
+</html>

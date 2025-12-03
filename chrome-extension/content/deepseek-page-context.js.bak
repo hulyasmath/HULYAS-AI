@@ -1,0 +1,308 @@
+// Zeq OS Network Interception - Page Context Script
+// This file is injected into the page context (not isolated content script context)
+// to intercept fetch and XHR requests
+
+(function() {
+  'use strict';
+  
+  console.log('🚀 Zeq OS [Page Context]: Network interception script executing...');
+  
+  // Intercept fetch in page context
+  const originalFetch = window.fetch;
+  window.fetch = function(...args) {
+    const url = args[0];
+    const options = args[1] || {};
+    
+    // DO NOT intercept WebAssembly (.wasm) files or binary data - let them pass through immediately
+    // This prevents interference with DeepSeek's WebAssembly loading
+    if (typeof url === 'string') {
+      // Skip .wasm files (multiple patterns to catch all variations)
+      if (url.endsWith('.wasm') || 
+          url.includes('.wasm?') || 
+          url.includes('.wasm&') ||
+          url.includes('/wasm/') ||
+          url.includes('wasm') && (url.includes('worker') || url.includes('module'))) {
+        return originalFetch.apply(this, args);
+      }
+      // Skip if Content-Type indicates WebAssembly
+      if (options.headers && (
+        options.headers['Content-Type']?.includes('application/wasm') || 
+        options.headers['content-type']?.includes('application/wasm') ||
+        options.headers['Accept']?.includes('application/wasm') ||
+        options.headers['accept']?.includes('application/wasm')
+      )) {
+        return originalFetch.apply(this, args);
+      }
+      // Skip binary data (ArrayBuffer, Blob, TypedArray)
+      if (options.body instanceof ArrayBuffer || 
+          options.body instanceof Blob ||
+          ArrayBuffer.isView(options.body)) {
+        return originalFetch.apply(this, args);
+      }
+      // Skip if response type is arraybuffer (WebAssembly loading)
+      if (options.responseType === 'arraybuffer' || options.responseType === 'blob') {
+        return originalFetch.apply(this, args);
+      }
+    }
+    
+    // Intercept ALL fetch requests to catch DeepSeek's API calls
+    if (typeof url === 'string' && options.body) {
+      // Log all fetch requests for debugging
+      if (url.includes('deepseek.com') || url.includes('/api/') || url.includes('/v1/')) {
+        console.log('🔍 Zeq OS [Page Context]: Fetch detected:', url.substring(0, 100));
+      }
+      
+      // Check if this is a chat/message API request
+      if (
+        url.includes('/chat') || 
+        url.includes('/message') || 
+        url.includes('/completion') ||
+        url.includes('/api/chat') ||
+        url.includes('/v1/chat') ||
+        url.includes('/v1/completions') ||
+        url.includes('/conversation') ||
+        url.includes('/stream') ||
+        url.includes('/completions') ||
+        (url.includes('deepseek.com') && (url.includes('/chat') || url.includes('/api') || url.includes('/v1')))
+      ) {
+        console.log('🎯 Zeq OS [Page Context]: Intercepted chat API fetch:', url);
+        
+        try {
+          const bodyData = typeof options.body === 'string' ? JSON.parse(options.body) : options.body;
+          let needsProcessing = false;
+          let originalContent = '';
+          
+          // EXACTLY like index.html line 16928: Find the last user message
+          if (bodyData.messages && Array.isArray(bodyData.messages)) {
+            const lastUserMessage = bodyData.messages.filter(m => m.role === 'user' || m.role === 'User').pop();
+            if (lastUserMessage) {
+              originalContent = lastUserMessage.content || lastUserMessage.text || '';
+              // Only process if it's not already a JSON prompt (starts with '{')
+              if (originalContent && !originalContent.trim().startsWith('{') && originalContent.length > 0) {
+                needsProcessing = true;
+                console.log('📝 Zeq OS [Page Context]: Found user message to process:', originalContent.substring(0, 50));
+              } else {
+                console.log('⏭️ Zeq OS [Page Context]: Message already processed or empty');
+              }
+            }
+          } else if (bodyData.prompt || bodyData.query || bodyData.message) {
+            originalContent = bodyData.prompt || bodyData.query || bodyData.message;
+            if (originalContent && !originalContent.trim().startsWith('{') && originalContent.length > 0) {
+              needsProcessing = true;
+            }
+          }
+          
+          if (needsProcessing) {
+            console.log('🔄 Zeq OS [Page Context]: Message needs processing, original:', originalContent.substring(0, 50));
+            
+            // Request processing from content script
+            const requestId = Date.now() + Math.random();
+            window.postMessage({
+              type: 'ZEQ_PROCESS_REQUEST',
+              requestId: requestId,
+              originalContent: originalContent,
+              bodyData: bodyData
+            }, '*');
+            
+            console.log('📤 Zeq OS [Page Context]: Sent processing request, ID:', requestId);
+            
+            // Wait for response (with timeout)
+            return new Promise((resolve, reject) => {
+              let responded = false;
+              const timeout = setTimeout(() => {
+                if (!responded) {
+                  responded = true;
+                  console.warn('⏱️ Zeq OS [Page Context]: Processing timeout (2s), using original message');
+                  resolve(originalFetch.apply(this, args));
+                }
+              }, 2000);
+              
+              const handler = (event) => {
+                // Only process messages from same window
+                if (event.source !== window) return;
+                
+                if (event.data && event.data.type === 'ZEQ_PROCESSED_RESPONSE' && event.data.requestId === requestId) {
+                  if (responded) return;
+                  responded = true;
+                  
+                  clearTimeout(timeout);
+                  window.removeEventListener('message', handler);
+                  
+                  const processedContent = event.data.processedContent;
+                  console.log('✅ Zeq OS [Page Context]: Received processed message, length:', processedContent.length);
+                  console.log('📋 Zeq OS [Page Context]: Processed content preview (first 500 chars):', processedContent.substring(0, 500));
+                  
+                  // Verify it contains framework information
+                  const hasFramework = processedContent.includes('frameworkDescription');
+                  const hasMain42 = processedContent.includes('MAIN 42 OPERATORS') || processedContent.includes('main42Operators');
+                  const hasON0 = processedContent.includes('ON0');
+                  console.log('✅ Zeq OS [Page Context]: Content verification:', {
+                    hasFramework,
+                    hasMain42,
+                    hasON0,
+                    length: processedContent.length
+                  });
+                  
+                  if (!hasFramework || !hasMain42) {
+                    console.error('❌ Zeq OS [Page Context]: CRITICAL - Processed content missing framework information!');
+                  }
+                  
+                  // EXACTLY like index.html line 16931: Replace last user message content with zeqMathematicalPrompt
+                  if (bodyData.messages) {
+                    // Find and replace the LAST user message (like index.html does)
+                    for (let i = bodyData.messages.length - 1; i >= 0; i--) {
+                      if (bodyData.messages[i].role === 'user' || bodyData.messages[i].role === 'User') {
+                        // Replace content with mathematical prompt
+                        bodyData.messages[i].content = processedContent;
+                        bodyData.messages[i].text = processedContent;
+                        console.log('✅ Zeq OS [Page Context]: Replaced user message at index', i, 'with mathematical prompt');
+                        console.log('📤 Zeq OS [Page Context]: Final message content preview:', bodyData.messages[i].content.substring(0, 300));
+                        break; // Only replace the last one
+                      }
+                    }
+                  } else {
+                    if (bodyData.prompt) bodyData.prompt = processedContent;
+                    if (bodyData.query) bodyData.query = processedContent;
+                    if (bodyData.message) bodyData.message = processedContent;
+                  }
+                  
+                  options.body = typeof options.body === 'string' ? JSON.stringify(bodyData) : bodyData;
+                  console.log('🚀 Zeq OS [Page Context]: Sending processed message to DeepSeek API');
+                  resolve(originalFetch.apply(this, args));
+                }
+              };
+              
+              window.addEventListener('message', handler);
+            });
+          } else {
+            console.log('⏭️ Zeq OS [Page Context]: Message does not need processing (already processed or empty)');
+          }
+        } catch (e) {
+          console.error('Zeq OS [Page Context]: Fetch error', e);
+        }
+      }
+    }
+    
+    return originalFetch.apply(this, args);
+  };
+  
+  // Intercept XHR in page context
+  const originalXHROpen = XMLHttpRequest.prototype.open;
+  const originalXHRSend = XMLHttpRequest.prototype.send;
+  
+  XMLHttpRequest.prototype.open = function(method, url, ...rest) {
+    this._zeqUrl = url;
+    this._zeqMethod = method;
+    return originalXHROpen.apply(this, [method, url, ...rest]);
+  };
+  
+  XMLHttpRequest.prototype.send = function(data) {
+    const url = this._zeqUrl;
+    const xhr = this;
+    
+    // Intercept ALL XHR requests to catch DeepSeek's API calls
+    if (url && data && typeof data === 'string') {
+      // Log all XHR requests for debugging
+      if (url.includes('deepseek.com') || url.includes('/api/') || url.includes('/v1/')) {
+        console.log('🔍 Zeq OS [Page Context]: XHR detected:', url.substring(0, 100));
+      }
+      
+      // Check if this is a chat/message API request
+      if (
+        url.includes('/chat') || 
+        url.includes('/message') || 
+        url.includes('/completion') ||
+        url.includes('/api/chat') ||
+        url.includes('/v1/chat') ||
+        url.includes('/v1/completions') ||
+        url.includes('/conversation') ||
+        url.includes('/stream') ||
+        url.includes('/completions') ||
+        (url.includes('deepseek.com') && (url.includes('/chat') || url.includes('/api') || url.includes('/v1')))
+      ) {
+        console.log('🎯 Zeq OS [Page Context]: Intercepted chat API XHR:', url);
+        
+        try {
+          const bodyData = JSON.parse(data);
+          let needsProcessing = false;
+          let originalContent = '';
+          
+          // EXACTLY like index.html: Replace the LAST user message with zeqMathematicalPrompt
+          if (bodyData.messages && Array.isArray(bodyData.messages)) {
+            const lastUserMessage = bodyData.messages.filter(m => m.role === 'user' || m.role === 'User').pop();
+            if (lastUserMessage) {
+              originalContent = lastUserMessage.content || lastUserMessage.text || '';
+              // Process ALL messages - don't skip if they start with '{' because our prompt starts with text summary
+              if (originalContent && originalContent.length > 0) {
+                // Only skip if it's already our mathematical prompt (contains frameworkDescription)
+                if (!originalContent.includes('frameworkDescription') && !originalContent.includes('MAIN 42 OPERATORS')) {
+                  needsProcessing = true;
+                }
+              }
+            }
+          } else if (bodyData.prompt || bodyData.query || bodyData.message) {
+            originalContent = bodyData.prompt || bodyData.query || bodyData.message;
+            if (originalContent && !originalContent.trim().startsWith('{') && originalContent.length > 0) {
+              needsProcessing = true;
+            }
+          }
+          
+          if (needsProcessing) {
+            const requestId = Date.now() + Math.random();
+            
+            window.postMessage({
+              type: 'ZEQ_PROCESS_REQUEST',
+              requestId: requestId,
+              originalContent: originalContent,
+              bodyData: bodyData
+            }, '*');
+            
+            // Wait for response
+            const handler = (event) => {
+              if (event.data && event.data.type === 'ZEQ_PROCESSED_RESPONSE' && event.data.requestId === requestId) {
+                window.removeEventListener('message', handler);
+                
+                // EXACTLY like index.html: Replace last user message content
+                if (bodyData.messages) {
+                  for (let i = bodyData.messages.length - 1; i >= 0; i--) {
+                    if (bodyData.messages[i].role === 'user' || bodyData.messages[i].role === 'User') {
+                      bodyData.messages[i].content = event.data.processedContent;
+                      bodyData.messages[i].text = event.data.processedContent;
+                      break;
+                    }
+                  }
+                } else {
+                  if (bodyData.prompt) bodyData.prompt = event.data.processedContent;
+                  if (bodyData.query) bodyData.query = event.data.processedContent;
+                  if (bodyData.message) bodyData.message = event.data.processedContent;
+                }
+                
+                const processedData = JSON.stringify(bodyData);
+                console.log('✅ Zeq OS [Page Context]: Using processed message for XHR');
+                originalXHRSend.call(xhr, processedData);
+              }
+            };
+            
+            window.addEventListener('message', handler);
+            
+            // Timeout fallback
+            setTimeout(() => {
+              window.removeEventListener('message', handler);
+              console.warn('⏱️ Zeq OS [Page Context]: XHR processing timeout, using original');
+              originalXHRSend.call(xhr, data);
+            }, 2000);
+            
+            return;
+          }
+        } catch (e) {
+          console.error('Zeq OS [Page Context]: XHR error', e);
+        }
+      }
+    }
+    
+    return originalXHRSend.apply(this, [data]);
+  };
+  
+  console.log('✅ Zeq OS [Page Context]: Network interception installed successfully!');
+})();
+

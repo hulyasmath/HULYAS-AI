@@ -1,0 +1,9 @@
+# Place your PDF documentation files here
+
+The PDF Manager will automatically load:
+- framework-documentation.pdf
+- operator-reference.pdf
+- hulyas-protocol.pdf
+
+Add your PDF files to this folder and update the bundledPDFs array in lib/pdf-manager.js if you add different filenames.
+

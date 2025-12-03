@@ -1,0 +1,124 @@
+import { useMemo } from 'react';
+import { useAtomValue } from 'jotai';
+import { useRecoilValue } from 'recoil';
+import { useAuthContext, useLocalize } from '~/hooks';
+import type { TMessageProps, TMessageIcon } from '~/common';
+import MinimalHoverButtons from '~/components/Chat/Messages/MinimalHoverButtons';
+import Icon from '~/components/Chat/Messages/MessageIcon';
+import SearchContent from './Content/SearchContent';
+import { fontSizeAtom } from '~/store/fontSize';
+import SearchButtons from './SearchButtons';
+import SubRow from './SubRow';
+import { cn } from '~/utils';
+import store from '~/store';
+
+const MessageAvatar = ({ iconData }: { iconData: TMessageIcon }) => (
+  <div className="relative flex flex-shrink-0 flex-col items-end">
+    <div className="pt-0.5">
+      <div className="flex h-6 w-6 items-center justify-center overflow-hidden rounded-full">
+        <Icon iconData={iconData} />
+      </div>
+    </div>
+  </div>
+);
+
+const MessageBody = ({ message, messageLabel, fontSize }) => (
+  <div
+    className={cn('relative flex w-11/12 flex-col', message.isCreatedByUser ? '' : 'agent-turn')}
+  >
+    <div className={cn('select-none font-semibold', fontSize)}>{messageLabel}</div>
+    <SearchContent message={message} />
+    <SubRow classes="text-xs">
+      <MinimalHoverButtons message={message} />
+      <SearchButtons message={message} />
+    </SubRow>
+  </div>
+);
+
+export default function SearchMessage({ message }: Pick<TMessageProps, 'message'>) {
+  const fontSize = useAtomValue(fontSizeAtom);
+  const UsernameDisplay = useRecoilValue<boolean>(store.UsernameDisplay);
+  const { user } = useAuthContext();
+  const localize = useLocalize();
+
+  const iconData: TMessageIcon = useMemo(
+    () => {
+      const endpoint = message?.endpoint ?? '';
+      const model = message?.model ?? '';
+      const isHulyas = endpoint === 'DeepSeek' && model === 'deepseek-chat';
+      
+      return {
+        endpoint: endpoint,
+        model: model,
+        iconURL: isHulyas ? '/assets/hulyas.gif' : (message?.iconURL ?? ''),
+        isCreatedByUser: message?.isCreatedByUser ?? false,
+      };
+    },
+    [message?.endpoint, message?.model, message?.iconURL, message?.isCreatedByUser],
+  );
+
+  const messageLabel = useMemo(() => {
+    if (message?.isCreatedByUser) {
+      return UsernameDisplay
+        ? (user?.name ?? '') || (user?.username ?? '')
+        : localize('com_user_message');
+    }
+    
+    // Always check endpoint/model first for HULYAS override
+    const endpoint = message?.endpoint ?? '';
+    const model = message?.model ?? '';
+    if (endpoint === 'DeepSeek' && model === 'deepseek-chat') {
+      return 'HULYAS';
+    }
+    
+    // For OpenRouter (Large Language Models), extract friendly name from model ID
+    if (endpoint === 'OpenRouter' && model) {
+      // Extract model name from format like "google/gemini-3-pro-preview" -> "Gemini 3 Pro"
+      const modelParts = model.split('/');
+      if (modelParts.length > 1) {
+        const modelName = modelParts[1];
+        // Convert "gemini-3-pro-preview" to "Gemini 3 Pro"
+        const friendlyName = modelName
+          .split('-')
+          .map((part, index) => {
+            // Skip version numbers and preview/suffixes for cleaner display
+            if (part === 'preview' || part === 'instruct' || part === 'chat' || part === 'coder') {
+              return '';
+            }
+            // Capitalize first letter of each meaningful part
+            return part.charAt(0).toUpperCase() + part.slice(1);
+          })
+          .filter(Boolean)
+          .join(' ');
+        return friendlyName || model;
+      }
+      return model;
+    }
+    
+    return message?.sender ?? '';
+  }, [
+    message?.isCreatedByUser,
+    message?.sender,
+    message?.endpoint,
+    message?.model,
+    UsernameDisplay,
+    user?.name,
+    user?.username,
+    localize,
+  ]);
+
+  if (!message) {
+    return null;
+  }
+
+  return (
+    <div className="text-token-text-primary w-full bg-transparent">
+      <div className="m-auto p-4 py-2 md:gap-6">
+        <div className="final-completion group mx-auto flex flex-1 gap-3 md:max-w-3xl md:px-5 lg:max-w-[40rem] lg:px-1 xl:max-w-[48rem] xl:px-5">
+          <MessageAvatar iconData={iconData} />
+          <MessageBody message={message} messageLabel={messageLabel} fontSize={fontSize} />
+        </div>
+      </div>
+    </div>
+  );
+}

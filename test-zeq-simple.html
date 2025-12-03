@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zeq OS Framework Simple Test</title>
+</head>
+<body>
+    <h1>Zeq OS Framework Test</h1>
+    <button onclick="testFramework()">Test Framework</button>
+    <div id="output"></div>
+    
+    <script src="/pdf-manager.js"></script>
+    <script src="/transparency-manager.js"></script>
+    <script src="/zeq-mathematical-framework.js"></script>
+    <script>
+        function log(msg) {
+            console.log(msg);
+            const div = document.getElementById('output');
+            div.innerHTML += '<p>' + msg + '</p>';
+        }
+        
+        function testFramework() {
+            log('=== Testing Framework ===');
+            
+            // Wait a bit for framework to initialize
+            setTimeout(() => {
+                log('Checking window.ZeqOSFramework: ' + (!!window.ZeqOSFramework));
+                log('Checking window.zeqMiddleware: ' + (!!window.zeqMiddleware));
+                log('Checking window.utpFramework: ' + (!!window.utpFramework));
+                
+                if (!window.ZeqOSFramework) {
+                    log('❌ ZeqOSFramework not found');
+                    return;
+                }
+                
+                // Create instances if not exist
+                if (!window.zeqMiddleware) {
+                    try {
+                        window.zeqMiddleware = new window.ZeqOSFramework.ZeqOSMiddleware();
+                        log('✅ Created zeqMiddleware');
+                    } catch (e) {
+                        log('❌ Error creating zeqMiddleware: ' + e);
+                        return;
+                    }
+                }
+                
+                if (!window.utpFramework) {
+                    try {
+                        window.utpFramework = new window.ZeqOSFramework.UTPWithOperators("big_bang", 1.287);
+                        log('✅ Created utpFramework');
+                    } catch (e) {
+                        log('❌ Error creating utpFramework: ' + e);
+                        return;
+                    }
+                }
+                
+                // Test processing
+                const testText = "Hello, this is a test message";
+                log('Testing with: "' + testText + '"');
+                
+                try {
+                    const zeqResult = window.zeqMiddleware.processQuery(testText);
+                    log('Zeq Result - Prompt length: ' + (zeqResult.mathematicalPrompt?.length || 0));
+                    log('Zeq Result - Preview: ' + (zeqResult.mathematicalPrompt?.substring(0, 200) || 'N/A'));
+                    
+                    const utpResult = window.utpFramework.calculate_operators(true, testText);
+                    log('UTP Result - Operator count: ' + Object.keys(utpResult.operators || {}).length);
+                    
+                    if (zeqResult.mathematicalPrompt && zeqResult.mathematicalPrompt !== testText) {
+                        log('✅ Framework is working! Text was processed.');
+                    } else {
+                        log('⚠️ Framework processed but result same as input');
+                    }
+                } catch (e) {
+                    log('❌ Error during processing: ' + e);
+                }
+            }, 1000);
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(testFramework, 2000);
+        });
+    </script>
+</body>
+</html>
+
+
+
+

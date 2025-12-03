@@ -1,0 +1,91 @@
+{
+  "manifest_version": 3,
+  "name": "Zeq OS Mathematical Framework",
+  "version": "1.287.0",
+  "description": "Mathematical intelligence middle layer for AI platforms. Processes queries through 620+ kinematic operators before sending to AI.",
+  "permissions": [
+    "activeTab",
+    "storage",
+    "scripting"
+  ],
+  "host_permissions": [
+    "https://chat.openai.com/*",
+    "https://chatgpt.com/*",
+    "https://www.chatgpt.com/*",
+    "https://claude.ai/*",
+    "https://x.com/*",
+    "https://twitter.com/*",
+    "https://www.x.com/*",
+    "https://www.twitter.com/*",
+    "https://grok.com/*",
+    "https://www.grok.com/*",
+    "https://groq.com/*",
+    "https://perplexity.ai/*",
+    "https://poe.com/*",
+    "https://bard.google.com/*",
+    "https://gemini.google.com/*",
+    "https://chat.deepseek.com/*",
+    "https://www.deepseek.com/*",
+    "https://deepseek.com/*"
+  ],
+  "background": {
+    "service_worker": "background/service-worker.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://chat.openai.com/*", "https://chatgpt.com/*", "https://www.chatgpt.com/*"],
+      "js": ["lib/pdf-manager.js", "lib/transparency-manager.js", "lib/zeq-mathematical-framework.js", "content/chatgpt.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": ["https://claude.ai/*"],
+      "js": ["lib/pdf-manager.js", "lib/transparency-manager.js", "lib/zeq-mathematical-framework.js", "content/claude.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": ["https://x.com/*", "https://twitter.com/*", "https://www.x.com/*", "https://www.twitter.com/*", "https://grok.com/*", "https://www.grok.com/*"],
+      "js": ["lib/pdf-manager.js", "lib/transparency-manager.js", "lib/zeq-mathematical-framework.js", "content/grok.js"],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://chat.deepseek.com/*",
+        "https://www.deepseek.com/*",
+        "https://deepseek.com/*"
+      ],
+      "js": ["lib/pdf-manager.js", "lib/transparency-manager.js", "lib/zeq-mathematical-framework.js", "content/deepseek.js"],
+      "run_at": "document_idle"
+    },
+    {
+      "matches": [
+        "https://groq.com/*",
+        "https://perplexity.ai/*",
+        "https://poe.com/*",
+        "https://bard.google.com/*",
+        "https://gemini.google.com/*"
+      ],
+      "js": ["lib/pdf-manager.js", "lib/transparency-manager.js", "lib/zeq-mathematical-framework.js", "content/universal.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["lib/zeq-mathematical-framework.js", "lib/pdf-manager.js", "lib/transparency-manager.js", "content/deepseek-page-context.js", "content/chatgpt-page-context.js", "content/grok-page-context.js", "content/claude-page-context.js", "content/universal-page-context.js", "docs/*.pdf"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
+

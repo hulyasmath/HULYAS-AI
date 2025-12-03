@@ -1,0 +1,20 @@
+[
+  {
+    "name": "ON0",
+    "category": "Core",
+    "equation": "ON0 = ψ_ON0 * ln(ψ_ON0) − (phase * f_pulse)",
+    "description": "Baseline ontological normalization operator measuring information density relative to HulyaPulse.",
+    "tags": ["core", "information", "normalization"]
+  },
+  {
+    "name": "QL1",
+    "category": "Core",
+    "equation": "QL1 = 0.1 * I_info * ln(I_info / I_0) + E_conscious",
+    "description": "Primary quantum‑logical operator encoding information density relative to baseline.",
+    "tags": ["core", "quantum", "information"]
+  }
+]
+
+
+
+

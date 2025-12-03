@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zeq OS Mathematical Framework</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Zeq OS Framework</h1>
+      <p class="version">v1.287 Hz</p>
+      <div class="pulse-indicator">
+        <div class="pulse-circle" id="pulseCircle"></div>
+        <span class="pulse-label">Pulse Active</span>
+      </div>
+    </div>
+    
+    <div class="section">
+      <div class="toggle-section">
+        <label class="toggle-label">
+          <span>Enable Framework</span>
+          <input type="checkbox" id="enableToggle" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>Platform Settings</h2>
+      <div class="platform-list">
+        <label class="platform-item">
+          <input type="checkbox" id="platform-chatgpt" checked>
+          <span>ChatGPT</span>
+        </label>
+        <label class="platform-item">
+          <input type="checkbox" id="platform-claude" checked>
+          <span>Claude</span>
+        </label>
+        <label class="platform-item">
+          <input type="checkbox" id="platform-grok" checked>
+          <span>Grok</span>
+        </label>
+        <label class="platform-item">
+          <input type="checkbox" id="platform-universal" checked>
+          <span>Other AI Platforms (DeepSeek, Perplexity, Groq, etc.)</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="info">
+        <p><strong>620+ Kinematic Operators</strong></p>
+        <p>Mathematical intelligence layer for AI interactions</p>
+      </div>
+    </div>
+
+    <div class="section">
+      <button id="saveButton" class="save-button">Save Settings</button>
+    </div>
+
+    <div class="section">
+      <h2>Transparency Export</h2>
+      <div class="info">
+        <p>Export complete framework processing data for transparency and auditing</p>
+      </div>
+      <button id="exportTransparency" class="export-button">Export Transparency Data</button>
+      <button id="clearTransparency" class="clear-button">Clear Log</button>
+      <div id="transparencyStatus" class="status-message"></div>
+    </div>
+
+    <div class="section">
+      <h2>Learn More</h2>
+      <div class="links">
+        <a href="https://hulyaspulse.com/" target="_blank" class="link-button">Visit HulyaPulse</a>
+        <a href="https://hulyaspulse.com/" target="_blank" class="link-button">Documentation</a>
+      </div>
+    </div>
+  </div>
+  <script src="../lib/transparency-manager.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,15 @@
+{
+  "name": "zeq-os-mcp-server",
+  "version": "1.0.0",
+  "description": "Zeq OS Mathematical Framework MCP server for operator catalog and framework processing",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "express": "^4.19.0"
+  }
+}
+
+

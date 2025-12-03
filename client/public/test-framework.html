@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Zeq OS Framework Test</title>
+</head>
+<body>
+    <h1>Zeq OS Framework Test</h1>
+    <button onclick="testFramework()">Test Framework</button>
+    <pre id="output"></pre>
+    
+    <script src="/zeq-mathematical-framework.js"></script>
+    <script>
+        function testFramework() {
+            const output = document.getElementById('output');
+            output.textContent = 'Testing...\n\n';
+            
+            // Check if framework loaded
+            if (typeof window.ZeqOSFramework === 'undefined') {
+                output.textContent += '❌ ERROR: window.ZeqOSFramework is undefined\n';
+                output.textContent += 'Framework did NOT load!\n';
+                return;
+            }
+            
+            output.textContent += '✅ window.ZeqOSFramework exists\n';
+            
+            // Initialize
+            if (!window.zeqMiddleware) {
+                window.zeqMiddleware = new window.ZeqOSFramework.ZeqOSMiddleware();
+            }
+            if (!window.utpFramework) {
+                window.utpFramework = new window.ZeqOSFramework.UTPWithOperators("big_bang", 1.287);
+            }
+            
+            output.textContent += '✅ Framework initialized\n';
+            
+            // Test processing
+            const testQuery = "What is 2+2?";
+            output.textContent += `\nTesting with: "${testQuery}"\n\n`;
+            
+            try {
+                const zeqResult = window.zeqMiddleware.processQuery(testQuery);
+                const utpResult = window.utpFramework.calculate_operators(true, testQuery);
+                
+                output.textContent += '✅ Processing successful!\n';
+                output.textContent += `Mathematical Prompt Length: ${zeqResult.mathematicalPrompt?.length || 0}\n`;
+                output.textContent += `Operator Count: ${Object.keys(utpResult.operators || {}).length}\n`;
+                output.textContent += `Active Operators: ${zeqResult.activeOperators?.length || 0}\n`;
+                output.textContent += `\nMathematical Prompt Preview:\n${zeqResult.mathematicalPrompt?.substring(0, 500) || 'N/A'}\n`;
+            } catch (error) {
+                output.textContent += `❌ ERROR: ${error.message}\n`;
+                output.textContent += error.stack;
+            }
+        }
+        
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            setTimeout(testFramework, 1000);
+        });
+    </script>
+</body>
+</html>
