@@ -1,7 +1,18 @@
 # v0.8.1-rc1
 
+# Cache busting - Railway will automatically provide these build args
+# If not provided, use defaults that change on each build
+ARG RAILWAY_GIT_COMMIT
+ARG RAILWAY_GIT_BRANCH
+ARG CACHE_BUST=${RAILWAY_GIT_COMMIT:-$(date +%s)}
+
 # Base node image
 FROM node:20-alpine AS node
+
+# Use the cache bust arg to invalidate cache - this forces fresh builds
+RUN echo "Build cache bust: ${CACHE_BUST}" && \
+    echo "Git commit: ${RAILWAY_GIT_COMMIT:-local-build}" && \
+    echo "Git branch: ${RAILWAY_GIT_BRANCH:-unknown}"
 
 # Install jemalloc
 RUN apk add --no-cache jemalloc
@@ -37,6 +48,11 @@ RUN \
     npm ci --no-audit
 
 COPY --chown=node:node . .
+
+# Add build metadata for cache busting
+RUN echo "Build Date: ${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}" > /app/.build-info && \
+    echo "Git Commit: ${GIT_COMMIT:-unknown}" >> /app/.build-info && \
+    echo "Cache Bust: ${CACHE_BUST}" >> /app/.build-info
 
 RUN \
     # Build all packages explicitly first (in dependency order)

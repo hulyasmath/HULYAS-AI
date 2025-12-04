@@ -1,17 +1,59 @@
-**/.circleci
-**/.editorconfig
-**/.dockerignore
-**/.git
-**/.DS_Store
-**/.vscode
-**/node_modules
+# Git
+.git
+.gitignore
+.gitattributes
 
-# Specific patterns to ignore
-data-node
-meili_data*
-librechat*
-Dockerfile*
-docs
+# Documentation
+*.md
+!README.md
+docs/
 
-# Ignore all hidden files
-.*
+# CI/CD
+.github/
+.railway/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependencies (will be installed in container)
+node_modules/
+
+# Build outputs (will be built in container)
+dist/
+build/
+*.tsbuildinfo
+
+# Environment files (will be created in container)
+.env.local
+.env.*.local
+
+# Test files
+**/__tests__/
+**/*.test.ts
+**/*.test.js
+**/*.spec.ts
+**/*.spec.js
+coverage/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Railway specific
+.railway-version
