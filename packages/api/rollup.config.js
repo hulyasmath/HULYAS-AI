@@ -1,5 +1,5 @@
 // rollup.config.js
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync, statSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve as resolvePath } from 'path';
 import json from '@rollup/plugin-json';
@@ -20,6 +20,35 @@ const pkg = JSON.parse(readFileSync(new URL('./package.json', import.meta.url), 
  */
 const isDevelopment = process.env.NODE_ENV === 'development';
 
+/**
+ * Resolve ~ alias to actual file path with extension
+ */
+const resolveAlias = (id) => {
+  if (!id.startsWith('~')) {
+    return null;
+  }
+  
+  const pathAfterTilde = id.replace(/^~\/?/, '');
+  const basePath = resolvePath(__dirname, 'src', pathAfterTilde);
+  
+  // Try with .ts extension first
+  const tsPath = basePath + '.ts';
+  if (existsSync(tsPath)) {
+    return tsPath;
+  }
+  
+  // Try as directory with index.ts
+  if (existsSync(basePath) && statSync(basePath).isDirectory()) {
+    const indexPath = resolvePath(basePath, 'index.ts');
+    if (existsSync(indexPath)) {
+      return indexPath;
+    }
+  }
+  
+  // Fallback: return base path (let other plugins handle it)
+  return basePath;
+};
+
 const plugins = [
   peerDepsExternal(),
   resolve({
@@ -29,8 +58,29 @@ const plugins = [
   alias({
     entries: [
       {
-        find: '~',
-        replacement: resolvePath(__dirname, 'src')
+        find: /^~(\/.*)?$/,
+        replacement: (matched) => {
+          // Extract path after ~ (matched is the full string like "~/memory/config")
+          const pathAfterTilde = matched.replace(/^~\/?/, '') || '';
+          const basePath = resolvePath(__dirname, 'src', pathAfterTilde);
+          
+          // Try with .ts extension first
+          const tsPath = basePath + '.ts';
+          if (existsSync(tsPath)) {
+            return tsPath;
+          }
+          
+          // Try as directory with index.ts
+          if (existsSync(basePath) && statSync(basePath).isDirectory()) {
+            const indexPath = resolvePath(basePath, 'index.ts');
+            if (existsSync(indexPath)) {
+              return indexPath;
+            }
+          }
+          
+          // Fallback: return base path (let typescript plugin handle it)
+          return basePath;
+        }
       }
     ]
   }),
