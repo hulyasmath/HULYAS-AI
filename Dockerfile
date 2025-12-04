@@ -1,10 +1,11 @@
 # v0.8.1-rc1
+# CACHE_BUST: 2025-12-04T02:32:00Z-v4 - UPDATE THIS TIMESTAMP TO FORCE FRESH BUILD
 
 # Cache busting - Railway will automatically provide these build args
 # If not provided, use defaults that change on each build
 ARG RAILWAY_GIT_COMMIT
 ARG RAILWAY_GIT_BRANCH
-ARG CACHE_BUST=${RAILWAY_GIT_COMMIT:-$(date +%s)}
+ARG CACHE_BUST=2025-12-04T02:32:00Z-v4
 
 # Base node image
 FROM node:20-alpine AS node
@@ -12,7 +13,8 @@ FROM node:20-alpine AS node
 # Use the cache bust arg to invalidate cache - this forces fresh builds
 RUN echo "Build cache bust: ${CACHE_BUST}" && \
     echo "Git commit: ${RAILWAY_GIT_COMMIT:-local-build}" && \
-    echo "Git branch: ${RAILWAY_GIT_BRANCH:-unknown}"
+    echo "Git branch: ${RAILWAY_GIT_BRANCH:-unknown}" && \
+    echo "Timestamp: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
 
 # Install jemalloc
 RUN apk add --no-cache jemalloc
