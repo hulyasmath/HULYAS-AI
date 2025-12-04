@@ -58,13 +58,13 @@ const plugins = [
   alias({
     entries: [
       {
-        find: /^~(\/.*)?$/,
-        replacement: (matched) => {
-          // Extract path after ~ (matched is the full string like "~/memory/config")
-          const pathAfterTilde = matched.replace(/^~\/?/, '') || '';
+        find: /^~(\/.*)$/,
+        replacement: (matched, ...args) => {
+          // Extract path after ~/ - args[0] is the first capture group (the path)
+          const pathAfterTilde = (args[0] || matched.replace(/^~\/?/, '')).replace(/^\//, '');
           const basePath = resolvePath(__dirname, 'src', pathAfterTilde);
           
-          // Try with .ts extension first
+          // Try with .ts extension first (most common case)
           const tsPath = basePath + '.ts';
           if (existsSync(tsPath)) {
             return tsPath;
@@ -78,8 +78,8 @@ const plugins = [
             }
           }
           
-          // Fallback: return base path (let typescript plugin handle it)
-          return basePath;
+          // Fallback: return with .ts extension (TypeScript plugin will handle it)
+          return tsPath;
         }
       }
     ]

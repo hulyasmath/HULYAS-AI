@@ -1,11 +1,11 @@
 # v0.8.1-rc1
-# CACHE_BUST: 2025-12-04T02:32:00Z-v4 - UPDATE THIS TIMESTAMP TO FORCE FRESH BUILD
+# CACHE_BUST: 2025-12-04T02:40:19Z-v1764816019 - UPDATE THIS TIMESTAMP TO FORCE FRESH BUILD
 
 # Cache busting - Railway will automatically provide these build args
 # If not provided, use defaults that change on each build
 ARG RAILWAY_GIT_COMMIT
 ARG RAILWAY_GIT_BRANCH
-ARG CACHE_BUST=2025-12-04T02:32:00Z-v4
+ARG CACHE_BUST=2025-12-04T02:40:19Z-v1764816019
 
 # Base node image
 FROM node:20-alpine AS node
