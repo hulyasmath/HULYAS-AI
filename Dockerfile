@@ -43,15 +43,12 @@ COPY --chown=node:node packages/data-schemas/package.json ./packages/data-schema
 COPY --chown=node:node packages/api/package.json ./packages/api/package.json
 
 RUN \
-    # Allow mounting of these files, which have no default \
     touch .env ; \
-    # Create directories for the volumes to inherit the correct permissions \
     mkdir -p /app/client/public/images /app/api/logs /app/uploads ; \
-    npm config set fetch-retry-maxtimeout 600000 ; \
-    npm config set fetch-retries 5 ; \
-    npm config set fetch-retry-mintimeout 15000 ; \
+    npm config set fetch-retry-maxtimeout 1200000 ; \
+    npm config set fetch-retries 10 ; \
+    npm config set fetch-retry-mintimeout 30000 ; \
     npm ci --no-audit && \
-    # Ensure winston-daily-rotate-file is available at runtime for logging \
     npm install --no-save --legacy-peer-deps winston-daily-rotate-file
 
 COPY --chown=node:node . .
