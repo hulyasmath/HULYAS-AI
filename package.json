@@ -80,6 +80,7 @@
     "b:list-balances": "bun config/list-balances.js",
     "reset-terms": "node config/reset-terms.js",
     "flush-cache": "node config/flush-cache.js",
+    "install-railway-build-hook": "node scripts/install-railway-build-hook.js",
     "migrate:agent-permissions:dry-run": "node config/migrate-agent-permissions.js --dry-run",
     "migrate:agent-permissions": "node config/migrate-agent-permissions.js",
     "migrate:agent-permissions:batch": "node config/migrate-agent-permissions.js --batch-size=50",
