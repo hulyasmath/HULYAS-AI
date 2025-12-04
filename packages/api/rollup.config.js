@@ -1,5 +1,5 @@
 // rollup.config.js
-import { readFileSync, existsSync, statSync } from 'fs';
+import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve as resolvePath } from 'path';
 import json from '@rollup/plugin-json';
@@ -22,37 +22,17 @@ const isDevelopment = process.env.NODE_ENV === 'development';
 
 const plugins = [
   peerDepsExternal(),
-  alias({
-    entries: [
-      {
-        find: /^~(.+)$/,
-        replacement: (match) => {
-          const path = resolvePath(__dirname, 'src', match.replace(/^~\/?/, ''));
-          // Try with .ts extension first
-          if (existsSync(path + '.ts')) {
-            return path + '.ts';
-          }
-          // Try as directory with index.ts
-          if (existsSync(path) && statSync(path).isDirectory()) {
-            return resolvePath(path, 'index.ts');
-          }
-          // Fallback to original path (let typescript plugin handle it)
-          return path;
-        }
-      }
-    ]
-  }),
   resolve({
     preferBuiltins: true,
     skipSelf: true,
   }),
-  replace({
-    __IS_DEV__: isDevelopment,
-    preventAssignment: true,
-  }),
-  commonjs({
-    transformMixedEsModules: true,
-    requireReturnsDefault: 'auto',
+  alias({
+    entries: [
+      {
+        find: '~',
+        replacement: resolvePath(__dirname, 'src')
+      }
+    ]
   }),
   typescript({
     tsconfig: './tsconfig.build.json',
@@ -66,6 +46,14 @@ const plugins = [
      * Always include source content in sourcemaps for better debugging
      */
     inlineSources: true,
+  }),
+  replace({
+    __IS_DEV__: isDevelopment,
+    preventAssignment: true,
+  }),
+  commonjs({
+    transformMixedEsModules: true,
+    requireReturnsDefault: 'auto',
   }),
   json(),
 ];
