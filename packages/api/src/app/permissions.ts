@@ -7,7 +7,7 @@ import {
   getConfigDefaults,
 } from 'librechat-data-provider';
 import type { IRole, AppConfig } from '@librechat/data-schemas';
-import { isMemoryEnabled } from '../memory/config';
+import { isMemoryEnabled } from '~/memory/config';
 
 /**
  * Checks if a permission type has explicit configuration

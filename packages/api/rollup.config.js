@@ -1,5 +1,5 @@
 // rollup.config.js
-import { readFileSync } from 'fs';
+import { readFileSync, existsSync, statSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, resolve as resolvePath } from 'path';
 import json from '@rollup/plugin-json';
@@ -24,7 +24,22 @@ const plugins = [
   peerDepsExternal(),
   alias({
     entries: [
-      { find: '~', replacement: resolvePath(__dirname, 'src') }
+      {
+        find: /^~(.+)$/,
+        replacement: (match) => {
+          const path = resolvePath(__dirname, 'src', match.replace(/^~\/?/, ''));
+          // Try with .ts extension first
+          if (existsSync(path + '.ts')) {
+            return path + '.ts';
+          }
+          // Try as directory with index.ts
+          if (existsSync(path) && statSync(path).isDirectory()) {
+            return resolvePath(path, 'index.ts');
+          }
+          // Fallback to original path (let typescript plugin handle it)
+          return path;
+        }
+      }
     ]
   }),
   resolve({
