@@ -216,7 +216,7 @@ export const primeResources = async ({
     }
 
     const isContextEnabled = (
-      appConfig?.endpoints?.[EModelEndpoint.agents]?.capabilities ?? []
+      (appConfig?.endpoints?.[EModelEndpoint.agents as keyof typeof appConfig.endpoints] as any)?.capabilities ?? []
     ).includes(AgentCapabilities.context);
 
     const fileIds = tool_resources[EToolResources.context]?.file_ids ?? [];
