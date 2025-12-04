@@ -30,6 +30,9 @@ WORKDIR /app
 
 USER node
 
+# Copy build ID file first to bust cache - this file changes on each commit
+COPY --chown=node:node .railway-build-id /app/.railway-build-id
+
 COPY --chown=node:node package.json package-lock.json ./
 COPY --chown=node:node api/package.json ./api/package.json
 COPY --chown=node:node client/package.json ./client/package.json
