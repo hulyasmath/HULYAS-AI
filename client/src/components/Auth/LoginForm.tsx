@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useForm } from 'react-hook-form';
 import { Turnstile } from '@marsidev/react-turnstile';
+import { Eye, EyeOff } from 'lucide-react';
 import { ThemeContext, Spinner, Button, isDark } from '@librechat/client';
 import type { TLoginUser, TStartupConfig } from 'librechat-data-provider';
 import type { TAuthContext } from '~/common';
@@ -25,6 +26,7 @@ const LoginForm: React.FC<TLoginFormProps> = ({ onSubmit, startupConfig, error, 
   } = useForm<TLoginUser>();
   const [showResendLink, setShowResendLink] = useState<boolean>(false);
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const { data: config } = useGetStartupConfig();
   const useUsernameLogin = config?.ldap?.username;
@@ -119,7 +121,7 @@ const LoginForm: React.FC<TLoginFormProps> = ({ onSubmit, startupConfig, error, 
         <div className="mb-2">
           <div className="relative">
             <input
-              type="password"
+              type={showPassword ? 'text' : 'password'}
               id="password"
               autoComplete="current-password"
               aria-label={localize('com_auth_password')}
@@ -132,7 +134,7 @@ const LoginForm: React.FC<TLoginFormProps> = ({ onSubmit, startupConfig, error, 
                 maxLength: { value: 128, message: localize('com_auth_password_max_length') },
               })}
               aria-invalid={!!errors.password}
-              className="webkit-dark-styles transition-color peer w-full rounded-2xl border border-border-light bg-surface-primary px-3.5 pb-2.5 pt-3 text-text-primary duration-200 focus:border-green-500 focus:outline-none"
+              className="webkit-dark-styles transition-color peer w-full rounded-2xl border border-border-light bg-surface-primary px-3.5 pb-2.5 pt-3 pr-10 text-text-primary duration-200 focus:border-green-500 focus:outline-none"
               placeholder=" "
             />
             <label
@@ -141,6 +143,19 @@ const LoginForm: React.FC<TLoginFormProps> = ({ onSubmit, startupConfig, error, 
             >
               {localize('com_auth_password')}
             </label>
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute end-3 top-1/2 -translate-y-1/2 z-10 p-1 text-text-secondary-alt hover:text-text-primary transition-colors focus:outline-none focus:ring-2 focus:ring-green-500 rounded"
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              tabIndex={-1}
+            >
+              {showPassword ? (
+                <EyeOff className="h-5 w-5" />
+              ) : (
+                <Eye className="h-5 w-5" />
+              )}
+            </button>
           </div>
           {renderError('password')}
         </div>
