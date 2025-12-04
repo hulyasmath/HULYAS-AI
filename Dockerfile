@@ -39,13 +39,13 @@ RUN \
 COPY --chown=node:node . .
 
 RUN \
-    # Build all packages explicitly first
-    echo "Building data-provider..." && \
-    npm run build:data-provider && \
-    test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider build failed!" && exit 1) && \
+    # Build all packages explicitly first (in dependency order)
     echo "Building data-schemas..." && \
     npm run build:data-schemas && \
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas build failed!" && exit 1) && \
+    echo "Building data-provider..." && \
+    npm run build:data-provider && \
+    test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider build failed!" && exit 1) && \
     echo "Building api package..." && \
     npm run build:api && \
     test -f packages/api/dist/index.js || (echo "ERROR: api package build failed!" && exit 1) && \
@@ -60,9 +60,11 @@ RUN \
     test -f packages/api/dist/index.js || (echo "ERROR: api package missing after build!" && exit 1) && \
     # Ensure workspace packages are properly linked (reinstall to fix any broken symlinks)
     npm install --no-save --legacy-peer-deps && \
-    # Verify workspace packages are accessible via symlinks
-    test -f node_modules/@librechat/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas not accessible!" && ls -la node_modules/@librechat/ 2>/dev/null || echo "node_modules/@librechat/ does not exist" && exit 1) && \
-    test -f node_modules/@librechat/api/dist/index.js || (echo "ERROR: api package not accessible!" && ls -la node_modules/@librechat/api/ 2>/dev/null || echo "node_modules/@librechat/api/ does not exist" && exit 1) && \
+    # Verify workspace packages are accessible via symlinks with detailed error output
+    echo "Verifying symlinks..." && \
+    (test -f node_modules/@librechat/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas not accessible via symlink!" && echo "Checking symlink:" && ls -la node_modules/@librechat/data-schemas 2>/dev/null || echo "Symlink does not exist" && echo "Checking source:" && ls -la packages/data-schemas/dist/ 2>/dev/null || echo "Source dist does not exist" && exit 1)) && \
+    (test -f node_modules/@librechat/api/dist/index.js || (echo "ERROR: api package not accessible via symlink!" && echo "Checking symlink:" && ls -la node_modules/@librechat/api 2>/dev/null || echo "Symlink does not exist" && echo "Checking source:" && ls -la packages/api/dist/ 2>/dev/null || echo "Source dist does not exist" && exit 1)) && \
+    echo "All packages built and verified successfully!" && \
     npm cache clean --force
 
 # Node API setup
