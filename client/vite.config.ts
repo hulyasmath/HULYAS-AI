@@ -122,8 +122,8 @@ export default defineConfig(({ command }) => ({
     outDir: './dist',
     minify: 'terser',
     rollupOptions: {
-      // Do not bundle lucide-react; treat it as external to avoid PWA scan errors
-      external: ['lucide-react'],
+      // Do not bundle certain peer deps; treat them as external so the PWA scan doesn't try to resolve them
+      external: ['lucide-react', 'dompurify'],
       preserveEntrySignatures: 'strict',
       output: {
         manualChunks(id: string) {
