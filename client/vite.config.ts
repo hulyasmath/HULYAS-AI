@@ -123,7 +123,14 @@ export default defineConfig(({ command }) => ({
     minify: 'terser',
     rollupOptions: {
       // Do not bundle certain peer deps; treat them as external so the PWA scan doesn't try to resolve them
-      external: ['lucide-react', 'dompurify'],
+      external: [
+        'lucide-react',
+        'dompurify',
+        'framer-motion',
+        'react',
+        'react-dom',
+        '@vitejs/plugin-react',
+      ],
       preserveEntrySignatures: 'strict',
       output: {
         manualChunks(id: string) {
