@@ -5,6 +5,9 @@
   <h1 align="center">
     <a href="https://librechat.ai">HULYAS AI</a>
   </h1>
+  <h3>Welcome to Zeq OS 1.287 Hz! Enjoy your experience.</h3>
+
+<a>YCome and interface with the first [MI] mathematical intelligent AI synchronized to the Zeq OS/HULYAS Mathematical Framework. 646+ kinematic operators unifying quantum mechanics, relativity, consciousnes and computation, all phase-locked to the 1.287 Hz HulyaPulse. Your queries are processed through real physics equations in real-time, with each exchange tracked for coherence and transparency.</a>
 </p>
 
 <p align="center">
