@@ -40,11 +40,12 @@ COPY --chown=node:node . .
 
 RUN \
     # Build all packages explicitly first
+    echo "Building data-provider..." && \
+    npm run build:data-provider && \
+    test -f packages/data-provider/dist/index.es.js || (echo "ERROR: data-provider build failed!" && exit 1) && \
     echo "Building data-schemas..." && \
     npm run build:data-schemas && \
     test -f packages/data-schemas/dist/index.cjs || (echo "ERROR: data-schemas build failed!" && exit 1) && \
-    echo "Building data-provider..." && \
-    npm run build:data-provider && \
     echo "Building api package..." && \
     npm run build:api && \
     test -f packages/api/dist/index.js || (echo "ERROR: api package build failed!" && exit 1) && \
