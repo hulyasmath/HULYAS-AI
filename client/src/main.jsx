@@ -45,10 +45,36 @@ import 'katex/dist/katex.min.css';
 import 'katex/dist/contrib/copy-tex.js';
 
 const container = document.getElementById('root');
-const root = createRoot(container);
 
-root.render(
-  <ApiErrorBoundaryProvider>
-    <App />
-  </ApiErrorBoundaryProvider>,
-);
+if (!container) {
+  console.error('❌ Root container not found! Cannot render app.');
+  throw new Error('Root container element not found');
+}
+
+// Ensure safe initialization with error handling
+try {
+  const root = createRoot(container);
+  
+  root.render(
+    <ApiErrorBoundaryProvider>
+      <App />
+    </ApiErrorBoundaryProvider>,
+  );
+} catch (error) {
+  console.error('❌ Failed to render app:', error);
+  // Show error message to user
+  container.innerHTML = `
+    <div style="padding: 20px; text-align: center; font-family: system-ui;">
+      <h1>🚀 HULYAS - Zeq OS 1.287 Hz</h1>
+      <p style="color: #ef4444;">Application failed to initialize</p>
+      <p>Please refresh the page or contact support if the issue persists.</p>
+      <button onclick="window.location.reload()" style="margin-top: 20px; padding: 10px 20px; cursor: pointer;">
+        Reload Application
+      </button>
+      <details style="margin-top: 20px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+        <summary style="cursor: pointer;">Error Details</summary>
+        <pre style="background: #1f1f1f; padding: 10px; border-radius: 4px; overflow: auto;">${error.toString()}\n${error.stack || ''}</pre>
+      </details>
+    </div>
+  `;
+}

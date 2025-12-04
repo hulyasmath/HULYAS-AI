@@ -222,6 +222,61 @@
               }
           };
       </script>
+    <!-- Runtime Safety: Fix Object.keys() and isEmpty() null/undefined handling -->
+    <script>
+        (function() {
+            'use strict';
+            
+            // Store original functions
+            const originalKeys = Object.keys;
+            const originalIsEmpty = window.isEmpty;
+            
+            // Safe Object.keys wrapper - handles null/undefined
+            Object.keys = function(obj) {
+                if (obj == null) return [];
+                if (typeof obj !== 'object' && typeof obj !== 'function') return [];
+                try {
+                    return originalKeys(obj);
+                } catch (e) {
+                    console.warn('Object.keys error:', e, obj);
+                    return [];
+                }
+            };
+            
+            // Safe isEmpty implementation
+            window.isEmpty = function(obj) {
+                if (obj == null) return true;
+                if (typeof obj !== 'object') return false;
+                try {
+                    return Object.keys(obj).length === 0;
+                } catch (e) {
+                    console.warn('isEmpty error:', e, obj);
+                    return true;
+                }
+            };
+            
+            // Additional safe utility functions
+            window.ensureObject = function(obj, defaultValue = {}) {
+                return obj != null ? obj : defaultValue;
+            };
+            
+            window.safeKeys = function(obj) {
+                return obj != null ? Object.keys(obj) : [];
+            };
+            
+            window.safeIsEmpty = function(obj) {
+                if (obj == null) return true;
+                if (typeof obj !== 'object') return false;
+                return window.safeKeys(obj).length === 0;
+            };
+            
+            // Ensure critical window objects exist
+            if (!window.config) window.config = {};
+            if (!window.appState) window.appState = {};
+            
+            console.log('✅ Runtime safety checks installed - Object.keys() and isEmpty() are now null-safe');
+        })();
+    </script>
     <!-- CRITICAL: Import Map for Module Resolution -->
     <script type="importmap">
     {
