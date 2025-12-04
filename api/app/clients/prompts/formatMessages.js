@@ -160,6 +160,12 @@ const formatAgentMessages = (payload) => {
           return false;
         }
         
+        // Reject IMAGE_URL for assistant messages - LangChain AIMessage deserialization
+        // only supports 'text' variant, not 'image_url'
+        if (part.type === ContentTypes.IMAGE_URL && message.role === 'assistant') {
+          return false;
+        }
+        
         // Allow supported types
         return (
           part.type === ContentTypes.TEXT ||
@@ -250,10 +256,15 @@ const formatAgentMessages = (payload) => {
         // Skip file and image_file types - these should be handled via attachments, not content
         // LangChain messages don't support 'file' type in content
         continue;
+      } else if (part.type === ContentTypes.IMAGE_URL) {
+        // Skip IMAGE_URL for assistant messages - LangChain AIMessage deserialization
+        // only supports 'text' variant, not 'image_url'
+        // This prevents "unknown variant `image_url`, expected `text`" errors
+        continue;
       } else {
-        // Only include supported content types (TEXT, IMAGE_URL, etc.)
+        // Only include supported content types (TEXT, etc.)
         // Filter out any unsupported types to prevent deserialization errors
-        if (part.type === ContentTypes.TEXT || part.type === ContentTypes.IMAGE_URL) {
+        if (part.type === ContentTypes.TEXT) {
           currentContent.push(part);
         }
       }

@@ -335,14 +335,22 @@ class AgentClient extends BaseClient {
     }
 
     const formattedMessages = orderedMessages.map((message, i) => {
-      // Clean message content before formatting - remove unsupported 'file' types
+      // Clean message content before formatting - remove unsupported 'file' types and IMAGE_URL for assistant messages
       if (message.content && Array.isArray(message.content)) {
         message.content = message.content.filter((part) => {
           if (!part || typeof part !== 'object' || !part.type) {
             return false;
           }
           // Explicitly reject 'file' type which causes deserialization errors
-          return part.type !== 'file';
+          if (part.type === 'file') {
+            return false;
+          }
+          // Reject IMAGE_URL for assistant messages - API deserialization only supports 'text' variant
+          // This prevents "unknown variant `image_url`, expected `text`" errors
+          if (part.type === ContentTypes.IMAGE_URL && !message.isCreatedByUser) {
+            return false;
+          }
+          return true;
         });
         // If all content was filtered out, ensure there's at least text content
         if (message.content.length === 0 && message.text) {
@@ -355,6 +363,25 @@ class AgentClient extends BaseClient {
         userName: this.options?.name,
         assistantName: this.options?.modelLabel,
       });
+
+      // Post-process formatted message to ensure IMAGE_URL is removed from assistant messages
+      // This is a defensive measure in case formatMessage includes IMAGE_URL
+      if (!message.isCreatedByUser && Array.isArray(formattedMessage.content)) {
+        formattedMessage.content = formattedMessage.content.filter((part) => {
+          if (!part || typeof part !== 'object' || !part.type) {
+            return false;
+          }
+          // Remove IMAGE_URL from assistant messages to prevent deserialization errors
+          if (part.type === ContentTypes.IMAGE_URL) {
+            return false;
+          }
+          return true;
+        });
+        // If all content was filtered out, ensure there's at least text content
+        if (formattedMessage.content.length === 0) {
+          formattedMessage.content = message.text || '';
+        }
+      }
 
       if (message.fileContext && i !== orderedMessages.length - 1) {
         if (typeof formattedMessage.content === 'string') {
