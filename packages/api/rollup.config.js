@@ -51,38 +51,15 @@ const resolveAlias = (id) => {
 
 const plugins = [
   peerDepsExternal(),
+  alias({
+    entries: [
+      { find: '~', replacement: resolvePath(__dirname, 'src') }
+    ]
+  }),
   resolve({
     preferBuiltins: true,
     skipSelf: true,
-  }),
-  alias({
-    entries: [
-      {
-        find: /^~(\/.*)$/,
-        replacement: (matched, ...args) => {
-          // Extract path after ~/ - args[0] is the first capture group (the path)
-          const pathAfterTilde = (args[0] || matched.replace(/^~\/?/, '')).replace(/^\//, '');
-          const basePath = resolvePath(__dirname, 'src', pathAfterTilde);
-          
-          // Try with .ts extension first (most common case)
-          const tsPath = basePath + '.ts';
-          if (existsSync(tsPath)) {
-            return tsPath;
-          }
-          
-          // Try as directory with index.ts
-          if (existsSync(basePath) && statSync(basePath).isDirectory()) {
-            const indexPath = resolvePath(basePath, 'index.ts');
-            if (existsSync(indexPath)) {
-              return indexPath;
-            }
-          }
-          
-          // Fallback: return with .ts extension (TypeScript plugin will handle it)
-          return tsPath;
-        }
-      }
-    ]
+    extensions: ['.mjs', '.js', '.json', '.node', '.ts'],
   }),
   typescript({
     tsconfig: './tsconfig.build.json',

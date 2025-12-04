@@ -111,14 +111,14 @@ export async function updateInterfacePermissions({
       permType: PermissionTypes,
       permissions: Record<string, boolean | undefined>,
     ) => {
-      const permTypeExists = existingPermissions?.[permType];
+      const permTypeExists = (existingPermissions as any)?.[permType];
       const isExplicitlyConfigured =
         interfaceConfig && hasExplicitConfig(interfaceConfig, permType);
       const isMemoryDisabled = permType === PermissionTypes.MEMORIES && isMemoryExplicitlyDisabled;
       const isMemoryReenabling =
         permType === PermissionTypes.MEMORIES &&
         shouldEnableMemory &&
-        existingPermissions?.[PermissionTypes.MEMORIES]?.[Permissions.USE] === false;
+        (existingPermissions?.[PermissionTypes.MEMORIES as keyof typeof existingPermissions] as any)?.[Permissions.USE] === false;
 
       // Only update if: doesn't exist OR explicitly configured OR memory state change
       if (!permTypeExists || isExplicitlyConfigured || isMemoryDisabled || isMemoryReenabling) {

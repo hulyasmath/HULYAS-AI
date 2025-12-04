@@ -1,11 +1,11 @@
 # v0.8.1-rc1
-# CACHE_BUST: 2025-12-04T02:40:19Z-v1764816019 - UPDATE THIS TIMESTAMP TO FORCE FRESH BUILD
+# CACHE_BUST: 2025-12-04T04:09:02Z-v1764821342 - UPDATE THIS TIMESTAMP TO FORCE FRESH BUILD
 
 # Cache busting - Railway will automatically provide these build args
 # If not provided, use defaults that change on each build
 ARG RAILWAY_GIT_COMMIT
 ARG RAILWAY_GIT_BRANCH
-ARG CACHE_BUST=2025-12-04T02:40:19Z-v1764816019
+ARG CACHE_BUST=2025-12-04T04:09:02Z-v1764821342
 
 # Base node image
 FROM node:20-alpine AS node
@@ -54,10 +54,16 @@ RUN \
 
 COPY --chown=node:node . .
 
+# Verify essential files are present before build
+RUN test -f packages/api/src/memory/config.ts || (echo "ERROR: memory/config.ts not found in build context!" && exit 1)
+
 # Add build metadata for cache busting
 RUN echo "Build Date: ${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}" > /app/.build-info && \
     echo "Git Commit: ${GIT_COMMIT:-unknown}" >> /app/.build-info && \
     echo "Cache Bust: ${CACHE_BUST}" >> /app/.build-info
+
+# Verify critical source files exist before build
+RUN test -f packages/api/src/memory/config.ts || (echo "ERROR: memory/config.ts not found in build context!" && exit 1)
 
 RUN \
     # Build all packages explicitly first (in dependency order)

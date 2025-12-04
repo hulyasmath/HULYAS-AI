@@ -62,9 +62,9 @@ export const getCustomEndpointConfig = ({
     throw new Error(`Config not found for the ${endpoint} custom endpoint.`);
   }
 
-  const customEndpoints = appConfig.endpoints?.[EModelEndpoint.custom] ?? [];
+  const customEndpoints = (appConfig.endpoints?.[EModelEndpoint.custom as keyof typeof appConfig.endpoints] as any) ?? [];
   return customEndpoints.find(
-    (endpointConfig) => normalizeEndpointName(endpointConfig.name) === endpoint,
+    (endpointConfig: any) => normalizeEndpointName(endpointConfig.name) === endpoint,
   );
 };
 
