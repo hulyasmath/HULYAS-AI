@@ -48,7 +48,13 @@ export default function AdminSettings() {
       alert(`API configuration updated successfully! ${data.note}`);
     },
     onError: (error: any) => {
-      alert(`Error updating API configuration: ${error.message || 'Unknown error'}`);
+      const errorMessage = error.message || 'Unknown error';
+      // Check if this is a Railway-specific error
+      if (errorMessage.includes('Railway') || errorMessage.includes('railway')) {
+        alert(`⚠️ Railway Environment Detected\n\n${errorMessage}\n\nYou cannot update environment variables through the UI on Railway. Please use the Railway dashboard to update environment variables.`);
+      } else {
+        alert(`Error updating API configuration: ${errorMessage}`);
+      }
     },
   });
 
@@ -270,8 +276,17 @@ export default function AdminSettings() {
       { name: 'RAG API', key: 'rag', icon: '📚', description: 'Retrieval Augmented Generation' },
     ];
 
+    // Check if running on Railway (detect from window location or API)
+    const isRailway = window.location.hostname.includes('railway.app') || window.location.hostname.includes('up.railway.app');
+
     return (
       <div className="space-y-6">
+        {isRailway && (
+          <div className="rounded-lg border border-yellow-500/50 bg-yellow-500/10 p-4 text-sm text-yellow-700 dark:text-yellow-400">
+            <strong>⚠️ Railway Environment Detected:</strong> Environment variables cannot be updated through this UI on Railway. 
+            Please update API keys through the <a href="https://railway.app" target="_blank" rel="noopener noreferrer" className="underline">Railway dashboard</a> → Variables tab, then redeploy your service.
+          </div>
+        )}
         <div>
           <h4 className="mb-4 flex items-center gap-2 text-lg font-semibold">
             <Server className="h-5 w-5" />
