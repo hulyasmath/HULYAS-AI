@@ -127,6 +127,7 @@ export default defineConfig(({ command }) => ({
         'lucide-react',
         'dompurify',
         'framer-motion',
+        '@react-spring/web',
         'react',
         'react-dom',
         '@vitejs/plugin-react',
