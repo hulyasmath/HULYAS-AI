@@ -49,7 +49,11 @@ RUN \
     npm config set fetch-retries 10 ; \
     npm config set fetch-retry-mintimeout 30000 ; \
     npm ci --no-audit && \
-    npm install --no-save --legacy-peer-deps winston-daily-rotate-file
+    npm install --no-save --legacy-peer-deps winston-daily-rotate-file && \
+    # Explicitly install lucide-react to ensure it's available for packages/client build
+    npm install --no-save lucide-react@^0.394.0 && \
+    # Ensure all workspace dependencies are properly linked
+    npm install --workspaces --no-save
 
 COPY --chown=node:node . .
 
@@ -65,6 +69,9 @@ RUN echo "Build Date: ${BUILD_DATE:-$(date -u +'%Y-%m-%dT%H:%M:%SZ')}" > /app/.b
 RUN test -f packages/api/src/memory/config.ts || (echo "ERROR: memory/config.ts not found in build context!" && exit 1)
 
 RUN \
+    # Verify lucide-react is available before building
+    echo "Verifying lucide-react installation..." && \
+    (npm list lucide-react || npm install --no-save lucide-react@^0.394.0) && \
     # Build all packages explicitly first (in dependency order)
     echo "Building data-schemas..." && \
     npm run build:data-schemas && \
@@ -75,6 +82,9 @@ RUN \
     echo "Building api package..." && \
     npm run build:api && \
     test -f packages/api/dist/index.js || (echo "ERROR: api package build failed!" && exit 1) && \
+    # Ensure lucide-react is available in node_modules before building client-package
+    echo "Ensuring lucide-react is available for packages/client build..." && \
+    (test -d node_modules/lucide-react || npm install --no-save lucide-react@^0.394.0) && \
     echo "Building client-package..." && \
     npm run build:client-package && \
     # React client build
