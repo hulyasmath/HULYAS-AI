@@ -37,7 +37,7 @@ RUN \
     npm config set fetch-retry-maxtimeout 600000 ; \
     npm config set fetch-retries 5 ; \
     npm config set fetch-retry-mintimeout 15000 ; \
-    rm -f package-lock.json && npm install --no-audit --force && npm dedupe
+    rm -f package-lock.json && npm install --no-audit --force && npm dedupe --force
 
 COPY --chown=node:node . .
 
