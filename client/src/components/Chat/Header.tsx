@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useMediaQuery } from '@librechat/client';
 import { useOutletContext } from 'react-router-dom';
+import { LayoutGrid } from 'lucide-react';
 import { getConfigDefaults, PermissionTypes, Permissions } from 'librechat-data-provider';
 import type { ContextType } from '~/common';
 import ModelSelector from './Menus/Endpoints/ModelSelector';
@@ -56,6 +57,14 @@ export default function Header() {
               !isSmallScreen ? 'transition-all duration-200 ease-in-out' : ''
             } ${!navVisible ? 'translate-x-0' : 'translate-x-[-100px]'}`}
           >
+            <a
+              href={import.meta.env.VITE_APP_STORE_URL || '/'}
+              className="my-1 flex h-10 items-center gap-2 rounded-xl border border-border-light bg-surface-secondary px-3 py-2 text-sm text-text-primary hover:bg-surface-tertiary transition-colors shrink-0"
+              title="Back to App Store"
+            >
+              <LayoutGrid className="h-4 w-4 shrink-0" />
+              <span className="hidden sm:inline whitespace-nowrap">App Store</span>
+            </a>
             <ModelSelector startupConfig={startupConfig} />
             {interfaceConfig.presets === true && interfaceConfig.modelSelect && <PresetsMenu />}
             {hasAccessToBookmarks === true && <BookmarkMenu />}

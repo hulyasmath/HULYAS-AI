@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ZEQ Sync + Three.js Example</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-family: monospace;
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <div>ZEQ Sync + Three.js Demo</div>
+    <div>Zeqond: <span id="zeqond">0</span></div>
+    <div>Sync Value: <span id="syncValue">0</span></div>
+    <div>Pulse: <span id="pulseCount">0</span></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="zeq-sync-plugin.js"></script>
+  <script>
+    // Setup Three.js scene
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setClearColor(0x1a1a2e);
+    document.body.appendChild(renderer.domElement);
+
+    // Create a sphere that pulses with HulyaPulse
+    const geometry = new THREE.SphereGeometry(1, 32, 32);
+    const material = new THREE.MeshPhongMaterial({ 
+      color: 0x6366f1,
+      emissive: 0x1e1b4b,
+      shininess: 100
+    });
+    const sphere = new THREE.Mesh(geometry, material);
+    scene.add(sphere);
+
+    // Add light
+    const light = new THREE.PointLight(0xffffff, 1, 100);
+    light.position.set(5, 5, 5);
+    scene.add(light);
+    scene.add(new THREE.AmbientLight(0x404040));
+
+    camera.position.z = 5;
+
+    // Create ZEQ Sync instance
+    const sync = ZeqSync.create({ autoStart: true });
+
+    // Attach Three.js with KO42 modulation
+    sync.attachThreeJS(renderer, scene, camera, {
+      modulateTime: true,
+      onUpdate: (pulseData, scene, camera) => {
+        // Pulse the sphere size with KO42
+        const scale = 1 + pulseData.syncValue * 2;
+        sphere.scale.set(scale, scale, scale);
+        
+        // Rotate based on Zeqond
+        sphere.rotation.y = pulseData.zeqond * 0.01;
+        sphere.rotation.x = Math.sin(pulseData.elapsedTime) * 0.5;
+        
+        // Update emissive color based on sync
+        const intensity = 0.3 + pulseData.syncValue * 0.5;
+        material.emissive.setRGB(intensity * 0.1, intensity * 0.1, intensity * 0.3);
+        
+        // Update info display
+        document.getElementById('zeqond').textContent = pulseData.zeqond.toFixed(2);
+        document.getElementById('syncValue').textContent = pulseData.syncValue.toFixed(4);
+        document.getElementById('pulseCount').textContent = pulseData.pulseCount;
+      }
+    });
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>

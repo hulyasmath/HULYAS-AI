@@ -33,6 +33,7 @@ const {
   seedDefaultPlans,
 } = require('./Plan');
 const { getTokensUsedMonthly, getRequestsUsedDaily, getUserUsageSummary } = require('./Usage');
+const LLMConfig = require('./LLMConfig');
 
 const seedDatabase = async () => {
   await methods.initializeRoles();
@@ -83,4 +84,6 @@ module.exports = {
   updatePlan,
   deletePlan,
   seedDefaultPlans,
+  // LLM Config
+  LLMConfig,
 };

@@ -1,7 +1,6 @@
-// const accessPermissions = require('./accessPermissions'); // Temporarily disabled - missing PermissionsController
+const accessPermissions = require('./accessPermissions');
 const assistants = require('./assistants');
 const categories = require('./categories');
-const tokenizer = require('./tokenizer');
 const endpoints = require('./endpoints');
 const staticRoute = require('./static');
 const messages = require('./messages');
@@ -9,7 +8,6 @@ const memories = require('./memories');
 const presets = require('./presets');
 const prompts = require('./prompts');
 const balance = require('./balance');
-const plugins = require('./plugins');
 const actions = require('./actions');
 const banner = require('./banner');
 const search = require('./search');
@@ -23,21 +21,29 @@ const files = require('./files');
 const share = require('./share');
 const tags = require('./tags');
 const auth = require('./auth');
-const edit = require('./edit');
 const keys = require('./keys');
 const user = require('./user');
 const mcp = require('./mcp');
+// Zeq OS custom routes
 const transparency = require('./transparency');
 const admin = require('./admin');
 const stripe = require('./stripe');
 const zeqOperators = require('./zeqOperators');
+const zeqProcess = require('./zeqProcess');
+const zeqLogs = require('./zeqLogs');
+const zeqPatterns = require('./zeqPatterns');
 const mcpApiKey = require('./mcpApiKey');
+// Optional: load adminAuth and apiKeys if they exist in dev image
+let adminAuth, apiKeys;
+try { adminAuth = require('./adminAuth'); } catch (e) { adminAuth = null; }
+try { apiKeys = require('./apiKeys'); } catch (e) { apiKeys = null; }
 
 module.exports = {
   mcp,
-  edit,
   auth,
+  adminAuth,
   keys,
+  apiKeys,
   user,
   tags,
   roles,
@@ -51,21 +57,22 @@ module.exports = {
   config,
   models,
   prompts,
-  plugins,
   actions,
   presets,
   balance,
   messages,
   memories,
   endpoints,
-  tokenizer,
   assistants,
   categories,
   staticRoute,
-  // accessPermissions, // Temporarily disabled - missing PermissionsController
+  accessPermissions,
   transparency,
   admin,
   stripe,
   zeqOperators,
+  zeqProcess,
+  zeqLogs,
+  zeqPatterns,
   mcpApiKey,
 };

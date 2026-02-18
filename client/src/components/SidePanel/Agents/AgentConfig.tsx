@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
 import { useToastContext } from '@librechat/client';
 import { Controller, useWatch, useFormContext } from 'react-hook-form';
 import { EModelEndpoint, getEndpointField } from 'librechat-data-provider';
@@ -36,6 +36,48 @@ const inputClass = cn(
   'flex w-full px-3 py-2 border-border-light bg-surface-secondary focus-visible:ring-2 focus-visible:ring-ring-primary',
   removeFocusOutlines,
 );
+
+/**
+ * ZEQ OS Description Auto-Generator
+ * Generates an advanced, framework-aware agent description based on name, category, and tools.
+ */
+function generateZeqDescription(name: string, category: string, tools: string[]): string {
+  const categoryDescriptions: Record<string, string> = {
+    general: 'general-purpose problem solving',
+    research: 'scientific research and analysis',
+    coding: 'software development and code analysis',
+    writing: 'content creation and writing',
+    math: 'mathematical computation and proof verification',
+    data: 'data analysis and visualization',
+    creative: 'creative design and ideation',
+    education: 'teaching, tutoring, and educational support',
+    finance: 'financial analysis and market modeling',
+    science: 'scientific discovery and experimental design',
+    engineering: 'engineering design and systems analysis',
+    health: 'healthcare analysis and medical research',
+    legal: 'legal research and compliance analysis',
+    business: 'business strategy and operations',
+    security: 'cybersecurity and threat analysis',
+  };
+
+  const categoryFocus = categoryDescriptions[category] || categoryDescriptions.general;
+  const toolList = tools.length > 0 ? ` Equipped with ${tools.length} specialized tool(s) for enhanced capability.` : '';
+  const hasCodeExec = tools.some(t => t.includes('code') || t.includes('execute'));
+  const hasSearch = tools.some(t => t.includes('search'));
+  const hasFileSearch = tools.some(t => t.includes('file'));
+
+  const capabilities: string[] = [];
+  if (hasCodeExec) capabilities.push('code execution');
+  if (hasSearch) capabilities.push('web search');
+  if (hasFileSearch) capabilities.push('file analysis');
+
+  const capStr = capabilities.length > 0 ? ` with ${capabilities.join(', ')} capabilities` : '';
+
+  return `${name} is a ZEQ OS-powered agent specialized in ${categoryFocus}${capStr}. ` +
+    `Operates at 1.287 Hz HulyaPulse frequency with access to 1,549 kinematic operators across 34 domains. ` +
+    `Follows the 7-Step HULYAS Protocol for precision-verified computations (KO42 mandatory, ≤0.1% error target). ` +
+    `All outputs are validated through the Forensic Intelligence (FI) scoring engine with 20 forensic functions.${toolList}`;
+}
 
 export default function AgentConfig() {
   const localize = useLocalize();
@@ -178,6 +220,47 @@ export default function AgentConfig() {
 
   const { toolIds, mcpServerNames } = useVisibleTools(tools, regularTools, mcpServersMap);
 
+  const name = useWatch({ control, name: 'name' });
+  const category = useWatch({ control, name: 'category' });
+  const description = useWatch({ control, name: 'description' });
+
+  const handleGenerateDescription = useCallback(() => {
+    const agentName = name || 'Agent';
+    const agentCategory = category || 'general';
+    const agentTools = tools || [];
+    const generated = generateZeqDescription(agentName, agentCategory, agentTools);
+    methods.setValue('description', generated, { shouldDirty: true });
+  }, [name, category, tools, methods]);
+
+  // Listen for ZEQ OS skill-to-agent events to also auto-populate description
+  useEffect(() => {
+    const handleSkillToAgent = (event: Event) => {
+      const customEvent = event as CustomEvent<string>;
+      if (customEvent.detail && !description) {
+        // Extract description from skill markdown frontmatter
+        const descMatch = customEvent.detail.match(/^description:\s*(.+)$/m);
+        const nameMatch = customEvent.detail.match(/^name:\s*(.+)$/m);
+        const industryMatch = customEvent.detail.match(/^industry:\s*(.+)$/m);
+        if (descMatch) {
+          const skillDesc = descMatch[1].trim();
+          const skillName = nameMatch ? nameMatch[1].trim() : name || 'Agent';
+          const industry = industryMatch ? industryMatch[1].trim() : '';
+          methods.setValue(
+            'description',
+            `${skillName}: ${skillDesc} — Powered by ZEQ OS Mathematical Intelligence (1,549 operators, 1.287 Hz HulyaPulse, FI-verified${industry ? `, ${industry} domain` : ''}).`,
+            { shouldDirty: true },
+          );
+        }
+      }
+    };
+
+    window.addEventListener('zeq-skill-to-agent', handleSkillToAgent);
+    return () => {
+      window.removeEventListener('zeq-skill-to-agent', handleSkillToAgent);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [description, name]);
+
   return (
     <>
       <div className="h-auto bg-white px-4 pt-3 dark:bg-transparent">
@@ -227,21 +310,34 @@ export default function AgentConfig() {
         </div>
         {/* Description */}
         <div className="mb-4">
-          <label className={labelClass} htmlFor="description">
-            {localize('com_ui_description')}
-          </label>
+          <div className="mb-2 flex items-center justify-between">
+            <label className="text-token-text-primary font-medium" htmlFor="description">
+              {localize('com_ui_description')}
+            </label>
+            <button
+              type="button"
+              onClick={handleGenerateDescription}
+              className="flex h-7 items-center gap-1 rounded-md border border-border-medium bg-surface-secondary px-2 py-0 text-sm text-text-primary transition-colors duration-200 hover:bg-surface-tertiary"
+              title="Auto-generate an advanced ZEQ OS description"
+            >
+              <svg className="mr-1 h-3 w-3 text-text-secondary" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+              </svg>
+              ZEQ OS
+            </button>
+          </div>
           <Controller
             name="description"
             control={control}
             render={({ field }) => (
-              <input
+              <textarea
                 {...field}
                 value={field.value ?? ''}
-                maxLength={512}
-                className={inputClass}
+                maxLength={1024}
+                className={cn(inputClass, 'min-h-[60px] resize-y')}
                 id="description"
-                type="text"
-                placeholder={localize('com_agents_description_placeholder')}
+                rows={2}
+                placeholder="Click 'ZEQ OS' to auto-generate, or describe your Agent manually"
                 aria-label="Agent description"
               />
             )}

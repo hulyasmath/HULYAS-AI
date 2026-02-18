@@ -4,7 +4,8 @@ const getZeqOperators = async ({ search, category, tags } = {}) => {
   const filter = {};
 
   if (search) {
-    const regex = new RegExp(search, 'i');
+    const escaped = search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(escaped, 'i');
     filter.$or = [{ name: regex }, { description: regex }, { equation: regex }, { tags: regex }];
   }
 
@@ -38,7 +39,6 @@ module.exports = {
   updateZeqOperator,
   deleteZeqOperator,
 };
-
 
 
 

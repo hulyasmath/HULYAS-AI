@@ -1,0 +1,9 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+COPY zeqond_daemon.py .
+
+EXPOSE 2871
+
+CMD ["python", "zeqond_daemon.py"]

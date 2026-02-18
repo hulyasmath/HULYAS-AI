@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { SystemRoles } = require('librechat-data-provider');
-const { requireJwtAuth } = require('~/server/middleware');
+const requireJwtAuth = require('~/server/middleware/requireJwtAuth');
 const { ZeqOperator } = require('~/db/models');
 const {
   getZeqOperators,
@@ -37,11 +37,24 @@ router.get('/', requireJwtAuth, isAdmin, async (req, res) => {
   }
 });
 
+// Extract only allowed operator fields from request body
+function pickOperatorFields(body) {
+  const { name, category, equation, description, tags, parameters } = body;
+  const data = {};
+  if (name !== undefined) { data.name = name; }
+  if (category !== undefined) { data.category = category; }
+  if (equation !== undefined) { data.equation = equation; }
+  if (description !== undefined) { data.description = description; }
+  if (tags !== undefined) { data.tags = tags; }
+  if (parameters !== undefined) { data.parameters = parameters; }
+  return data;
+}
+
 // Admin: create operator
 router.post('/', requireJwtAuth, isAdmin, async (req, res) => {
   try {
     const data = {
-      ...req.body,
+      ...pickOperatorFields(req.body),
       createdBy: req.user?._id,
       updatedBy: req.user?._id,
     };
@@ -52,7 +65,7 @@ router.post('/', requireJwtAuth, isAdmin, async (req, res) => {
     if (error.code === 11000) {
       return res.status(400).json({ message: 'Operator name must be unique' });
     }
-    res.status(500).json({ message: 'Error creating operator', error: error.message });
+    res.status(500).json({ message: 'Error creating operator' });
   }
 });
 
@@ -60,8 +73,11 @@ router.post('/', requireJwtAuth, isAdmin, async (req, res) => {
 router.put('/:id', requireJwtAuth, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
     const updates = {
-      ...req.body,
+      ...pickOperatorFields(req.body),
       updatedBy: req.user?._id,
     };
     const operator = await updateZeqOperator(id, updates);
@@ -71,7 +87,7 @@ router.put('/:id', requireJwtAuth, isAdmin, async (req, res) => {
     res.status(200).json(operator);
   } catch (error) {
     console.error('[ZeqOperators] PUT /:id error', error);
-    res.status(500).json({ message: 'Error updating operator', error: error.message });
+    res.status(500).json({ message: 'Error updating operator' });
   }
 });
 
@@ -79,6 +95,9 @@ router.put('/:id', requireJwtAuth, isAdmin, async (req, res) => {
 router.delete('/:id', requireJwtAuth, isAdmin, async (req, res) => {
   try {
     const { id } = req.params;
+    if (!/^[0-9a-fA-F]{24}$/.test(id)) {
+      return res.status(400).json({ message: 'Invalid ID format' });
+    }
     const operator = await deleteZeqOperator(id);
     if (!operator) {
       return res.status(404).json({ message: 'Operator not found' });
@@ -86,7 +105,7 @@ router.delete('/:id', requireJwtAuth, isAdmin, async (req, res) => {
     res.status(200).json({ message: 'Operator deleted successfully' });
   } catch (error) {
     console.error('[ZeqOperators] DELETE /:id error', error);
-    res.status(500).json({ message: 'Error deleting operator', error: error.message });
+    res.status(500).json({ message: 'Error deleting operator' });
   }
 });
 
@@ -106,7 +125,6 @@ router.get('/public/list', async (req, res) => {
 });
 
 module.exports = router;
-
 
 
 

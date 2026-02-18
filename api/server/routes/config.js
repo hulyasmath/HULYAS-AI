@@ -12,7 +12,7 @@ const { getAppConfig } = require('~/server/services/Config/app');
 const { getProjectByName } = require('~/models/Project');
 const { getMCPManager } = require('~/config');
 const { getLogStores } = require('~/cache');
-const { mcpServersRegistry } = require('@librechat/api');
+const { MCPServersRegistry } = require('@librechat/api');
 
 const router = express.Router();
 const emailLoginEnabled =
@@ -44,7 +44,8 @@ const getMCPServers = async (payload, appConfig) => {
     if (!mcpManager) {
       return;
     }
-    const mcpServers = await mcpServersRegistry.getAllServerConfigs();
+    const registry = MCPServersRegistry.getInstance();
+    const mcpServers = await registry.getAllServerConfigs();
     if (!mcpServers) return;
     for (const serverName in mcpServers) {
       if (!payload.mcpServers) {

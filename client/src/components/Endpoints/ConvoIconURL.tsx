@@ -22,13 +22,10 @@ const classMap = {
 
 const styleMap = {
   'menu-item': { width: '20px', height: '20px' },
-  message: { width: '36px', height: '36px' },
   default: { width: '100%', height: '100%' },
 };
 
 const styleImageMap = {
-  'menu-item': { width: '20px', height: '20px', maxWidth: '20px', maxHeight: '20px' },
-  message: { width: '36px', height: '36px', maxWidth: '36px', maxHeight: '36px' },
   default: { width: '100%', height: '100%' },
 };
 

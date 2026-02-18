@@ -150,7 +150,7 @@ export async function initializeZeqInterceptor() {
       return;
     }
 
-    window.__zeqInterceptorActive = true;
+    Object.defineProperty(window, '__zeqInterceptorActive', { value: true, writable: false, configurable: false });
     console.log('✅ Zeq OS: Interceptor initialized and active');
   } catch (error) {
     console.error('❌ Zeq OS: Error initializing interceptor:', error);

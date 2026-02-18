@@ -1,0 +1,1051 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeq Physics Engine Demo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0a0a2a 0%, #1a1a3a 100%);
+            color: #e0e0ff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(10, 10, 40, 0.8);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            border: 2px solid #4a4aff;
+            box-shadow: 0 0 30px rgba(74, 74, 255, 0.3);
+        }
+
+        .title {
+            font-size: 3.5rem;
+            background: linear-gradient(90deg, #4a4aff, #00ffff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(74, 74, 255, 0.5);
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0a0ff;
+            margin-bottom: 20px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 8px 16px;
+            background: rgba(0, 255, 255, 0.1);
+            border-radius: 10px;
+            border: 1px solid #00ffff;
+            font-size: 1rem;
+            margin: 5px;
+        }
+
+        /* Main Layout */
+        .main-content {
+            display: grid;
+            grid-template-columns: 300px 1fr 300px;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 250px 1fr;
+            }
+
+            .right-panel {
+                grid-column: 1 / -1;
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .title {
+                font-size: 2.5rem;
+            }
+        }
+
+        /* Panels */
+        .panel {
+            background: rgba(20, 20, 50, 0.8);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid #4a4aff;
+        }
+
+        .panel-title {
+            font-size: 1.2rem;
+            color: #00ffff;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #4a4aff;
+        }
+
+        /* Canvas */
+        .canvas-container {
+            position: relative;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid #4a4aff;
+        }
+
+        #physicsCanvas {
+            width: 100%;
+            height: 600px;
+            display: block;
+            cursor: move;
+        }
+
+        .canvas-overlay {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            color: white;
+            font-size: 0.9rem;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        /* Controls */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .control-group {
+            background: rgba(20, 20, 50, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #4a4aff;
+        }
+
+        .control-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #a0a0ff;
+            font-size: 0.9rem;
+        }
+
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            background: linear-gradient(90deg, #4a4aff, #00ffff);
+            border-radius: 3px;
+            outline: none;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #00ffff;
+        }
+
+        .value-display {
+            min-width: 60px;
+            text-align: right;
+            font-family: monospace;
+            color: #00ffff;
+        }
+
+        button {
+            background: linear-gradient(135deg, #4a4aff, #00ffff);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(74, 74, 255, 0.4);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        button.secondary {
+            background: linear-gradient(135deg, #ff4444, #ff8800);
+        }
+
+        select {
+            width: 100%;
+            padding: 10px;
+            background: rgba(20, 20, 50, 0.8);
+            border: 1px solid #4a4aff;
+            border-radius: 5px;
+            color: #e0e0ff;
+            font-family: inherit;
+        }
+
+        /* Metrics Display */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .metric-card {
+            background: rgba(30, 30, 60, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #4a4aff;
+        }
+
+        .metric-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #00ffff;
+            margin: 5px 0;
+        }
+
+        .metric-label {
+            font-size: 0.8rem;
+            color: #a0a0ff;
+        }
+
+        /* Operator Display */
+        .operator-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 15px;
+        }
+
+        .operator-item {
+            background: rgba(30, 30, 60, 0.8);
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            border: 1px solid #4a4aff;
+            font-size: 0.9rem;
+        }
+
+        .operator-code {
+            color: #00ffff;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .operator-domain {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-top: 5px;
+        }
+
+        .domain-quantum {
+            background: rgba(0, 255, 255, 0.2);
+            color: #00ffff;
+        }
+
+        .domain-classical {
+            background: rgba(74, 74, 255, 0.2);
+            color: #4a4aff;
+        }
+
+        .domain-relativistic {
+            background: rgba(255, 68, 68, 0.2);
+            color: #ff4444;
+        }
+
+        .domain-field {
+            background: rgba(255, 255, 0, 0.2);
+            color: #ffff00;
+        }
+
+        .domain-information {
+            background: rgba(0, 255, 0, 0.2);
+            color: #00ff00;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+            background: rgba(10, 10, 40, 0.8);
+            border-radius: 15px;
+            border-top: 2px solid #4a4aff;
+        }
+
+        .footer-text {
+            color: #a0a0ff;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+
+        .code-example {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            text-align: left;
+            overflow-x: auto;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .pulsing {
+            animation: pulse 1.287s infinite;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: rgba(20, 20, 50, 0.8);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #4a4aff, #00ffff);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container"> <!-- Header -->
+        <header class="header">
+            <h1 class="title">Zeq Physics Engine</h1>
+            <div class="subtitle">Unified Quantum/Classical/Relativistic Physics Simulation</div>
+            <div class="badge pulsing">v1.287.0</div>
+            <div class="badge">Frequency: 1.287 Hz</div>
+            <div class="badge">Precision: 0.1%</div>
+            <div class="badge">Operators: 646</div>
+        </header>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Left Panel - Controls -->
+            <div class="panel left-panel">
+                <h2 class="panel-title">Physics Controls</h2>
+
+                <div class="control-group">
+                    <label class="control-label">Field Strength (φ)</label>
+                    <div class="slider-container">
+                        <input type="range" id="fieldStrength" min="0" max="100" value="50" step="0.1">
+                        <span class="value-display" id="fieldStrengthValue">50.0</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Consciousness Coupling</label>
+                    <div class="slider-container">
+                        <input type="range" id="consciousnessCoupling" min="0" max="2" value="1" step="0.01">
+                        <span class="value-display" id="consciousnessValue">1.00</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Time Scale</label>
+                    <div class="slider-container">
+                        <input type="range" id="timeScale" min="0.1" max="10" value="1" step="0.1">
+                        <span class="value-display" id="timeScaleValue">1.0x</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Gravity</label>
+                    <div class="slider-container">
+                        <input type="range" id="gravity" min="0" max="20" value="9.81" step="0.1">
+                        <span class="value-display" id="gravityValue">9.81</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label">Physics Domain</label>
+                    <select id="physicsDomain">
+                        <option value="unified">Unified (All Domains)</option>
+                        <option value="quantum">Quantum Only</option>
+                        <option value="classical">Classical Only</option>
+                        <option value="relativistic">Relativistic Only</option>
+                    </select>
+                </div>
+
+                <h2 class="panel-title" style="margin-top: 20px;">Body Creation</h2>
+
+                <button id="addQuantumBtn">Add Quantum Particle</button>
+                <button id="addClassicalBtn">Add Classical Body</button>
+                <button id="addConstraintBtn">Add Constraint</button>
+                <button id="clearConstraintsBtn" class="secondary">Clear Constraints</button>
+
+                <h2 class="panel-title" style="margin-top: 20px;">Simulation Control</h2>
+
+                <button id="togglePauseBtn">Pause Simulation</button>
+                <button id="resetBtn" class="secondary">Reset Simulation</button>
+                <button id="demoBtn">Load Demo Scene</button>
+            </div>
+
+            <!-- Center - Canvas -->
+            <div class="canvas-container">
+                <canvas id="physicsCanvas"></canvas>
+                <div class="canvas-overlay">
+                    <div>Time: <span id="timeDisplay">0.000</span>s</div>
+                    <div>FPS: <span id="fpsDisplay">0</span></div>
+                    <div>Bodies: <span id="bodyCount">0</span></div>
+                    <div>Drag to pan | Scroll to zoom</div>
+                </div>
+            </div>
+
+            <!-- Right Panel - Metrics & Operators -->
+            <div class="panel right-panel">
+                <h2 class="panel-title">System Metrics</h2>
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Master Sum</div>
+                        <div class="metric-value" id="masterSum">0.000</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Phase Coherence</div>
+                        <div class="metric-value" id="phaseCoherence">100.00%</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Field φ</div>
+                        <div class="metric-value" id="fieldPhi">0.500</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Consciousness</div>
+                        <div class="metric-value" id="consciousnessField">1.000</div>
+                    </div>
+                </div>
+
+                <h2 class="panel-title" style="margin-top: 20px;">Active Operators</h2>
+                <div class="operator-list" id="operatorList">
+                    <!-- Operators will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls Grid -->
+        <div class="controls-grid">
+            <div class="control-group">
+                <label class="control-label">Render Settings</label>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="showQuantumClouds" checked> Show Probability Clouds
+                    </label>
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="showTrails" checked> Show Trails
+                    </label>
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="showField" checked> Show Field
+                    </label>
+                    <label style="display: flex; align-items: center;">
+                        <input type="checkbox" id="showConstraints" checked> Show Constraints
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Camera Controls</label>
+                <button id="resetCameraBtn">Reset Camera</button>
+                <button id="zoomInBtn">Zoom In (+)</button>
+                <button id="zoomOutBtn">Zoom Out (-)</button>
+                <div style="margin-top: 10px;">
+                    <label class="control-label">Follow Body:</label>
+                    <select id="followBodySelect">
+                        <option value="none">None</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">Export & Import</label>
+                <button id="exportBtn">Export Scene</button>
+                <button id="importBtn">Import Scene</button>
+                <button id="saveImageBtn">Save as Image</button>
+                <div style="margin-top: 10px;">
+                    <label class="control-label">Performance:</label>
+                    <div id="performanceInfo">Update: 0ms | Render: 0ms</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer with Code Examples -->
+        <footer class="footer">
+            <div class="footer-text">
+                Zeq Physics Engine v1.287.0 | MIT License | Free for everyone to use
+            </div>
+            <div class="footer-text">
+                Unified physics engine implementing quantum, classical, and relativistic domains with consciousness
+                field integration
+            </div>
+
+            <div class="code-example">
+                <strong>Quick Start Example:</strong><br>
+                <pre>
+// Include the library
+<script src="zeq-physics.js"></script>
+
+// Create engine
+const engine = new ZeqPhysics.Engine();
+
+// Create quantum particle
+const particle = engine.createQuantumParticle({
+position: new ZeqPhysics.Vector(100, 100),
+velocity: new ZeqPhysics.Vector(2, 0),
+mass: 1,
+radius: 10
+});
+
+// Create classical body
+const body = engine.createClassicalBody({
+position: new ZeqPhysics.Vector(200, 200),
+mass: 20,
+radius: 15
+});
+
+// Add to engine
+engine.addBody(particle);
+engine.addBody(body);
+
+// Update loop
+function animate() {
+engine.update();
+requestAnimationFrame(animate);
+}
+animate();
+</pre>
+            </div>
+
+            <div class="footer-text" style="margin-top: 20px;">
+                <strong>Keyboard Shortcuts:</strong> Space=Pause | Q=Add Quantum | C=Add Classical | R=Reset | S=Save
+                Scene
+            </div>
+        </footer>
+    </div>
+
+    <script src="zeq-physics.js"></script>
+    <script>
+        // Initialize the demo
+        document.addEventListener('DOMContentLoaded', () => {
+            const canvas = document.getElementById('physicsCanvas');
+            let zeqApp = null;
+            let isDragging = false;
+            let lastMouseX = 0;
+            let lastMouseY = 0;
+            let selectedBodyId = null;
+
+            // Initialize Zeq Physics
+            function initZeqPhysics() {
+                zeqApp = ZeqPhysics.init(canvas, {
+                    gravityEnabled: true,
+                    consciousnessFieldEnabled: true,
+                    fieldStrength: 0.5,
+                    bounds: {
+                        min: new ZeqPhysics.Vector(-1000, -1000),
+                        max: new ZeqPhysics.Vector(1000, 1000)
+                    }
+                });
+
+                // Create demo scene
+                loadDemoScene();
+
+                // Set up event listeners
+                setupEventListeners();
+
+                // Start update loop for UI
+                updateUI();
+            }
+
+            function loadDemoScene() {
+                ZeqPhysics.createDemoScene(zeqApp.engine, {
+                    particleCount: 8,
+                    bodyCount: 4,
+                    createConstraints: true
+                });
+            }
+
+            function setupEventListeners() {
+                const engine = zeqApp.engine;
+                const renderer = zeqApp.renderer;
+
+                // Field strength control
+                const fieldStrengthSlider = document.getElementById('fieldStrength');
+                const fieldStrengthValue = document.getElementById('fieldStrengthValue');
+
+                fieldStrengthSlider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value) / 100;
+                    fieldStrengthValue.textContent = e.target.value;
+                    engine.setFieldStrength(value);
+                });
+
+                // Consciousness coupling control
+                const consciousnessSlider = document.getElementById('consciousnessCoupling');
+                const consciousnessValue = document.getElementById('consciousnessValue');
+
+                consciousnessSlider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    consciousnessValue.textContent = value.toFixed(2);
+                    engine.setConsciousnessField(value);
+                });
+
+                // Time scale control
+                const timeScaleSlider = document.getElementById('timeScale');
+                const timeScaleValue = document.getElementById('timeScaleValue');
+
+                timeScaleSlider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    timeScaleValue.textContent = value.toFixed(1) + 'x';
+                    engine.setTimeScale(value);
+                });
+
+                // Gravity control
+                const gravitySlider = document.getElementById('gravity');
+                const gravityValue = document.getElementById('gravityValue');
+
+                gravitySlider.addEventListener('input', (e) => {
+                    const value = parseFloat(e.target.value);
+                    gravityValue.textContent = value.toFixed(2);
+                    engine.setGravity(new ZeqPhysics.Vector(0, value));
+                });
+
+                // Physics domain control
+                const physicsDomainSelect = document.getElementById('physicsDomain');
+                physicsDomainSelect.addEventListener('change', (e) => {
+                    const domain = e.target.value;
+
+                    // Enable/disable domains based on selection
+                    engine.activeDomains.clear();
+
+                    if (domain === 'unified') {
+                        engine.enableDomain(ZeqPhysics.Constants.DOMAINS.QUANTUM);
+                        engine.enableDomain(ZeqPhysics.Constants.DOMAINS.CLASSICAL);
+                        engine.enableDomain(ZeqPhysics.Constants.DOMAINS.RELATIVISTIC);
+                    } else if (domain === 'quantum') {
+                        engine.enableDomain(ZeqPhysics.Constants.DOMAINS.QUANTUM);
+                    } else if (domain === 'classical') {
+                        engine.enableDomain(ZeqPhysics.Constants.DOMAINS.CLASSICAL);
+                    } else if (domain === 'relativistic') {
+                        engine.enableDomain(ZeqPhysics.Constants.DOMAINS.RELATIVISTIC);
+                    }
+                });
+
+                // Body creation buttons
+                document.getElementById('addQuantumBtn').addEventListener('click', () => {
+                    const particle = engine.createQuantumParticle({
+                        position: renderer.screenToWorld(
+                            canvas.width / 2 + (Math.random() - 0.5) * 100,
+                            canvas.height / 2 + (Math.random() - 0.5) * 100
+                        ),
+                        velocity: ZeqPhysics.Vector.random2D(2),
+                        mass: 1 + Math.random() * 4,
+                        radius: 5 + Math.random() * 10,
+                        color: `hsl(${Math.random() * 360}, 100%, 70%)`
+                    });
+                    updateBodySelect();
+                });
+
+                document.getElementById('addClassicalBtn').addEventListener('click', () => {
+                    const body = engine.createClassicalBody({
+                        position: renderer.screenToWorld(
+                            canvas.width / 2 + (Math.random() - 0.5) * 150,
+                            canvas.height / 2 + (Math.random() - 0.5) * 150
+                        ),
+                        velocity: ZeqPhysics.Vector.random2D(1),
+                        mass: 10 + Math.random() * 40,
+                        radius: 15 + Math.random() * 20,
+                        color: `hsl(${60 + Math.random() * 60}, 80%, 60%)`
+                    });
+                    updateBodySelect();
+                });
+
+                document.getElementById('addConstraintBtn').addEventListener('click', () => {
+                    const bodies = engine.getAllBodies();
+                    if (bodies.length = 2) {
+                        const bodyA = bodies[Math.floor(Math.random() * bodies.length)];
+                        let bodyB;
+                        do {
+                            bodyB = bodies[Math.floor(Math.random() * bodies.length)];
+                        } while (bodyA.id === bodyB.id); engine.createConstraint(bodyA, bodyB, {
+                            stiffness: 0.05 + Math.random() * 0.1,
+                            color: `hsl(${Math.random() * 360}, 100%, 70%)`
+                        });
+                    }
+                });
+
+                document.getElementById('clearConstraintsBtn').addEventListener('click', () => {
+                    engine.constraints = [];
+                });
+
+                // Simulation control buttons
+                const togglePauseBtn = document.getElementById('togglePauseBtn');
+                togglePauseBtn.addEventListener('click', () => {
+                    const isRunning = engine.togglePause();
+                    togglePauseBtn.textContent = isRunning ? 'Pause Simulation' : 'Resume Simulation';
+                });
+
+                document.getElementById('resetBtn').addEventListener('click', () => {
+                    engine.clear();
+                    loadDemoScene();
+                    updateBodySelect();
+                });
+
+                document.getElementById('demoBtn').addEventListener('click', () => {
+                    engine.clear();
+                    loadDemoScene();
+                    updateBodySelect();
+                });
+
+                // Render settings
+                document.getElementById('showQuantumClouds').addEventListener('change', (e) => {
+                    renderer.settings.showQuantumClouds = e.target.checked;
+                });
+
+                document.getElementById('showTrails').addEventListener('change', (e) => {
+                    renderer.settings.showTrails = e.target.checked;
+                });
+
+                document.getElementById('showField').addEventListener('change', (e) => {
+                    renderer.settings.showField = e.target.checked;
+                });
+
+                document.getElementById('showConstraints').addEventListener('change', (e) => {
+                    renderer.settings.showConstraints = e.target.checked;
+                });
+
+                // Camera controls
+                document.getElementById('resetCameraBtn').addEventListener('click', () => {
+                    renderer.resetCamera();
+                });
+
+                document.getElementById('zoomInBtn').addEventListener('click', () => {
+                    renderer.zoom(1.2, canvas.width / 2, canvas.height / 2);
+                });
+
+                document.getElementById('zoomOutBtn').addEventListener('click', () => {
+                    renderer.zoom(0.8, canvas.width / 2, canvas.height / 2);
+                });
+
+                const followBodySelect = document.getElementById('followBodySelect');
+                followBodySelect.addEventListener('change', (e) => {
+                    if (e.target.value === 'none') {
+                        selectedBodyId = null;
+                    } else {
+                        selectedBodyId = parseInt(e.target.value);
+                    }
+                });
+
+                // Export/Import
+                document.getElementById('exportBtn').addEventListener('click', () => {
+                    const sceneData = engine.toJSON();
+                    const dataStr = JSON.stringify(sceneData, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,' + encodeURIComponent(dataStr);
+
+                    const exportFileDefaultName = `zeq-scene-${Date.now()}.json`;
+
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                });
+
+                document.getElementById('importBtn').addEventListener('click', () => {
+                    const input = document.createElement('input');
+                    input.type = 'file';
+                    input.accept = '.json';
+
+                    input.onchange = (e) => {
+                        const file = e.target.files[0];
+                        const reader = new FileReader();
+
+                        reader.onload = (event) => {
+                            try {
+                                const sceneData = JSON.parse(event.target.result);
+                                engine.fromJSON(sceneData);
+                                updateBodySelect();
+                                console.log('Scene imported successfully');
+                            } catch (error) {
+                                console.error('Error importing scene:', error);
+                                alert('Error importing scene. Please check the file format.');
+                            }
+                        };
+
+                        reader.readAsText(file);
+                    };
+
+                    input.click();
+                });
+
+                document.getElementById('saveImageBtn').addEventListener('click', () => {
+                    const link = document.createElement('a');
+                    link.download = `zeq-physics-${Date.now()}.png`;
+                    link.href = canvas.toDataURL('image/png');
+                    link.click();
+                });
+
+                // Canvas interaction
+                canvas.addEventListener('mousedown', (e) => {
+                    isDragging = true;
+                    lastMouseX = e.clientX;
+                    lastMouseY = e.clientY;
+
+                    // Check if clicked on a body
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+                    const worldPos = renderer.screenToWorld(x, y);
+
+                    // Find clicked body
+                    const bodies = engine.getAllBodies();
+                    let clickedBody = null;
+                    let minDistance = Infinity;
+
+                    bodies.forEach(body => {
+                        const distance = body.position.distanceTo(worldPos);
+                        if (distance < body.radius * 2) {
+                            if (distance < minDistance) {
+                                minDistance = distance;
+                                clickedBody = body;
+                            }
+                        }
+                    });
+
+                    if (clickedBody) {
+                        selectedBodyId = clickedBody.id;
+                        followBodySelect.value = clickedBody.id;
+                    }
+                });
+
+                canvas.addEventListener('mousemove', (e) => {
+                    if (isDragging) {
+                        const dx = e.clientX - lastMouseX;
+                        const dy = e.clientY - lastMouseY;
+
+                        renderer.pan(dx, dy);
+
+                        lastMouseX = e.clientX;
+                        lastMouseY = e.clientY;
+                    }
+                });
+
+                canvas.addEventListener('mouseup', () => {
+                    isDragging = false;
+                });
+
+                canvas.addEventListener('mouseleave', () => {
+                    isDragging = false;
+                });
+
+                canvas.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const rect = canvas.getBoundingClientRect();
+                    const x = e.clientX - rect.left;
+                    const y = e.clientY - rect.top;
+
+                    const zoomFactor = e.deltaY > 0 ? 0.9 : 1.1;
+                    renderer.zoom(zoomFactor, x, y);
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    switch (e.key) {
+                        case ' ':
+                            e.preventDefault();
+                            engine.togglePause();
+                            togglePauseBtn.textContent = engine.isRunning ? 'Pause Simulation' : 'Resume Simulation';
+                            break;
+                        case 'q':
+                        case 'Q':
+                            document.getElementById('addQuantumBtn').click();
+                            break;
+                        case 'c':
+                        case 'C':
+                            document.getElementById('addClassicalBtn').click();
+                            break;
+                        case 'r':
+                        case 'R':
+                            document.getElementById('resetBtn').click();
+                            break;
+                        case 's':
+                        case 'S':
+                            if (e.ctrlKey || e.metaKey) {
+                                e.preventDefault();
+                                document.getElementById('exportBtn').click();
+                            }
+                            break;
+                    }
+                });
+
+                // Window resize
+                window.addEventListener('resize', () => {
+                    renderer.resize();
+                });
+            }
+
+            function updateBodySelect() {
+                const select = document.getElementById('followBodySelect');
+                const bodies = zeqApp.engine.getAllBodies();
+
+                // Save current selection
+                const currentValue = select.value;
+
+                // Clear options except "None"
+                select.innerHTML = '<option value="none">None</option>';
+
+                // Add body options
+                bodies.forEach(body => {
+                    const option = document.createElement('option');
+                    option.value = body.id;
+                    option.textContent = `${body.type.charAt(0).toUpperCase()}${body.type.slice(1)} ${body.id} (${body.mass.toFixed(1)})`;
+                    select.appendChild(option);
+                });
+
+                // Restore selection if still valid
+                if (currentValue !== 'none') {
+                    const bodyExists = bodies.some(b => b.id === parseInt(currentValue));
+                    if (bodyExists) {
+                        select.value = currentValue;
+                        selectedBodyId = parseInt(currentValue);
+                    } else {
+                        select.value = 'none';
+                        selectedBodyId = null;
+                    }
+                }
+            }
+
+            function updateUI() {
+                if (!zeqApp) return;
+
+                const engine = zeqApp.engine;
+                const renderer = zeqApp.renderer;
+                const stats = engine.getStats();
+                const fieldState = engine.getFieldState();
+                const performance = engine.getPerformance();
+
+                // Update metrics
+                document.getElementById('timeDisplay').textContent = stats.time.toFixed(3);
+                document.getElementById('fpsDisplay').textContent = stats.fps;
+                document.getElementById('bodyCount').textContent = stats.bodies;
+                document.getElementById('masterSum').textContent = stats.masterSum;
+                document.getElementById('phaseCoherence').textContent = stats.phaseCoherence;
+                document.getElementById('fieldPhi').textContent = fieldState.phi.toFixed(3);
+                document.getElementById('consciousnessField').textContent = fieldState.consciousnessField.toFixed(3);
+                document.getElementById('performanceInfo').textContent =
+                    `Update: ${performance.updateTime.toFixed(1)}ms | Render: ${performance.renderTime.toFixed(1)}ms`;
+
+                // Update operator list
+                updateOperatorList();
+
+                // Follow selected body
+                if (selectedBodyId) {
+                    const body = engine.getBody(selectedBodyId);
+                    if (body) {
+                        renderer.followBody(body);
+                    }
+                }
+
+                // Schedule next update
+                requestAnimationFrame(updateUI);
+            }
+
+            function updateOperatorList() {
+                const operatorList = document.getElementById('operatorList');
+                const registry = zeqApp.engine.getOperatorRegistry();
+                const activeOperators = registry.getActiveOperators();
+
+                // Clear list
+                operatorList.innerHTML = '';
+
+                // Add active operators
+                activeOperators.slice(0, 10).forEach(op => { // Show first 10
+                    const item = document.createElement('div');
+                    item.className = 'operator-item';
+
+                    const domainClass = `domain-${op.domain}`;
+
+                    item.innerHTML = `
+                    <div class="operator-code">${op.code}</div>
+                    <div style="font-size: 0.8rem; color: #a0a0ff;">${op.equation}</div>
+                    <div class="operator-domain ${domainClass}">${op.domain}</div>
+                    <div style="font-size: 0.7rem; color: #00ffff; margin-top: 5px;">
+                        Value: ${op.lastValue.toFixed(6)}
+                    </div>
+                `;
+
+                    operatorList.appendChild(item);
+                });
+
+                // Show count if more operators
+                if (activeOperators.length > 10) {
+                    const moreItem = document.createElement('div');
+                    moreItem.className = 'operator-item';
+                    moreItem.style.textAlign = 'center';
+                    moreItem.textContent = `... and ${activeOperators.length - 10} more operators`;
+                    operatorList.appendChild(moreItem);
+                }
+            }
+
+            // Initialize the application
+            initZeqPhysics();
+        });
+    </script>
+</body>
+
+</html>

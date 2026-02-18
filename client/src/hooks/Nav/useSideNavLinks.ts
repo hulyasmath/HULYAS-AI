@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Blocks, MCPIcon, AttachmentIcon } from '@librechat/client';
-import { Database, Bookmark, Settings2, ArrowRightToLine, MessageSquareQuote } from 'lucide-react';
+import { Database, Bookmark, Settings2, ArrowRightToLine, MessageSquareQuote, Sparkles } from 'lucide-react';
 import {
   Permissions,
   EModelEndpoint,
@@ -19,6 +19,7 @@ import PromptsAccordion from '~/components/Prompts/PromptsAccordion';
 import Parameters from '~/components/SidePanel/Parameters/Panel';
 import FilesPanel from '~/components/SidePanel/Files/Panel';
 import MCPPanel from '~/components/SidePanel/MCP/MCPPanel';
+import AIStudioPanel from '~/components/ZeqOS/AIStudioPanel';
 import { useGetStartupConfig } from '~/data-provider';
 import { useHasAccess } from '~/hooks';
 
@@ -83,6 +84,14 @@ export default function useSideNavLinks({
         Component: PanelSwitch,
       });
     }
+
+    links.push({
+      title: 'com_ui_ai_studio' as any,
+      label: '',
+      icon: Sparkles,
+      id: 'ai-studio',
+      Component: AIStudioPanel,
+    });
 
     if (
       endpointsConfig?.[EModelEndpoint.agents] &&

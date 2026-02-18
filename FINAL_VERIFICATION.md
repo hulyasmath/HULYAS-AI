@@ -106,7 +106,7 @@ console.log(result);
 
 const utpResult = window.utpFramework.calculate_operators(true, "test");
 console.log(Object.keys(utpResult.operators).length);
-// Should show: 620+ (number of operators)
+// Should show: 1549 (number of operators)
 ```
 
 ### Test 4: Send a Real Message
@@ -118,7 +118,7 @@ console.log(Object.keys(utpResult.operators).length);
    ✅ Zeq OS [useSubmitMessage]: Message processed
       originalLength: 12
       processedLength: [large number]
-      operatorCount: 620+
+      operatorCount: 1549
       textChanged: true
    ```
 4. **Check Network tab:**

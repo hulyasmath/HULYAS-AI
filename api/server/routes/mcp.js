@@ -6,7 +6,7 @@ const {
   MCPOAuthHandler,
   MCPTokenStorage,
   getUserMCPAuthMap,
-  mcpServersRegistry,
+  MCPServersRegistry,
 } = require('@librechat/api');
 const { getMCPManager, getFlowStateManager, getOAuthReconnectionManager } = require('~/config');
 const { getMCPSetupData, getServerConnectionStatus } = require('~/server/services/MCP');
@@ -364,7 +364,7 @@ router.post('/:serverName/reinitialize', requireJwtAuth, async (req, res) => {
     logger.info(`[MCP Reinitialize] Reinitializing server: ${serverName}`);
 
     const mcpManager = getMCPManager();
-    const serverConfig = await mcpServersRegistry.getServerConfig(serverName, user.id);
+    const serverConfig = await MCPServersRegistry.getInstance().getServerConfig(serverName, user.id);
     if (!serverConfig) {
       return res.status(404).json({
         error: `MCP server '${serverName}' not found in configuration`,
@@ -513,7 +513,7 @@ router.get('/:serverName/auth-values', requireJwtAuth, async (req, res) => {
       return res.status(401).json({ error: 'User not authenticated' });
     }
 
-    const serverConfig = await mcpServersRegistry.getServerConfig(serverName, user.id);
+    const serverConfig = await MCPServersRegistry.getInstance().getServerConfig(serverName, user.id);
     if (!serverConfig) {
       return res.status(404).json({
         error: `MCP server '${serverName}' not found in configuration`,
@@ -553,7 +553,7 @@ router.get('/:serverName/auth-values', requireJwtAuth, async (req, res) => {
 });
 
 async function getOAuthHeaders(serverName, userId) {
-  const serverConfig = await mcpServersRegistry.getServerConfig(serverName, userId);
+  const serverConfig = await MCPServersRegistry.getInstance().getServerConfig(serverName, userId);
   return serverConfig?.oauth_headers ?? {};
 }
 

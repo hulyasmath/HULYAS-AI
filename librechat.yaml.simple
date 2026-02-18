@@ -1,0 +1,40 @@
+# Minimal LibreChat configuration
+version: 1.2.1
+
+cache: true
+
+interface:
+  customWelcome: 'Welcome to Zeq OS 1.287 Hz!'
+  endpointsMenu: true
+  modelSelect: true
+  parameters: true
+  sidePanel: true
+  presets: true
+
+registration:
+  socialLogins: []
+
+endpoints:
+  custom:
+    - name: 'groq'
+      apiKey: '${GROQ_API_KEY}'
+      baseURL: 'https://api.groq.com/openai/v1/'
+      models:
+        default:
+          - 'llama-3.1-8b-instant'
+          - 'llama-3.1-70b-instruct'
+        fetch: true
+      titleConvo: true
+      titleModel: 'llama-3.1-8b-instant'
+      modelDisplayLabel: 'Groq'
+    
+    - name: 'DeepSeek'
+      apiKey: '${DEEPSEEK_API_KEY}'
+      baseURL: 'https://api.deepseek.com/v1'
+      models:
+        default:
+          - 'deepseek-chat'
+        fetch: false
+      titleConvo: true
+      titleModel: 'deepseek-chat'
+      modelDisplayLabel: 'DeepSeek'

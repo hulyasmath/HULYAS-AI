@@ -101,11 +101,13 @@ export default function useTextarea({
           ? getEntityName({ name: entityName, isAgent, localize })
           : getSender(conversation as TEndpointOption);
 
-      // Override sender name for HULYAS (DeepSeek)
+      // Override sender name for HULYAS
       const endpoint = conversation?.endpoint;
       const model = conversation?.model;
-      const displaySender = (endpoint === 'DeepSeek' && model === 'deepseek-chat') 
-        ? 'HULYAS' 
+      const displaySender = (endpoint === 'DeepSeek' && model === 'deepseek-chat')
+        ? 'HULYAS'
+        : (endpoint === 'agents')
+        ? 'HULYAS'
         : sender;
 
       return `${localize('com_endpoint_message_new', {

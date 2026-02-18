@@ -19,7 +19,6 @@ import { useGetEndpointsQuery } from '~/data-provider';
 import { mapEndpoints, getIconKey } from '~/utils';
 import { useHasAccess } from '~/hooks';
 import { icons } from './Icons';
-import { URLIcon } from '~/components/Endpoints/URLIcon';
 
 export const useEndpoints = ({
   agents,
@@ -94,35 +93,18 @@ export const useEndpoints = ({
           (modelsQuery.data?.[ep]?.length ?? 0) > 0);
 
       // Base result object with formatted default icon
-      // Use modelDisplayLabel from endpoint config if available, otherwise use alternateName or endpoint name
-      const modelDisplayLabel = getEndpointField(endpointsConfig, ep, 'modelDisplayLabel');
-      
-      // If endpoint has iconURL, use URLIcon directly for proper sizing
-      let endpointIcon: React.ReactNode = null;
-      if (endpointIconURL && (endpointIconURL.includes('http') || endpointIconURL.startsWith('/'))) {
-        endpointIcon = React.createElement(URLIcon, {
-          iconURL: endpointIconURL,
-          altName: modelDisplayLabel || ep,
-          containerStyle: { width: 20, height: 20 },
-          imageStyle: { width: '20px', height: '20px', maxWidth: '20px', maxHeight: '20px' },
-          className: 'shrink-0 overflow-hidden rounded-full',
-          endpoint: ep,
-        });
-      } else if (Icon) {
-        endpointIcon = React.createElement(Icon, {
-          size: 20,
-          className: 'text-text-primary shrink-0 icon-md',
-          iconURL: endpointIconURL,
-          endpoint: ep,
-          context: 'menu-item',
-        });
-      }
-      
       const result: Endpoint = {
         value: ep,
-        label: modelDisplayLabel || alternateName[ep] || ep,
+        label: alternateName[ep] || ep,
         hasModels,
-        icon: endpointIcon,
+        icon: Icon
+          ? React.createElement(Icon, {
+              size: 20,
+              className: 'text-text-primary shrink-0 icon-md',
+              iconURL: endpointIconURL,
+              endpoint: ep,
+            })
+          : null,
       };
 
       // Handle agents case

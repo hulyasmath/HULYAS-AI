@@ -1,0 +1,11 @@
+FROM node:20-slim
+
+WORKDIR /app
+
+COPY api-server.cjs .
+
+RUN npm init -y && npm install express cors sqlite3 bcrypt jsonwebtoken
+
+EXPOSE 8080
+
+CMD ["node", "api-server.cjs"]

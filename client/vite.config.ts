@@ -76,8 +76,8 @@ export default defineConfig(({ command }) => ({
       },
       includeAssets: [],
       manifest: {
-        name: 'LibreChat',
-        short_name: 'LibreChat',
+        name: 'Zeq OS 1.287 Hz',
+        short_name: 'Zeq OS',
         display: 'standalone',
         background_color: '#000000',
         theme_color: '#009688',
@@ -275,6 +275,7 @@ export default defineConfig(({ command }) => ({
       '~': path.join(__dirname, 'src/'),
       $fonts: path.resolve(__dirname, 'public/fonts'),
       'micromark-extension-math': 'micromark-extension-llm-math',
+      '@codesandbox/sandpack-react/unstyled': path.resolve(__dirname, '../node_modules/@codesandbox/sandpack-react/dist/unstyled/index.mjs'),
     },
   },
 }));

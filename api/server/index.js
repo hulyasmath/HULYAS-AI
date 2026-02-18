@@ -28,6 +28,11 @@ const { getAppConfig } = require('./services/Config');
 const staticCache = require('./utils/staticCache');
 const noIndex = require('./middleware/noIndex');
 const { seedDatabase } = require('~/models');
+// Zeq Patterns system
+const { seedDefaultPatterns } = require('~/models/ZeqPattern');
+const { seedDefaultCategories } = require('~/models/ZeqPatternCategory');
+const { seedDefaultMessages } = require('~/models/ZeqCoherenceMessage');
+const { initDailyScheduler } = require('./services/ZeqPatternGenerator');
 const routes = require('./routes');
 
 const { PORT, HOST, ALLOW_SOCIAL_LOGIN, DISABLE_COMPRESSION, TRUST_PROXY } = process.env ?? {};
@@ -81,7 +86,23 @@ const startServer = async () => {
   app.use(noIndex);
   app.use(express.json({ limit: '3mb' }));
   app.use(express.urlencoded({ extended: true, limit: '3mb' }));
-  app.use(mongoSanitize());
+  // Manual MongoDB operator sanitization (express-mongo-sanitize incompatible with Express 5)
+  app.use((req, _res, next) => {
+    const sanitize = (obj) => {
+      if (obj && typeof obj === 'object') {
+        for (const key of Object.keys(obj)) {
+          if (key.startsWith('$')) {
+            delete obj[key];
+          } else if (typeof obj[key] === 'object') {
+            sanitize(obj[key]);
+          }
+        }
+      }
+    };
+    if (req.body) { sanitize(req.body); }
+    if (req.params) { sanitize(req.params); }
+    next();
+  });
   app.use(cors());
   app.use(cookieParser());
 
@@ -95,47 +116,35 @@ const startServer = async () => {
   // This must be before any static middleware to ensure it matches
   app.get('/zeq-mathematical-framework.js', (req, res, next) => {
     const filePath = path.join(appConfig.paths.publicPath, 'zeq-mathematical-framework.js');
-    logger.info(`[Framework Route] Checking file: ${filePath}, exists: ${fs.existsSync(filePath)}`);
     if (fs.existsSync(filePath)) {
       res.type('application/javascript');
-      res.sendFile(filePath, (err) => {
-        if (err) {
-          logger.error(`[Framework Route] Error sending file: ${err.message}`);
+      return res.sendFile(filePath, (err) => {
+        if (err && !res.headersSent) {
           next();
         }
       });
-    } else {
-      logger.warn(`[Framework Route] File not found: ${filePath}`);
-      next();
     }
+    next();
   });
   app.get('/pdf-manager.js', (req, res, next) => {
     const filePath = path.join(appConfig.paths.publicPath, 'pdf-manager.js');
     if (fs.existsSync(filePath)) {
       res.type('application/javascript');
-      res.sendFile(filePath, (err) => {
-        if (err) {
-          logger.error(`[PDF Manager Route] Error sending file: ${err.message}`);
-          next();
-        }
+      return res.sendFile(filePath, (err) => {
+        if (err && !res.headersSent) next();
       });
-    } else {
-      next();
     }
+    next();
   });
   app.get('/transparency-manager.js', (req, res, next) => {
     const filePath = path.join(appConfig.paths.publicPath, 'transparency-manager.js');
     if (fs.existsSync(filePath)) {
       res.type('application/javascript');
-      res.sendFile(filePath, (err) => {
-        if (err) {
-          logger.error(`[Transparency Manager Route] Error sending file: ${err.message}`);
-          next();
-        }
+      return res.sendFile(filePath, (err) => {
+        if (err && !res.headersSent) next();
       });
-    } else {
-      next();
     }
+    next();
   });
 
   app.use(staticCache(appConfig.paths.dist));
@@ -164,21 +173,20 @@ const startServer = async () => {
   app.use('/oauth', routes.oauth);
   /* API Endpoints */
   app.use('/api/auth', routes.auth);
+  if (routes.adminAuth) { app.use('/api/admin', routes.adminAuth); }
   app.use('/api/actions', routes.actions);
   app.use('/api/keys', routes.keys);
+  if (routes.apiKeys) { app.use('/api/api-keys', routes.apiKeys); }
   app.use('/api/user', routes.user);
   app.use('/api/search', routes.search);
-  app.use('/api/edit', routes.edit);
   app.use('/api/messages', routes.messages);
   app.use('/api/convos', routes.convos);
   app.use('/api/presets', routes.presets);
   app.use('/api/prompts', routes.prompts);
   app.use('/api/categories', routes.categories);
-  app.use('/api/tokenizer', routes.tokenizer);
   app.use('/api/endpoints', routes.endpoints);
   app.use('/api/balance', routes.balance);
   app.use('/api/models', routes.models);
-  app.use('/api/plugins', routes.plugins);
   app.use('/api/config', routes.config);
   app.use('/api/assistants', routes.assistants);
   app.use('/api/files', await routes.files.initialize());
@@ -188,13 +196,15 @@ const startServer = async () => {
   app.use('/api/agents', routes.agents);
   app.use('/api/banner', routes.banner);
   app.use('/api/memories', routes.memories);
-  // app.use('/api/permissions', routes.accessPermissions); // Temporarily disabled - missing controller
-
+  app.use('/api/permissions', routes.accessPermissions);
   app.use('/api/tags', routes.tags);
   app.use('/api/mcp', routes.mcp);
+  // Zeq OS custom routes
   app.use('/api/transparency', routes.transparency);
-  app.use('/api/admin', routes.admin);
   app.use('/api/zeq/operators', routes.zeqOperators);
+  app.use('/api/zeq', routes.zeqProcess);
+  app.use('/api/zeq', routes.zeqLogs);
+  app.use('/api/zeq-patterns', routes.zeqPatterns);
   
   // MCP API Key validation endpoint (no JWT required, validates key itself)
   const { mcpApiKeyController } = require('~/server/controllers/MCPApiKeyController');
@@ -226,7 +236,8 @@ const startServer = async () => {
     });
 
     const lang = req.cookies.lang || req.headers['accept-language']?.split(',')[0] || 'en-US';
-    const saneLang = lang.replace(/"/g, '&quot;');
+    const langRegex = /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})?$/;
+    const saneLang = langRegex.test(lang) ? lang : 'en-US';
     let updatedIndexHtml = indexHTML.replace(/lang="en-US"/g, `lang="${saneLang}"`);
 
     res.type('html');
@@ -245,6 +256,12 @@ const startServer = async () => {
     await initializeMCPs();
     await initializeOAuthReconnectManager();
     await checkMigrations();
+
+    // Zeq Patterns: seed data and start daily scheduler
+    try { await seedDefaultCategories(); } catch(e) { logger.warn('[ZEQ] seedDefaultCategories failed:', e.message); }
+    try { await seedDefaultMessages(); } catch(e) { logger.warn('[ZEQ] seedDefaultMessages failed:', e.message); }
+    try { await seedDefaultPatterns(); } catch(e) { logger.warn('[ZEQ] seedDefaultPatterns failed:', e.message); }
+    try { initDailyScheduler(); } catch(e) { logger.warn('[ZEQ] initDailyScheduler failed:', e.message); }
   });
 };
 

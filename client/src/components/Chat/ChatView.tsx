@@ -8,6 +8,7 @@ import type { TMessage } from 'librechat-data-provider';
 import type { ChatFormValues } from '~/common';
 import { ChatContext, AddedChatContext, useFileMapContext, ChatFormProvider } from '~/Providers';
 import { useChatHelpers, useAddedResponse, useSSE } from '~/hooks';
+import PatternCards from '~/components/ZeqOS/PatternCards';
 import ConversationStarters from './Input/ConversationStarters';
 import { useGetMessagesByConvoId } from '~/data-provider';
 import MessagesView from './Messages/MessagesView';
@@ -98,7 +99,14 @@ function ChatView({ index = 0 }: { index?: number }) {
                     )}
                   >
                     <ChatForm index={index} />
-                    {isLandingPage ? <ConversationStarters /> : <Footer />}
+                    {isLandingPage ? (
+                      <>
+                        <ConversationStarters />
+                        <PatternCards />
+                      </>
+                    ) : (
+                      <Footer />
+                    )}
                   </div>
                 </div>
                 {isLandingPage && <Footer />}

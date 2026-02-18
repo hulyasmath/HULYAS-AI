@@ -56,8 +56,7 @@ const getApiKeys = async (req, res) => {
             llmName: endpoint.modelDisplayLabel || endpoint.name,
             baseURL: endpoint.baseURL,
             envVar,
-            apiKey: actualKey || null, // Full key for editing
-            maskedKey, // Masked for display
+            maskedKey,
             configured,
             models: endpoint.models?.default || [],
           });

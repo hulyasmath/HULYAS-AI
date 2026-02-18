@@ -1,0 +1,37 @@
+{
+  "name": "@zeq/sdk",
+  "version": "1.287.0",
+  "description": "Zeq OS Mathematical Intelligence SDK - 1549 operators across 34 domains at 1.287 Hz (777ms Zeqond)",
+  "main": "src/index.js",
+  "bin": {
+    "zeq-mcp-server": "./mcp/server.js"
+  },
+  "exports": {
+    ".": {
+      "require": "./src/index.js",
+      "import": "./src/index.js"
+    }
+  },
+  "files": [
+    "src",
+    "mcp"
+  ],
+  "scripts": {
+    "test": "node -e \"const {ZeqProcessor}=require('./src'); console.log(new ZeqProcessor().getStatus());\"",
+    "mcp": "node mcp/server.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "pdf-parse": "^1.1.1"
+  },
+  "keywords": [
+    "zeq",
+    "zeq-os",
+    "mathematical-intelligence",
+    "ai",
+    "operators",
+    "hulyas"
+  ],
+  "author": "HULYAS",
+  "license": "MIT"
+}

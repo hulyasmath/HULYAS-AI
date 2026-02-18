@@ -91,15 +91,15 @@ function ModelSelectorContent() {
           renderSearchResults(searchResults, localize, searchValue)
         ) : (
           <>
-            {/* Render ungrouped modelSpecs (no group field) */}
+            {/* Render only "Zeq MI" modelSpec (hide Zeq MI Agent, Zeq MI Pro) */}
             {renderModelSpecs(
-              modelSpecs?.filter((spec) => !spec.group) || [],
+              modelSpecs?.filter((spec) => !spec.group && spec.name === 'deepseek') || [],
               selectedValues.modelSpec || '',
             )}
-            {/* Render endpoints (will include grouped specs matching endpoint names) */}
-            {renderEndpoints(mappedEndpoints ?? [])}
-            {/* Render custom groups (specs with group field not matching any endpoint) */}
-            {renderCustomGroups(modelSpecs || [], mappedEndpoints ?? [])}
+            {/* Render only "My Agents" endpoint (hide DeepSeek, Fireworks raw endpoints) */}
+            {renderEndpoints(
+              (mappedEndpoints ?? []).filter((ep) => ep.value === 'agents'),
+            )}
           </>
         )}
       </Menu>

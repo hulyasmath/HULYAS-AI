@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ZEQ Sync + p5.js Example</title>
+  <style>
+    body { 
+      margin: 0; 
+      display: flex; 
+      justify-content: center; 
+      align-items: center; 
+      min-height: 100vh;
+      background: #1a1a2e;
+    }
+    #info {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      color: white;
+      font-family: monospace;
+      background: rgba(0,0,0,0.7);
+      padding: 10px;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <div id="info">
+    <div>ZEQ Sync + p5.js Demo</div>
+    <div>Consciousness Field Visualization</div>
+    <div>Zeqond: <span id="zeqond">0</span></div>
+    <div>Sync: <span id="syncValue">0</span></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+  <script src="zeq-sync-plugin.js"></script>
+  <script>
+    let sync;
+    let particles = [];
+    const NUM_PARTICLES = 200;
+
+    function setup() {
+      createCanvas(800, 600);
+      colorMode(HSB, 360, 100, 100, 100);
+      noStroke();
+      
+      // Initialize particles
+      for (let i = 0; i < NUM_PARTICLES; i++) {
+        particles.push({
+          x: random(width),
+          y: random(height),
+          vx: random(-1, 1),
+          vy: random(-1, 1),
+          size: random(3, 8),
+          hue: random(240, 300)
+        });
+      }
+      
+      // Create ZEQ Sync
+      sync = ZeqSync.create({ autoStart: true });
+      
+      // Attach p5.js
+      sync.attachP5JS(window, {
+        autoRedraw: false, // We'll handle draw ourselves
+        onUpdate: (pulseData) => {
+          // Update info
+          document.getElementById('zeqond').textContent = pulseData.zeqond.toFixed(2);
+          document.getElementById('syncValue').textContent = pulseData.syncValue.toFixed(4);
+        }
+      });
+    }
+
+    function draw() {
+      // Get current sync data
+      const zeqData = window.zeqSync || { value: 0, zeqond: 0, delta: 0.016 };
+      const syncValue = sync ? sync.getSyncValue() : 0;
+      const zeqond = sync ? sync.getZeqond() : 0;
+      
+      // Fade background for trail effect
+      background(240, 50, 10, 10);
+      
+      // Draw consciousness field grid
+      drawFieldGrid(syncValue, zeqond);
+      
+      // Update and draw particles
+      for (let p of particles) {
+        // KO42 modulated movement
+        const fieldInfluence = syncValue * 2;
+        p.vx += (noise(p.x * 0.01, zeqond * 0.001) - 0.5) * fieldInfluence;
+        p.vy += (noise(p.y * 0.01, zeqond * 0.001) - 0.5) * fieldInfluence;
+        
+        // Damping
+        p.vx *= 0.99;
+        p.vy *= 0.99;
+        
+        // Update position
+        p.x += p.vx;
+        p.y += p.vy;
+        
+        // Wrap around edges
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+        
+        // Draw particle with sync-modulated size and brightness
+        const size = p.size * (1 + syncValue);
+        const brightness = 70 + syncValue * 30;
+        fill(p.hue, 80, brightness, 80);
+        ellipse(p.x, p.y, size, size);
+      }
+      
+      // Draw central consciousness indicator
+      drawConsciousnessCore(syncValue, zeqond);
+    }
+
+    function drawFieldGrid(syncValue, zeqond) {
+      const gridSize = 40;
+      stroke(270, 50, 30, 20);
+      strokeWeight(1);
+      
+      for (let x = 0; x < width; x += gridSize) {
+        for (let y = 0; y < height; y += gridSize) {
+          // Field strength based on distance from center
+          const dx = x - width/2;
+          const dy = y - height/2;
+          const dist = sqrt(dx*dx + dy*dy);
+          const fieldStrength = map(dist, 0, 400, 1, 0) * (1 + syncValue);
+          
+          // Draw field line
+          push();
+          translate(x, y);
+          rotate(atan2(dy, dx) + zeqond * 0.001);
+          line(0, 0, fieldStrength * 15, 0);
+          pop();
+        }
+      }
+      noStroke();
+    }
+
+    function drawConsciousnessCore(syncValue, zeqond) {
+      push();
+      translate(width/2, height/2);
+      
+      // Pulsing core
+      const coreSize = 50 + syncValue * 30;
+      
+      // Outer glow
+      for (let i = 5; i > 0; i--) {
+        const alpha = map(i, 5, 0, 10, 50);
+        fill(280, 80, 90, alpha);
+        ellipse(0, 0, coreSize + i * 20, coreSize + i * 20);
+      }
+      
+      // Inner core
+      fill(280, 60, 100);
+      ellipse(0, 0, coreSize, coreSize);
+      
+      // Center point
+      fill(0, 0, 100);
+      ellipse(0, 0, 10, 10);
+      
+      pop();
+    }
+  </script>
+</body>
+</html>

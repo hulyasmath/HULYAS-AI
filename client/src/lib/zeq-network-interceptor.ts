@@ -145,10 +145,14 @@ function activateInterceptor() {
     const SSE = (window as any).SSE;
     if (SSE) {
       const OriginalSSE = SSE;
+      // Only intercept SSE requests to the same origin (LibreChat API)
+      const trustedOrigin = window.location.origin;
       (window as any).SSE = class extends OriginalSSE {
         constructor(url: string, options: any) {
-          // Process payload if it's a string (JSON)
-          if (options?.payload && typeof options.payload === 'string') {
+          // Only intercept requests to our own API, not third-party SSE connections
+          const isLocalApi = url.startsWith('/') || url.startsWith(trustedOrigin);
+          // Process payload if it's a string (JSON) and targeting our API
+          if (isLocalApi && options?.payload && typeof options.payload === 'string') {
             try {
               const payload = JSON.parse(options.payload);
               

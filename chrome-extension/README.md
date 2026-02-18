@@ -1,11 +1,11 @@
 # Zeq OS Mathematical Framework - Chrome Extension
 
-A Chrome extension that acts as a mathematical intelligence middle layer between users and AI platforms. It processes user queries through the Zeq OS Mathematical Framework (620+ kinematic operators) before sending them to AI platforms.
+A Chrome extension that acts as a mathematical intelligence middle layer between users and AI platforms. It processes user queries through the Zeq OS Mathematical Framework (1549 operators across 34 domains) before sending them to AI platforms.
 
 ## Features
 
 - **Universal AI Platform Support**: Works with ChatGPT, Claude, Grok, and other AI platforms
-- **Mathematical Framework Integration**: Processes all queries through 620+ kinematic operators
+- **Mathematical Framework Integration**: Processes all queries through 1549 operators
 - **Automatic Interception**: Seamlessly intercepts input boxes and processes messages
 - **Configurable**: Enable/disable per platform through extension popup
 - **Non-intrusive**: Falls back to original message if framework processing fails
@@ -44,7 +44,7 @@ Click the extension icon to open the popup and configure:
 2. **Message Interception**: Captures user message before submission
 3. **Framework Processing**: 
    - Detects domains from query
-   - Selects relevant operators (620+ available)
+   - Selects relevant operators (1549 available)
    - Executes operators and generates mathematical state
    - Creates mathematical prompt (JSON format)
 4. **Message Replacement**: Replaces input with mathematical prompt

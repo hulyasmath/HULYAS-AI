@@ -1,13 +1,27 @@
+const cookies = require('cookie');
 const { logger } = require('@librechat/data-schemas');
 const { SystemRoles } = require('librechat-data-provider');
 const { Strategy: JwtStrategy, ExtractJwt } = require('passport-jwt');
 const { getUserById, updateUser } = require('~/models');
 
-// JWT strategy
+// Custom extractor to get JWT from cookies
+const cookieExtractor = (req) => {
+  let token = null;
+  if (req && req.headers && req.headers.cookie) {
+    const parsedCookies = cookies.parse(req.headers.cookie);
+    token = parsedCookies.token || null;
+  }
+  return token;
+};
+
+// JWT strategy - supports both Authorization header and cookie
 const jwtLogin = () =>
   new JwtStrategy(
     {
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      jwtFromRequest: ExtractJwt.fromExtractors([
+        ExtractJwt.fromAuthHeaderAsBearerToken(), // Try Authorization header first
+        cookieExtractor, // Fall back to cookie
+      ]),
       secretOrKey: process.env.JWT_SECRET,
     },
     async (payload, done) => {

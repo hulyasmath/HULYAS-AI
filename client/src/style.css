@@ -29,6 +29,17 @@
   --green-800: #065f46;
   --green-900: #064e3b;
   --green-950: #022c22;
+  --cyan-50: #ecfeff;
+  --cyan-100: #cffafe;
+  --cyan-200: #a5f3fc;
+  --cyan-300: #67e8f9;
+  --cyan-400: #22d3ee;
+  --cyan-500: #06b6d4;
+  --cyan-600: #0891b2;
+  --cyan-700: #0e7490;
+  --cyan-800: #155e75;
+  --cyan-900: #164e63;
+  --cyan-950: #083344;
   --red-50: #fef2f2;
   --red-100: #fee2e2;
   --red-200: #fecaca;
@@ -51,7 +62,7 @@
   --amber-800: #92400e;
   --amber-900: #78350f;
   --amber-950: #451a03;
-  --brand-purple: #ab68ff;
+  --brand-purple: #22d3ee;
   --gizmo-gray-500: #999;
   --gizmo-gray-600: #666;
   --gizmo-gray-950: #0f0f0f;
@@ -61,9 +72,27 @@
   --font-size-lg: 1.125rem;
   --font-size-xl: 1.25rem;
   --markdown-font-size: 1rem;
+
+  /* Zeq OS Theme Colors */
+  --zeq-bg-primary: #0a0a0b;
+  --zeq-bg-secondary: #111113;
+  --zeq-bg-tertiary: #1a1a1d;
+  --zeq-bg-hover: #222226;
+  --zeq-text-primary: #f0f0f2;
+  --zeq-text-secondary: #a0a0a8;
+  --zeq-text-muted: #606068;
+  --zeq-accent: #22d3ee;
+  --zeq-accent-hover: #67e8f9;
+  --zeq-accent-glow: rgba(34, 211, 238, 0.15);
+  --zeq-border: #2a2a2e;
+  --zeq-border-light: #1f1f23;
+  --zeq-border-focus: #22d3ee;
+  --zeq-success: #22c55e;
+  --zeq-warning: #f59e0b;
+  --zeq-error: #ef4444;
 }
 html {
-  --brand-purple: #ab68ff;
+  --brand-purple: #22d3ee;
   --presentation: var(--white);
   --text-primary: var(--gray-800);
   --text-secondary: var(--gray-600);
@@ -86,8 +115,8 @@ html {
   --surface-tertiary: var(--gray-100);
   --surface-tertiary-alt: var(--white);
   --surface-dialog: var(--white);
-  --surface-submit: var(--green-700);
-  --surface-submit-hover: var(--green-800);
+  --surface-submit: var(--cyan-700);
+  --surface-submit-hover: var(--cyan-800);
   --surface-destructive: var(--red-700);
   --surface-destructive-hover: var(--red-800);
   --surface-chat: var(--white);
@@ -124,63 +153,64 @@ html {
   --switch-unchecked: 0 0% 58%;
 }
 .dark {
-  --brand-purple: #ab68ff;
-  --presentation: var(--gray-800);
-  --text-primary: var(--gray-100);
-  --text-secondary: var(--gray-300);
-  --text-secondary-alt: var(--gray-400);
-  --text-tertiary: var(--gray-500);
+  --brand-purple: #22d3ee;
+  --presentation: var(--zeq-bg-secondary);
+  --text-primary: var(--zeq-text-primary);
+  --text-secondary: var(--zeq-text-secondary);
+  --text-secondary-alt: var(--zeq-text-secondary);
+  --text-tertiary: var(--zeq-text-muted);
   --text-warning: var(--amber-500);
-  --header-primary: var(--gray-700);
-  --header-hover: var(--gray-600);
-  --header-button-hover: var(--gray-700);
-  --surface-active: var(--gray-500);
-  --surface-active-alt: var(--gray-700);
-  --surface-hover: var(--gray-600);
-  --surface-hover-alt: var(--gray-600);
-  --surface-primary: var(--gray-900);
-  --surface-primary-alt: var(--gray-850);
-  --surface-primary-contrast: var(--gray-850);
-  --surface-secondary: var(--gray-800);
-  --surface-secondary-alt: var(--gray-800);
-  --surface-tertiary: var(--gray-700);
-  --surface-tertiary-alt: var(--gray-700);
-  --surface-dialog: var(--gray-850);
-  --surface-submit: var(--green-700);
-  --surface-submit-hover: var(--green-800);
+  --ring-primary: var(--zeq-accent);
+  --header-primary: var(--zeq-bg-secondary);
+  --header-hover: var(--zeq-bg-tertiary);
+  --header-button-hover: var(--zeq-bg-tertiary);
+  --surface-active: var(--zeq-bg-hover);
+  --surface-active-alt: var(--zeq-bg-tertiary);
+  --surface-hover: var(--zeq-bg-hover);
+  --surface-hover-alt: var(--zeq-bg-hover);
+  --surface-primary: var(--zeq-bg-primary);
+  --surface-primary-alt: var(--zeq-bg-secondary);
+  --surface-primary-contrast: var(--zeq-bg-secondary);
+  --surface-secondary: var(--zeq-bg-secondary);
+  --surface-secondary-alt: var(--zeq-bg-secondary);
+  --surface-tertiary: var(--zeq-bg-tertiary);
+  --surface-tertiary-alt: var(--zeq-bg-tertiary);
+  --surface-dialog: var(--zeq-bg-secondary);
+  --surface-submit: var(--zeq-accent);
+  --surface-submit-hover: var(--zeq-accent-hover);
   --surface-destructive: var(--red-800);
   --surface-destructive-hover: var(--red-900);
-  --surface-chat: var(--gray-700);
-  --border-light: var(--gray-700);
-  --border-medium-alt: var(--gray-600);
-  --border-medium: var(--gray-600);
-  --border-heavy: var(--gray-500);
-  --border-xheavy: var(--gray-400);
-  /* These are test styles */
+  --surface-chat: var(--zeq-bg-tertiary);
+  --border-light: var(--zeq-border-light);
+  --border-medium-alt: var(--zeq-border);
+  --border-medium: var(--zeq-border);
+  --border-heavy: var(--zeq-border);
+  --border-xheavy: var(--zeq-text-muted);
 
-  --background: 0 0% 7%;
-  --foreground: 0 0% 98%;
-  --card: 0 0% 3.9%;
-  --card-foreground: 0 0% 98%;
-  --primary: 0 0% 98%;
-  --primary-foreground: 0 0% 9%;
-  --secondary: 0 0% 14.9%;
-  --secondary-foreground: 0 0% 98%;
-  --muted: 0 0% 14.9%;
-  --muted-foreground: 0 0% 63.9%;
-  --accent: 0 0% 14.9%;
-  --accent-foreground: 0 0% 98%;
+  /* Zeq OS dark theme - near black with purple accent */
+  --background: 240 10% 4%;
+  --foreground: 240 5% 96%;
+  --card: 240 10% 5%;
+  --card-foreground: 240 5% 96%;
+  --primary: 267 100% 70%;
+  --primary-foreground: 240 10% 4%;
+  --secondary: 240 6% 10%;
+  --secondary-foreground: 240 5% 96%;
+  --muted: 240 6% 10%;
+  --muted-foreground: 240 5% 45%;
+  --accent: 267 100% 70%;
+  --accent-foreground: 240 10% 4%;
   --destructive: 0 62.8% 40.6%;
   --destructive-foreground: 0 0% 98%;
-  --border: 0 0% 14.9%;
-  --input: 0 0% 14.9%;
-  --ring: 0 0% 83.1%;
-  --chart-1: 220 70% 50%;
+  --border: 240 6% 15%;
+  --input: 240 6% 15%;
+  --ring: 267 100% 70%;
+  --chart-1: 267 70% 60%;
   --chart-2: 160 60% 45%;
   --chart-3: 30 80% 55%;
   --chart-4: 280 65% 60%;
   --chart-5: 340 75% 55%;
-  --switch-unchecked: 0 0% 40%;
+  --switch-unchecked: 0 0% 30%;
 }
 .gizmo {
   --text-primary: var(--gizmo-gray-950);
@@ -2815,4 +2845,244 @@ html {
 
 .sharepoint-picker-bg{
   background-color: #F5F5F5;
+}
+
+/* ============================================
+   Zeq OS Theme - Mathematical Aesthetics
+   1.287 Hz Framework Inspired
+   ============================================ */
+
+/* Glass-morphism Card */
+.zeq-glass {
+  background: rgba(17, 17, 19, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(171, 104, 255, 0.05);
+}
+
+.zeq-glass-light {
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+/* Purple Glow Effects */
+.zeq-glow {
+  box-shadow:
+    0 0 20px rgba(171, 104, 255, 0.3),
+    0 0 40px rgba(171, 104, 255, 0.15),
+    0 0 60px rgba(171, 104, 255, 0.05);
+}
+
+.zeq-glow-subtle {
+  box-shadow:
+    0 0 15px rgba(171, 104, 255, 0.15),
+    0 0 30px rgba(171, 104, 255, 0.05);
+}
+
+.zeq-glow-text {
+  text-shadow: 0 0 20px rgba(171, 104, 255, 0.5);
+}
+
+/* Pulse Animation at 1.287 Hz (777ms period) */
+@keyframes zeq-pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(0.98);
+  }
+}
+
+.zeq-pulse {
+  animation: zeq-pulse 777ms ease-in-out infinite;
+}
+
+@keyframes zeq-pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(171, 104, 255, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 40px rgba(171, 104, 255, 0.5);
+  }
+}
+
+.zeq-pulse-glow {
+  animation: zeq-pulse-glow 777ms ease-in-out infinite;
+}
+
+/* Grid Pattern Background */
+.zeq-grid-bg {
+  background-image:
+    linear-gradient(rgba(171, 104, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(171, 104, 255, 0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+}
+
+.zeq-grid-bg-dense {
+  background-image:
+    linear-gradient(rgba(171, 104, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(171, 104, 255, 0.04) 1px, transparent 1px);
+  background-size: 25px 25px;
+}
+
+/* Gradient Backgrounds */
+.zeq-gradient-bg {
+  background: linear-gradient(
+    135deg,
+    var(--zeq-bg-primary) 0%,
+    #0d0d10 50%,
+    var(--zeq-bg-primary) 100%
+  );
+}
+
+.zeq-gradient-radial {
+  background: radial-gradient(
+    ellipse at 50% 0%,
+    rgba(171, 104, 255, 0.1) 0%,
+    transparent 50%
+  );
+}
+
+/* Purple Accent Button */
+.zeq-btn-primary {
+  background: linear-gradient(135deg, var(--zeq-accent) 0%, #8f4de8 100%);
+  color: white;
+  border: none;
+  transition: all 0.2s ease;
+}
+
+.zeq-btn-primary:hover {
+  background: linear-gradient(135deg, var(--zeq-accent-hover) 0%, #a064f5 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 20px rgba(171, 104, 255, 0.4);
+}
+
+.zeq-btn-primary:active {
+  transform: translateY(0);
+}
+
+/* Input Styles */
+.zeq-input {
+  background: var(--zeq-bg-secondary);
+  border: 1px solid var(--zeq-border);
+  color: var(--zeq-text-primary);
+  transition: all 0.2s ease;
+}
+
+.zeq-input:focus {
+  border-color: var(--zeq-accent);
+  box-shadow: 0 0 0 3px rgba(171, 104, 255, 0.1);
+  outline: none;
+}
+
+.zeq-input::placeholder {
+  color: var(--zeq-text-muted);
+}
+
+/* Sidebar Active State */
+.zeq-nav-active {
+  background: rgba(171, 104, 255, 0.1);
+  border-left: 2px solid var(--zeq-accent);
+}
+
+/* Scrollbar Styling */
+.zeq-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.zeq-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.zeq-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--zeq-border);
+  border-radius: 3px;
+}
+
+.zeq-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--zeq-text-muted);
+}
+
+/* Mathematical/Decorative Elements */
+.zeq-dot-pattern {
+  background-image: radial-gradient(
+    rgba(171, 104, 255, 0.15) 1px,
+    transparent 1px
+  );
+  background-size: 20px 20px;
+}
+
+/* Fade-in Animation */
+@keyframes zeq-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.zeq-fade-in {
+  animation: zeq-fade-in 0.3s ease-out forwards;
+}
+
+/* Spinner with brand color */
+.zeq-spinner {
+  border: 2px solid var(--zeq-border);
+  border-top-color: var(--zeq-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Link styling */
+.zeq-link {
+  color: var(--zeq-accent);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.zeq-link:hover {
+  color: var(--zeq-accent-hover);
+  text-decoration: underline;
+}
+
+/* Card elevation */
+.zeq-card {
+  background: var(--zeq-bg-secondary);
+  border: 1px solid var(--zeq-border-light);
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.zeq-card:hover {
+  border-color: var(--zeq-border);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Divider */
+.zeq-divider {
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--zeq-border),
+    transparent
+  );
+}
+
+/* Focus ring */
+.zeq-focus-ring:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--zeq-bg-primary), 0 0 0 4px var(--zeq-accent);
 }

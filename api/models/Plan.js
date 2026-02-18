@@ -103,7 +103,7 @@ const seedDefaultPlans = async () => {
         displayName: 'Free Plan',
         monthlyTokenLimit: 100000, // 100k tokens
         dailyRequestLimit: 100,
-        allowedEndpoints: ['DeepSeek'],
+        allowedEndpoints: ['DeepSeek', 'OpenRouter', 'agents', 'groq', 'openAI'],
         hardLimit: true,
         isActive: true,
       },

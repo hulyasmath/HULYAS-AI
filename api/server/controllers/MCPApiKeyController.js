@@ -144,7 +144,6 @@ const mcpApiKeyController = {
 
       res.status(200).json({
         valid: true,
-        userId: mcpApiKey.userId.toString(),
       });
     } catch (error) {
       logger.error('[validateApiKey] Error:', error);

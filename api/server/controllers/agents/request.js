@@ -308,17 +308,6 @@ const AgentController = async (req, res, next, initializeClient, addTitle) => {
       performCleanup();
     }
   } catch (error) {
-    // Log the error with full details for debugging
-    logger.error('[AgentController] Error caught:', {
-      message: error?.message,
-      stack: error?.stack,
-      name: error?.name,
-      error: error,
-      conversationId,
-      endpoint: endpointOption?.endpoint,
-      agentId: endpointOption?.agent_id,
-    });
-    
     // Handle error without capturing much scope
     handleAbortError(res, req, error, {
       conversationId,

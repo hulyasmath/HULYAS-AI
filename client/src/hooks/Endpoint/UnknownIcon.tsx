@@ -85,14 +85,12 @@ function UnknownIcon({
   }
 
   if (iconURL) {
-    // Get size from className or default to 20px for menu-item context
-    const size = context === 'menu-item' ? 20 : context === 'message' ? 36 : 30;
     return (
       <img
         className={className}
         src={iconURL}
         alt={`${endpoint} Icon`}
-        style={{ width: `${size}px`, height: `${size}px`, maxWidth: `${size}px`, maxHeight: `${size}px`, objectFit: 'cover' }}
+        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
       />
     );
   }

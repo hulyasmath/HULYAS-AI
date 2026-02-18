@@ -81,8 +81,8 @@ export function testZeqFramework() {
   }
 }
 
-// Make it available globally
-if (typeof window !== 'undefined') {
+// Only expose test function in development
+if (typeof window !== 'undefined' && import.meta.env.DEV) {
   window.testZeqFramework = testZeqFramework;
 }
 

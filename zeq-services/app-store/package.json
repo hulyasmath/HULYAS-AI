@@ -1,0 +1,70 @@
+{
+  "name": "@zeq-os/app-store",
+  "version": "4.0.0",
+  "description": "ZEQ OS Mathematical Framework - 1549 operators at 1.287 Hz HulyaPulse",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "operator-registry.json"
+  ],
+  "keywords": [
+    "zeq",
+    "physics",
+    "mathematics",
+    "operators",
+    "sdk",
+    "computation",
+    "quantum",
+    "kinematics",
+    "framework"
+  ],
+  "author": "ZEQ OS Team <contact@zeq-os.com>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zeq-os/app-store"
+  },
+  "homepage": "https://zeq-os.com",
+  "bugs": {
+    "url": "https://github.com/zeq-os/app-store/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "api": "node api-server.cjs",
+    "seed": "node seed-db.js",
+    "test": "vitest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@google/genai": "^1.34.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
+    "@types/react-router-dom": "^5.3.3",
+    "@types/three": "^0.182.0",
+    "bcrypt": "^6.0.0",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^0.562.0",
+    "react": "^19.2.3",
+    "react-dom": "^19.2.3",
+    "react-router-dom": "^7.12.0",
+    "sqlite3": "^5.1.7",
+    "three": "^0.182.0",
+    "uuid": "^13.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0"
+  }
+}

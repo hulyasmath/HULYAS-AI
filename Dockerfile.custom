@@ -1,0 +1,37 @@
+# Extend updated LibreChat dev with custom Zeq OS files
+FROM ghcr.io/danny-avila/librechat-dev:latest
+
+USER root
+
+# Save base files that should NOT be overwritten by our old copies
+RUN cp /app/api/server/services/start/tools.js /tmp/base-tools.js && \
+    cp /app/api/server/routes/files/index.js /tmp/base-files-index.js
+
+# Copy all custom API source files
+COPY --chown=node:node api/server/ /app/api/server/
+COPY --chown=node:node api/models/ /app/api/models/
+COPY --chown=node:node api/utils/ /app/api/utils/
+COPY --chown=node:node api/strategies/ /app/api/strategies/
+COPY --chown=node:node api/app/ /app/api/app/
+COPY --chown=node:node api/cache/ /app/api/cache/
+COPY --chown=node:node api/config/ /app/api/config/
+COPY --chown=node:node api/db/ /app/api/db/
+COPY --chown=node:node api/lib/ /app/api/lib/
+COPY --chown=node:node api/data/ /app/api/data/
+COPY --chown=node:node api/typedefs.js /app/api/typedefs.js
+
+# Restore base files that our old copies would break
+RUN cp /tmp/base-tools.js /app/api/server/services/start/tools.js && \
+    cp /tmp/base-files-index.js /app/api/server/routes/files/index.js && \
+    chown node:node /app/api/server/services/start/tools.js /app/api/server/routes/files/index.js
+
+# Install missing dependencies needed by custom API files
+RUN cd /app && chown -R node:node /app/node_modules && \
+  su node -c "cd /app && npm install --legacy-peer-deps --no-save googleapis @googleapis/youtube youtube-transcript stripe @microsoft/microsoft-graph-client firebase winston-daily-rotate-file openid-client @opentelemetry/exporter-trace-otlp-http"
+
+# Copy custom config
+COPY --chown=node:node librechat.yaml /app/librechat.yaml
+
+USER node
+
+CMD ["npm", "run", "backend"]

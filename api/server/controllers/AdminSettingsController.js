@@ -25,96 +25,74 @@ const getApiConfig = async (req, res) => {
       openai: {
         configured: !!process.env.OPENAI_API_KEY,
         masked: process.env.OPENAI_API_KEY ? maskApiKey(process.env.OPENAI_API_KEY) : null,
-        apiKey: process.env.OPENAI_API_KEY || null,
         envVar: 'OPENAI_API_KEY',
         userProvided: process.env.OPENAI_API_KEY === 'user_provided',
         reverseProxy: process.env.OPENAI_REVERSE_PROXY || null,
         reverseProxyEnvVar: 'OPENAI_REVERSE_PROXY',
       },
-      // Azure OpenAI
       azureOpenAI: {
         configured: !!process.env.AZURE_API_KEY,
         masked: process.env.AZURE_API_KEY ? maskApiKey(process.env.AZURE_API_KEY) : null,
-        apiKey: process.env.AZURE_API_KEY || null,
         envVar: 'AZURE_API_KEY',
         userProvided: process.env.AZURE_API_KEY === 'user_provided',
         baseURL: process.env.AZURE_OPENAI_BASEURL || null,
         baseURLEnvVar: 'AZURE_OPENAI_BASEURL',
       },
-      // Anthropic
       anthropic: {
         configured: !!process.env.ANTHROPIC_API_KEY,
         masked: process.env.ANTHROPIC_API_KEY ? maskApiKey(process.env.ANTHROPIC_API_KEY) : null,
-        apiKey: process.env.ANTHROPIC_API_KEY || null,
         envVar: 'ANTHROPIC_API_KEY',
         userProvided: process.env.ANTHROPIC_API_KEY === 'user_provided',
       },
-      // Google
       google: {
         configured: !!process.env.GOOGLE_KEY,
         masked: process.env.GOOGLE_KEY ? maskApiKey(process.env.GOOGLE_KEY) : null,
-        apiKey: process.env.GOOGLE_KEY || null,
         envVar: 'GOOGLE_KEY',
         userProvided: process.env.GOOGLE_KEY === 'user_provided',
         reverseProxy: process.env.GOOGLE_REVERSE_PROXY || null,
         reverseProxyEnvVar: 'GOOGLE_REVERSE_PROXY',
       },
-      // DeepSeek
       deepseek: {
         configured: !!process.env.DEEPSEEK_API_KEY,
         masked: process.env.DEEPSEEK_API_KEY ? maskApiKey(process.env.DEEPSEEK_API_KEY) : null,
-        apiKey: process.env.DEEPSEEK_API_KEY || null,
         envVar: 'DEEPSEEK_API_KEY',
       },
-      // Groq
       groq: {
         configured: !!process.env.GROQ_API_KEY,
         masked: process.env.GROQ_API_KEY ? maskApiKey(process.env.GROQ_API_KEY) : null,
-        apiKey: process.env.GROQ_API_KEY || null,
         envVar: 'GROQ_API_KEY',
       },
-      // OpenRouter
       openrouter: {
-        configured: !!process.env.OPENROUTER_KEY,
-        masked: process.env.OPENROUTER_KEY ? maskApiKey(process.env.OPENROUTER_KEY) : null,
-        apiKey: process.env.OPENROUTER_KEY || null,
-        envVar: 'OPENROUTER_KEY',
+        configured: !!process.env.OPENROUTER_API_KEY,
+        masked: process.env.OPENROUTER_API_KEY ? maskApiKey(process.env.OPENROUTER_API_KEY) : null,
+        envVar: 'OPENROUTER_API_KEY',
       },
-      // SearXNG
       searxng: {
         configured: !!process.env.SEARXNG_INSTANCE_URL,
         url: process.env.SEARXNG_INSTANCE_URL || null,
         urlEnvVar: 'SEARXNG_INSTANCE_URL',
         apiKey: process.env.SEARXNG_API_KEY ? maskApiKey(process.env.SEARXNG_API_KEY) : null,
-        apiKeyValue: process.env.SEARXNG_API_KEY || null,
         apiKeyEnvVar: 'SEARXNG_API_KEY',
       },
-      // Meilisearch
       meilisearch: {
         configured: !!process.env.MEILI_HOST,
         host: process.env.MEILI_HOST || null,
         hostEnvVar: 'MEILI_HOST',
         masterKey: process.env.MEILI_MASTER_KEY ? maskApiKey(process.env.MEILI_MASTER_KEY) : null,
-        masterKeyValue: process.env.MEILI_MASTER_KEY || null,
         masterKeyEnvVar: 'MEILI_MASTER_KEY',
       },
-      // RAG API
       rag: {
         configured: !!process.env.RAG_API_URL,
         url: process.env.RAG_API_URL || null,
         urlEnvVar: 'RAG_API_URL',
       },
-      // Stripe
       stripe: {
         configured: !!process.env.STRIPE_SECRET_KEY,
         secretKey: process.env.STRIPE_SECRET_KEY ? maskApiKey(process.env.STRIPE_SECRET_KEY) : null,
-        secretKeyValue: process.env.STRIPE_SECRET_KEY || null,
         secretKeyEnvVar: 'STRIPE_SECRET_KEY',
         publishableKey: process.env.STRIPE_PUBLISHABLE_KEY ? maskApiKey(process.env.STRIPE_PUBLISHABLE_KEY) : null,
-        publishableKeyValue: process.env.STRIPE_PUBLISHABLE_KEY || null,
         publishableKeyEnvVar: 'STRIPE_PUBLISHABLE_KEY',
         webhookSecret: process.env.STRIPE_WEBHOOK_SECRET ? maskApiKey(process.env.STRIPE_WEBHOOK_SECRET) : null,
-        webhookSecretValue: process.env.STRIPE_WEBHOOK_SECRET || null,
         webhookSecretEnvVar: 'STRIPE_WEBHOOK_SECRET',
         webhookUrl: `${process.env.DOMAIN_SERVER || 'http://localhost:3080'}/api/stripe/webhook`,
       },

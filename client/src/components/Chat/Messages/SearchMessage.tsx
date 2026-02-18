@@ -71,30 +71,6 @@ export default function SearchMessage({ message }: Pick<TMessageProps, 'message'
       return 'HULYAS';
     }
     
-    // For OpenRouter (Large Language Models), extract friendly name from model ID
-    if (endpoint === 'OpenRouter' && model) {
-      // Extract model name from format like "google/gemini-3-pro-preview" -> "Gemini 3 Pro"
-      const modelParts = model.split('/');
-      if (modelParts.length > 1) {
-        const modelName = modelParts[1];
-        // Convert "gemini-3-pro-preview" to "Gemini 3 Pro"
-        const friendlyName = modelName
-          .split('-')
-          .map((part, index) => {
-            // Skip version numbers and preview/suffixes for cleaner display
-            if (part === 'preview' || part === 'instruct' || part === 'chat' || part === 'coder') {
-              return '';
-            }
-            // Capitalize first letter of each meaningful part
-            return part.charAt(0).toUpperCase() + part.slice(1);
-          })
-          .filter(Boolean)
-          .join(' ');
-        return friendlyName || model;
-      }
-      return model;
-    }
-    
     return message?.sender ?? '';
   }, [
     message?.isCreatedByUser,

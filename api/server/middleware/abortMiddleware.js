@@ -323,27 +323,15 @@ const handleAbortError = async (res, req, error, data) => {
     );
   }
 
-  // Extract error message more robustly
-  let errorMessage = error?.message || error?.toString() || 'Unknown error';
-  
-  // If error is an object without a message, try to stringify it
-  if (!error?.message && typeof error === 'object') {
-    try {
-      errorMessage = JSON.stringify(error);
-    } catch (e) {
-      errorMessage = String(error);
-    }
-  }
-
-  let errorText = errorMessage?.includes('"type"')
-    ? errorMessage
-    : `An error occurred while processing your request: ${errorMessage}`;
+  let errorText = error?.message?.includes('"type"')
+    ? error.message
+    : 'An error occurred while processing your request. Please contact the Admin.';
 
   if (error?.type === ErrorTypes.INVALID_REQUEST) {
     errorText = `{"type":"${ErrorTypes.INVALID_REQUEST}"}`;
   }
 
-  if (errorMessage?.includes("does not support 'system'")) {
+  if (error?.message?.includes("does not support 'system'")) {
     errorText = `{"type":"${ErrorTypes.NO_SYSTEM_MESSAGES}"}`;
   }
 

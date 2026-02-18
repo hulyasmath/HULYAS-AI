@@ -1,12 +1,23 @@
 const fs = require('fs').promises;
 const path = require('path');
-const { logger } = require('@librechat/data-schemas');
 
 const projectRoot = path.resolve(__dirname, '..', '..', '..', '..');
 const envPath = path.resolve(projectRoot, '.env');
 
-// Check if running on Railway
-const isRailway = !!process.env.RAILWAY_ENVIRONMENT || !!process.env.RAILWAY_PROJECT_ID;
+// Allowlist of env vars that can be updated via admin API
+const ALLOWED_ENV_VARS = new Set([
+  'OPENAI_API_KEY', 'OPENAI_REVERSE_PROXY',
+  'AZURE_API_KEY', 'AZURE_OPENAI_BASEURL',
+  'ANTHROPIC_API_KEY',
+  'GOOGLE_KEY', 'GOOGLE_REVERSE_PROXY',
+  'DEEPSEEK_API_KEY',
+  'GROQ_API_KEY',
+  'OPENROUTER_API_KEY',
+  'SEARXNG_INSTANCE_URL', 'SEARXNG_API_KEY',
+  'MEILI_HOST', 'MEILI_MASTER_KEY',
+  'RAG_API_URL',
+  'STRIPE_SECRET_KEY', 'STRIPE_PUBLISHABLE_KEY', 'STRIPE_WEBHOOK_SECRET',
+]);
 
 /**
  * Update or add an environment variable in the .env file
@@ -15,16 +26,15 @@ const isRailway = !!process.env.RAILWAY_ENVIRONMENT || !!process.env.RAILWAY_PRO
  * @returns {Promise<void>}
  */
 async function updateEnvVariable(envVar, value) {
-  // On Railway, we can't write to .env file - provide helpful error
-  if (isRailway) {
-    const railwayUrl = process.env.RAILWAY_PROJECT_ID 
-      ? `https://railway.app/project/${process.env.RAILWAY_PROJECT_ID}/variables`
-      : 'Railway dashboard';
-    const errorMessage = `Cannot update environment variables on Railway through the UI. Please update "${envVar}" through Railway dashboard: ${railwayUrl}. Steps: 1) Go to your Railway project → Variables tab, 2) Add/Update variable "${envVar}" with your API key, 3) Redeploy the service.`;
-    logger.error(`[updateEnvVariable] ${errorMessage}`);
-    throw new Error(errorMessage);
+  // Validate env var name format and allowlist
+  if (!/^[A-Z][A-Z0-9_]*$/.test(envVar)) {
+    throw new Error('Invalid environment variable name');
   }
-
+  if (!ALLOWED_ENV_VARS.has(envVar)) {
+    throw new Error(`Environment variable ${envVar} is not in the allowed list`);
+  }
+  // Prevent newline injection
+  const safeValue = String(value).replace(/[\r\n]/g, '');
   let envContent = '';
   try {
     envContent = await fs.readFile(envPath, 'utf8');
@@ -40,7 +50,7 @@ async function updateEnvVariable(envVar, value) {
     const trimmedLine = line.trim();
     if (trimmedLine.startsWith(`${envVar}=`)) {
       found = true;
-      return `${envVar}=${value}`;
+      return `${envVar}=${safeValue}`;
     }
     return line;
   });
@@ -50,20 +60,14 @@ async function updateEnvVariable(envVar, value) {
     if (envContent && !envContent.endsWith('\n') && envContent.length > 0) {
       updatedLines.push('');
     }
-    updatedLines.push(`${envVar}=${value}`);
+    updatedLines.push(`${envVar}=${safeValue}`);
   }
 
-  try {
-    await fs.writeFile(envPath, updatedLines.join('\n'), 'utf8');
-  } catch (error) {
-    logger.error(`[updateEnvVariable] Failed to write .env file: ${error.message}`);
-    throw new Error(`Failed to update .env file: ${error.message}. Please check file permissions.`);
-  }
+  await fs.writeFile(envPath, updatedLines.join('\n'), 'utf8');
 }
 
 module.exports = {
   updateEnvVariable,
   envPath,
 };
-
 

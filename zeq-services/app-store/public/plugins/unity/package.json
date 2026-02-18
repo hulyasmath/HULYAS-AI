@@ -1,0 +1,28 @@
+{
+  "name": "com.zeqos.sync",
+  "version": "0.4.0-beta",
+  "displayName": "ZEQ OS Sync Plugin",
+  "description": "Universal physics synchronization to the 1.287 Hz HulyaPulse. Includes KO42 operators for synchronized physics simulation.",
+  "unity": "2020.3",
+  "unityRelease": "0f1",
+  "documentationUrl": "https://docs.zeq.os/unity",
+  "changelogUrl": "https://docs.zeq.os/changelog",
+  "licensesUrl": "https://docs.zeq.os/license",
+  "keywords": [
+    "physics",
+    "synchronization",
+    "simulation",
+    "zeq",
+    "hulyapulse"
+  ],
+  "author": {
+    "name": "ZEQ OS Team",
+    "email": "sdk@zeq.os",
+    "url": "https://zeq.os"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zeq-os/unity-sync-plugin.git"
+  },
+  "dependencies": {}
+}

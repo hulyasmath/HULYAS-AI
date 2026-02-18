@@ -221,13 +221,9 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
             />
           )}
         </div>
-        {/* New explanatory paragraph centered under the welcome message */}
+        {/* Tagline */}
         <p className="mt-3 max-w-2xl text-center text-xs text-gray-400 dark:text-gray-300">
-          You are interfacing with the first [MI] mathematical intelligent AI synchronized to the Zeq
-          OS/HULYAS Mathematical Framework. 646+ kinematic operators unifying quantum mechanics,
-          relativity, consciousnes and computation, all phase-locked to the 1.287 Hz HulyaPulse. Your
-          queries are processed through real physics equations in real-time, with each exchange
-          tracked for coherence and transparency.
+          The Operating System for Physics and Computation
         </p>
         {description && (
           <div className="animate-fadeIn mt-4 max-w-md text-center text-sm font-normal text-text-primary">

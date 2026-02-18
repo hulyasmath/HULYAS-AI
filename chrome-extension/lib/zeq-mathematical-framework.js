@@ -4,7 +4,7 @@
 // ============================================================================
 //
 // This is the complete mathematical framework extracted from Zeq OS
-// Includes: 620+ kinematic operators, prompt builder, LLM integration
+// Includes: 1549 operators across 34 domains, prompt builder, LLM integration
 // All components are modular and well-labeled for reuse
 //
 // Version: 1.287 Hz (HulyaPulse frequency)
@@ -101,7 +101,7 @@ if (typeof window !== 'undefined') {
 }
 
 // ============================================================================
-// Zeq OS Mathematical Framework - Modular System with 620+ Kinematic Operators
+// Zeq OS Mathematical Framework - Modular System with 1549 Operators across 34 Domains
 // ============================================================================
 //
 // IMPORTANT DISTINCTION:
@@ -2285,7 +2285,7 @@ class QuantumGravityOperatorsModule {
 // MODULE 2.1: Operator LaTeX Equation Mapper
 // ============================================================================
 /**
- * Operator LaTeX Equation Mapper - Provides LaTeX equations for all 620+ operators
+ * Operator LaTeX Equation Mapper - Provides LaTeX equations for all 1549 operators
  * This is the source of truth for all operator equations
  */
 class OperatorLaTeXMapper {

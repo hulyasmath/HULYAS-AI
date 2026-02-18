@@ -57,3 +57,13 @@ temp/
 
 # Railway specific
 .railway-version
+
+# Local LLM models (too large for Docker context)
+local-llm/
+*.gguf
+
+# Database and search data (managed by Docker volumes)
+data-node/
+meili_data_v1.12/
+uploads/
+images/

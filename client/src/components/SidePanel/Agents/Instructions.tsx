@@ -1,4 +1,4 @@
-import React, { useState, useId } from 'react';
+import React, { useState, useId, useEffect } from 'react';
 import { PlusCircle } from 'lucide-react';
 import * as Menu from '@ariakit/react/menu';
 import { DropdownPopup } from '@librechat/client';
@@ -32,6 +32,31 @@ export default function Instructions() {
   const { control, setValue, getValues } = methods;
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Listen for ZEQ OS skill-to-agent events from AIStudioPanel
+  useEffect(() => {
+    const handleSkillToAgent = (event: Event) => {
+      const customEvent = event as CustomEvent<string>;
+      if (customEvent.detail) {
+        setValue('instructions', customEvent.detail, { shouldDirty: true });
+      }
+    };
+
+    // Also check sessionStorage on mount for pending skill
+    const pendingSkill = sessionStorage.getItem('zeq-pending-skill');
+    if (pendingSkill) {
+      const currentInstructions = getValues('instructions') || '';
+      if (!currentInstructions) {
+        setValue('instructions', pendingSkill, { shouldDirty: true });
+      }
+      sessionStorage.removeItem('zeq-pending-skill');
+    }
+
+    window.addEventListener('zeq-skill-to-agent', handleSkillToAgent);
+    return () => {
+      window.removeEventListener('zeq-skill-to-agent', handleSkillToAgent);
+    };
+  }, [setValue, getValues]);
 
   const handleAddVariable = (label: TSpecialVarLabel, value: string) => {
     const currentInstructions = getValues('instructions') || '';
