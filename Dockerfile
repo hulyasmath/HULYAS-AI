@@ -37,8 +37,7 @@ RUN \
     npm config set fetch-retry-maxtimeout 600000 ; \
     npm config set fetch-retries 5 ; \
     npm config set fetch-retry-mintimeout 15000 ; \
-    npm ci --no-audit; \
-    npm dedupe
+    npm install --no-audit
 
 COPY --chown=node:node . .
 
@@ -46,7 +45,6 @@ RUN \
     # React client build with configurable memory
     NODE_OPTIONS="--max-old-space-size=${NODE_MAX_OLD_SPACE_SIZE}" npm run frontend; \
     npm prune --production; \
-    npm dedupe; \
     npm cache clean --force
 
 # Node API setup
