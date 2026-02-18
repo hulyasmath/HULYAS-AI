@@ -1,5 +1,7 @@
 import winston from 'winston';
-import 'winston-daily-rotate-file';
+import DailyRotateFile from 'winston-daily-rotate-file';
+// Explicitly register transport to avoid duplicate winston instance issues
+(winston.transports as any).DailyRotateFile = DailyRotateFile;
 import { redactFormat, redactMessage, debugTraverse, jsonTruncateFormat } from './parsers';
 import { getLogDirectory } from './utils';
 
