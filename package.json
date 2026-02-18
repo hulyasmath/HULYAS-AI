@@ -163,8 +163,6 @@
   },
   "dependencies": {
     "@opentelemetry/exporter-trace-otlp-http": "^0.208.0",
-    "stripe": "^20.0.0",
-    "winston": "^3.17.0",
-    "winston-daily-rotate-file": "^5.0.0"
+    "stripe": "^20.0.0"
   }
 }
