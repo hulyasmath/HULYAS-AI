@@ -128,6 +128,54 @@ app.post('/mcp', async (req, res) => {
           throw new Error('Missing required argument: message');
         }
         const processed = await processQueryWithFramework(args.message);
+
+        // Save to transparency log so math appears in download
+        if (args.conversationId && req.userId) {
+          try {
+            const transparencyEntry = {
+              id: `zeq_query_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+              timestamp: new Date().toISOString(),
+              messageType: 'user',
+              userQuery: args.message,
+              platform: 'librechat',
+              // Mathematical Framework Data
+              mathematicalPrompt: JSON.stringify(processed),
+              pulseCycle: processed.pulseCycle,
+              phase: processed.phase,
+              activeOperators: processed.activeOperators || [],
+              domains: processed.domains || [],
+              informationIntegrity: processed.metrics?.informationIntegrity,
+              crossDomainHarmony: processed.metrics?.crossDomainHarmony,
+              masterSum: processed.metrics?.masterSum,
+              truthVector: processed.truthVector,
+              operatorCount: processed.operatorCount,
+              totalOperators: processed.totalOperators,
+              processingTimeMs: processed.processingTimeMs,
+              auditTrail: [
+                `✓ Processed by Zeq OS MCP at ${new Date().toISOString()}`,
+                `Operators: ${processed.operatorCount}/${processed.totalOperators}`,
+                `Domains: ${(processed.domains || []).join(', ')}`,
+              ],
+            };
+
+            // POST to LibreChat transparency API
+            await fetch(`${LIBRECHAT_API_URL}/api/transparency/log`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${req.header('authorization')?.replace('Bearer ', '') || ''}`,
+              },
+              body: JSON.stringify({
+                conversationId: args.conversationId,
+                logEntry: transparencyEntry,
+              }),
+            });
+            console.log('[zeq-mcp] Saved query processing to transparency log');
+          } catch (transparencyError) {
+            console.warn('[zeq-mcp] Failed to save to transparency:', transparencyError.message);
+          }
+        }
+
         result = { content: processed };
         break;
       }

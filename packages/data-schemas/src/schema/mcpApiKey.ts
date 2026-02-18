@@ -40,3 +40,5 @@ export const MCPApiKeySchema = z.object({
   lastUsedAt: z.string().datetime().optional().nullable(),
   isActive: z.boolean().optional().default(true),
 });
+
+export default mcpApiKeySchema;

@@ -416,4 +416,24 @@ export const adminSettingsEndpoints = {
   userKeys: () => `${adminRoot}/settings/user-keys`,
   deleteUserKey: (userId: string, keyName: string) => `${adminRoot}/settings/user-keys/${userId}/${keyName}`,
   apiKeys: () => `${adminRoot}/settings/api-keys`,
+  guestAccess: () => `${adminRoot}/settings/guest-access`,
+};
+
+// Zeq Patterns endpoints
+const zeqPatternsRoot = `${BASE_URL}/api/zeq-patterns`;
+export const zeqPatternsEndpoints = {
+  daily: () => `${zeqPatternsRoot}/daily`,
+  trackClick: (patternId: string) => `${zeqPatternsRoot}/${patternId}/click`,
+  adminList: () => `${zeqPatternsRoot}/admin`,
+  adminGet: (id: string) => `${zeqPatternsRoot}/admin/${id}`,
+  adminCreate: () => `${zeqPatternsRoot}/admin`,
+  adminUpdate: (id: string) => `${zeqPatternsRoot}/admin/${id}`,
+  adminDelete: (id: string) => `${zeqPatternsRoot}/admin/${id}`,
+  // Category endpoints
+  categories: () => `${zeqPatternsRoot}/categories`,
+  categoriesAdminList: () => `${zeqPatternsRoot}/categories/admin`,
+  categoriesAdminGet: (id: string) => `${zeqPatternsRoot}/categories/admin/${id}`,
+  categoriesAdminCreate: () => `${zeqPatternsRoot}/categories/admin`,
+  categoriesAdminUpdate: (id: string) => `${zeqPatternsRoot}/categories/admin/${id}`,
+  categoriesAdminDelete: (id: string) => `${zeqPatternsRoot}/categories/admin/${id}`,
 };

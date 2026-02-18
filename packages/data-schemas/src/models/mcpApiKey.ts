@@ -1,5 +1,4 @@
-// Fixed: Changed from default import to named import for Rollup compatibility
-import { mcpApiKeySchema } from '~/schema/mcpApiKey';
+import mcpApiKeySchema from '~/schema/mcpApiKey';
 import type * as t from '~/types';
 
 export function createMCPApiKeyModel(mongoose: typeof import('mongoose')) {

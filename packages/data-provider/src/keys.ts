@@ -57,6 +57,11 @@ export enum QueryKeys {
   resourcePermissions = 'resourcePermissions',
   effectivePermissions = 'effectivePermissions',
   graphToken = 'graphToken',
+  /* Zeq Patterns */
+  zeqPatterns = 'zeqPatterns',
+  zeqPatternsAdmin = 'zeqPatternsAdmin',
+  zeqPatternCategories = 'zeqPatternCategories',
+  zeqPatternCategoriesAdmin = 'zeqPatternCategoriesAdmin',
 }
 
 // Dynamic query keys that require parameters

@@ -787,3 +787,239 @@ export const useUpdateAdminApiKeyMutation = (
     },
   );
 };
+
+export const useGetAdminGuestAccessQuery = (
+  config?: UseQueryOptions<{ enabled: boolean; dailyLimit: number; windowHours: number }>,
+): QueryObserverResult<{ enabled: boolean; dailyLimit: number; windowHours: number }> => {
+  return useQuery<{ enabled: boolean; dailyLimit: number; windowHours: number }>(
+    [QueryKeys.name, 'admin', 'settings', 'guest-access'],
+    () => dataService.getAdminGuestAccessConfig(),
+    {
+      refetchOnWindowFocus: false,
+      ...config,
+    },
+  );
+};
+
+export const useUpdateAdminGuestAccessMutation = (
+  options?: m.MutationOptions<{ message: string; note: string }, { enabled: boolean; dailyLimit: number; windowHours: number }>,
+): UseMutationResult<{ message: string; note: string }, unknown, { enabled: boolean; dailyLimit: number; windowHours: number }, unknown> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (payload: { enabled: boolean; dailyLimit: number; windowHours: number }) =>
+      dataService.updateAdminGuestAccessConfig(payload),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.name, 'admin', 'settings', 'guest-access']);
+      },
+      ...options,
+    },
+  );
+};
+
+/* ========================= */
+/* Zeq Patterns Hooks        */
+/* ========================= */
+
+// Get daily patterns (public)
+export const useGetDailyZeqPatternsQuery = (
+  config?: UseQueryOptions<dataService.TZeqPattern[]>,
+): QueryObserverResult<dataService.TZeqPattern[]> => {
+  return useQuery<dataService.TZeqPattern[]>(
+    [QueryKeys.zeqPatterns, 'daily'],
+    () => dataService.getDailyZeqPatterns(),
+    {
+      staleTime: 1000 * 60 * 60, // Cache for 1 hour (same patterns all day)
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      ...config,
+    },
+  );
+};
+
+// Track pattern click (public)
+export const useTrackZeqPatternClickMutation = (): UseMutationResult<
+  { success: boolean },
+  unknown,
+  string,
+  unknown
+> => {
+  return useMutation((patternId: string) => dataService.trackZeqPatternClick(patternId));
+};
+
+// Get all patterns (admin)
+export const useGetAdminZeqPatternsQuery = (
+  config?: UseQueryOptions<dataService.TZeqPattern[]>,
+): QueryObserverResult<dataService.TZeqPattern[]> => {
+  return useQuery<dataService.TZeqPattern[]>(
+    [QueryKeys.zeqPatternsAdmin],
+    () => dataService.getAdminZeqPatterns(),
+    {
+      refetchOnWindowFocus: false,
+      ...config,
+    },
+  );
+};
+
+// Create pattern (admin)
+export const useCreateAdminZeqPatternMutation = (
+  options?: m.MutationOptions<dataService.TZeqPattern, dataService.TCreateZeqPatternRequest>,
+): UseMutationResult<
+  dataService.TZeqPattern,
+  unknown,
+  dataService.TCreateZeqPatternRequest,
+  unknown
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: dataService.TCreateZeqPatternRequest) => dataService.createAdminZeqPattern(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.zeqPatternsAdmin]);
+        queryClient.invalidateQueries([QueryKeys.zeqPatterns]);
+      },
+      ...options,
+    },
+  );
+};
+
+// Update pattern (admin)
+export const useUpdateAdminZeqPatternMutation = (
+  options?: m.MutationOptions<dataService.TZeqPattern, { id: string; data: dataService.TUpdateZeqPatternRequest }>,
+): UseMutationResult<
+  dataService.TZeqPattern,
+  unknown,
+  { id: string; data: dataService.TUpdateZeqPatternRequest },
+  unknown
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ id, data }) => dataService.updateAdminZeqPattern(id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.zeqPatternsAdmin]);
+        queryClient.invalidateQueries([QueryKeys.zeqPatterns]);
+      },
+      ...options,
+    },
+  );
+};
+
+// Delete pattern (admin)
+export const useDeleteAdminZeqPatternMutation = (
+  options?: m.MutationOptions<{ message: string; pattern: dataService.TZeqPattern }, string>,
+): UseMutationResult<
+  { message: string; pattern: dataService.TZeqPattern },
+  unknown,
+  string,
+  unknown
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (id: string) => dataService.deleteAdminZeqPattern(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.zeqPatternsAdmin]);
+        queryClient.invalidateQueries([QueryKeys.zeqPatterns]);
+      },
+      ...options,
+    },
+  );
+};
+
+/* ========================= */
+/* Zeq Pattern Categories    */
+/* ========================= */
+
+export const useGetZeqPatternCategoriesQuery = (
+  config?: UseQueryOptions<dataService.TZeqPatternCategory[]>,
+): QueryObserverResult<dataService.TZeqPatternCategory[]> => {
+  return useQuery<dataService.TZeqPatternCategory[]>(
+    [QueryKeys.zeqPatternCategories],
+    () => dataService.getZeqPatternCategories(),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      ...config,
+    },
+  );
+};
+
+export const useGetAdminZeqPatternCategoriesQuery = (
+  config?: UseQueryOptions<dataService.TZeqPatternCategory[]>,
+): QueryObserverResult<dataService.TZeqPatternCategory[]> => {
+  return useQuery<dataService.TZeqPatternCategory[]>(
+    [QueryKeys.zeqPatternCategoriesAdmin],
+    () => dataService.getAdminZeqPatternCategories(),
+    {
+      refetchOnWindowFocus: false,
+      refetchOnReconnect: false,
+      refetchOnMount: false,
+      ...config,
+    },
+  );
+};
+
+export const useCreateAdminZeqPatternCategoryMutation = (
+  options?: m.MutationOptions<dataService.TZeqPatternCategory, dataService.TCreateZeqPatternCategoryRequest>,
+): UseMutationResult<
+  dataService.TZeqPatternCategory,
+  unknown,
+  dataService.TCreateZeqPatternCategoryRequest,
+  unknown
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (data: dataService.TCreateZeqPatternCategoryRequest) => dataService.createAdminZeqPatternCategory(data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.zeqPatternCategoriesAdmin]);
+        queryClient.invalidateQueries([QueryKeys.zeqPatternCategories]);
+      },
+      ...options,
+    },
+  );
+};
+
+export const useUpdateAdminZeqPatternCategoryMutation = (
+  options?: m.MutationOptions<dataService.TZeqPatternCategory, { id: string; data: dataService.TUpdateZeqPatternCategoryRequest }>,
+): UseMutationResult<
+  dataService.TZeqPatternCategory,
+  unknown,
+  { id: string; data: dataService.TUpdateZeqPatternCategoryRequest },
+  unknown
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    ({ id, data }) => dataService.updateAdminZeqPatternCategory(id, data),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.zeqPatternCategoriesAdmin]);
+        queryClient.invalidateQueries([QueryKeys.zeqPatternCategories]);
+      },
+      ...options,
+    },
+  );
+};
+
+export const useDeleteAdminZeqPatternCategoryMutation = (
+  options?: m.MutationOptions<{ message: string; category: dataService.TZeqPatternCategory }, string>,
+): UseMutationResult<
+  { message: string; category: dataService.TZeqPatternCategory },
+  unknown,
+  string,
+  unknown
+> => {
+  const queryClient = useQueryClient();
+  return useMutation(
+    (id: string) => dataService.deleteAdminZeqPatternCategory(id),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.zeqPatternCategoriesAdmin]);
+        queryClient.invalidateQueries([QueryKeys.zeqPatternCategories]);
+      },
+      ...options,
+    },
+  );
+};

@@ -1077,6 +1077,14 @@ export function updateAdminApiKey(payload: { endpointName: string; apiKey: strin
   return request.put(endpoints.adminSettingsEndpoints.apiKeys(), payload);
 }
 
+export function getAdminGuestAccessConfig(): Promise<{ enabled: boolean; dailyLimit: number; windowHours: number }> {
+  return request.get(endpoints.adminSettingsEndpoints.guestAccess());
+}
+
+export function updateAdminGuestAccessConfig(payload: { enabled: boolean; dailyLimit: number; windowHours: number }): Promise<{ message: string; note: string }> {
+  return request.put(endpoints.adminSettingsEndpoints.guestAccess(), payload);
+}
+
 export function getAdminPlan(planId: string): Promise<TPlan> {
   return request.get(endpoints.adminPlan(planId));
 }
@@ -1103,4 +1111,147 @@ export function getAdminUserPlan(userId: string): Promise<TUserPlanInfo> {
 
 export function updateAdminUserPlan(userId: string, data: TUpdateUserPlanRequest): Promise<{ message: string; user: any }> {
   return request.put(endpoints.adminUserPlan(userId), data);
+}
+
+/* ========================= */
+/* Zeq Patterns              */
+/* ========================= */
+
+export interface TZeqPattern {
+  _id: string;
+  title: string;
+  promptText: string;
+  category: string;
+  description?: string;
+  icon?: string;
+  priority: number;
+  isActive: boolean;
+  displayCount: number;
+  clickCount: number;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TCreateZeqPatternRequest {
+  title: string;
+  promptText: string;
+  category: string;
+  description?: string;
+  icon?: string;
+  priority?: number;
+  isActive?: boolean;
+}
+
+export interface TUpdateZeqPatternRequest {
+  title?: string;
+  promptText?: string;
+  category?: string;
+  description?: string;
+  icon?: string;
+  priority?: number;
+  isActive?: boolean;
+}
+
+// Public API - Get daily patterns
+export function getDailyZeqPatterns(): Promise<TZeqPattern[]> {
+  return request.get(endpoints.zeqPatternsEndpoints.daily());
+}
+
+// Public API - Track pattern click
+export function trackZeqPatternClick(patternId: string): Promise<{ success: boolean }> {
+  return request.post(endpoints.zeqPatternsEndpoints.trackClick(patternId));
+}
+
+// Admin API - Get all patterns
+export function getAdminZeqPatterns(): Promise<TZeqPattern[]> {
+  return request.get(endpoints.zeqPatternsEndpoints.adminList());
+}
+
+// Admin API - Get single pattern
+export function getAdminZeqPattern(id: string): Promise<TZeqPattern> {
+  return request.get(endpoints.zeqPatternsEndpoints.adminGet(id));
+}
+
+// Admin API - Create pattern
+export function createAdminZeqPattern(data: TCreateZeqPatternRequest): Promise<TZeqPattern> {
+  return request.post(endpoints.zeqPatternsEndpoints.adminCreate(), data);
+}
+
+// Admin API - Update pattern
+export function updateAdminZeqPattern(id: string, data: TUpdateZeqPatternRequest): Promise<TZeqPattern> {
+  return request.put(endpoints.zeqPatternsEndpoints.adminUpdate(id), data);
+}
+
+// Admin API - Delete pattern
+export function deleteAdminZeqPattern(id: string): Promise<{ message: string; pattern: TZeqPattern }> {
+  return request.delete(endpoints.zeqPatternsEndpoints.adminDelete(id));
+}
+
+/* ========================= */
+/* Zeq Pattern Categories    */
+/* ========================= */
+
+export interface TZeqPatternCategory {
+  _id: string;
+  value: string;
+  label: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  sortOrder: number;
+  isActive: boolean;
+  createdBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface TCreateZeqPatternCategoryRequest {
+  value: string;
+  label: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+}
+
+export interface TUpdateZeqPatternCategoryRequest {
+  value?: string;
+  label?: string;
+  description?: string;
+  color?: string;
+  icon?: string;
+  sortOrder?: number;
+  isActive?: boolean;
+}
+
+// Public API - Get active categories
+export function getZeqPatternCategories(): Promise<TZeqPatternCategory[]> {
+  return request.get(endpoints.zeqPatternsEndpoints.categories());
+}
+
+// Admin API - Get all categories (including inactive)
+export function getAdminZeqPatternCategories(): Promise<TZeqPatternCategory[]> {
+  return request.get(endpoints.zeqPatternsEndpoints.categoriesAdminList());
+}
+
+// Admin API - Get single category
+export function getAdminZeqPatternCategory(id: string): Promise<TZeqPatternCategory> {
+  return request.get(endpoints.zeqPatternsEndpoints.categoriesAdminGet(id));
+}
+
+// Admin API - Create category
+export function createAdminZeqPatternCategory(data: TCreateZeqPatternCategoryRequest): Promise<TZeqPatternCategory> {
+  return request.post(endpoints.zeqPatternsEndpoints.categoriesAdminCreate(), data);
+}
+
+// Admin API - Update category
+export function updateAdminZeqPatternCategory(id: string, data: TUpdateZeqPatternCategoryRequest): Promise<TZeqPatternCategory> {
+  return request.put(endpoints.zeqPatternsEndpoints.categoriesAdminUpdate(id), data);
+}
+
+// Admin API - Delete category
+export function deleteAdminZeqPatternCategory(id: string): Promise<{ message: string; category: TZeqPatternCategory }> {
+  return request.delete(endpoints.zeqPatternsEndpoints.categoriesAdminDelete(id));
 }
