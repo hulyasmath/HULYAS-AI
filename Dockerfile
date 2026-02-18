@@ -103,6 +103,9 @@ RUN \
     echo "All packages built and verified successfully!" && \
     npm cache clean --force
 
+
+# Fix winston-daily-rotate-file transport constructor (reinstall after workspace linking)
+RUN npm install --no-save --legacy-peer-deps winston-daily-rotate-file
 # Node API setup
 # Railway provides PORT env var automatically, default to 3080 for local builds
 ENV PORT=3080
