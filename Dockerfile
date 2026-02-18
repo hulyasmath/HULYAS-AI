@@ -103,9 +103,6 @@ RUN \
     echo "All packages built and verified successfully!" && \
     npm cache clean --force
 
-
-# Ensure winston-daily-rotate-file is available at runtime (gets removed by npm install --legacy-peer-deps)
-RUN npm install --no-save --legacy-peer-deps winston-daily-rotate-file
 # Node API setup
 # Railway provides PORT env var automatically, default to 3080 for local builds
 ENV PORT=3080
