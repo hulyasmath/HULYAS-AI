@@ -57,8 +57,6 @@ mcp.settings.transport_security = TransportSecuritySettings(
     ]
 )
 
-if __name__ == "__main__":
-    mcp.run(transport='sse', host='0.0.0.0', port=port)
 PYEOF
 
 RUN chown sandbox:sandbox /app/server.py
@@ -67,6 +65,6 @@ EXPOSE 8001
 
 USER sandbox
 
-# Run the MCP server in SSE mode
-# Railway will set PORT env var; server reads it
-CMD ["python", "/app/server.py"]
+# Run MCP server via fastmcp CLI on port 8001
+# The server.py sets security settings; fastmcp CLI handles transport
+CMD ["sh", "-c", "fastmcp run /app/server.py:mcp -t sse --host 0.0.0.0 --port ${PORT:-8001}"]
