@@ -286,7 +286,7 @@ endpoints:
         fetch: false
       titleConvo: true
       titleModel: 'deepseek-chat'
-      modelDisplayLabel: 'HULYAS'
+      modelDisplayLabel: 'Zeq MI'
       iconURL: '/assets/hulyas.gif'
       addParams:
         temperature: 0.1
@@ -296,8 +296,11 @@ endpoints:
 
 # Model Specs - Two options: HULYAS chat + Agents
 modelSpecs:
-  enforce: true
+  enforce: false
   prioritize: true
+  addedEndpoints:
+    - "agents"
+    - "DeepSeek"
   list:
     - name: "zeq-mi"
       label: "Zeq MI"
