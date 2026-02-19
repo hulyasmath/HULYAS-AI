@@ -296,8 +296,10 @@ endpoints:
 
 # Model Specs - Two options: HULYAS chat + Agents
 modelSpecs:
-  enforce: true
+  enforce: false
   prioritize: true
+  addedEndpoints:
+    - "agents"
   list:
     - name: "zeq-mi"
       label: "Zeq MI"
