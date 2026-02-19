@@ -217,18 +217,18 @@ mcpServers:
     env:
       PAPERS_DIR: /app/zeq-papers
 
-  code-sandbox:
-    type: sse
-    url: http://code_sandbox:8001/sse
-    timeout: 60000
-    headers:
-      Host: code_sandbox:8001
-    serverInstructions: |
-      Code Sandbox provides secure code execution in isolated Docker containers.
-      Available tools:
-      - run_python_code: Execute Python code safely (numpy, pandas, matplotlib included)
-      - run_javascript_code: Execute JavaScript/Node.js code safely
-      Use this for code execution, data analysis, calculations, and testing.
+  # code-sandbox:
+  #   type: sse
+  #   url: http://code_sandbox:8001/sse
+  #   timeout: 60000
+  #   headers:
+  #     Host: code_sandbox:8001
+  #   serverInstructions: |
+  #     Code Sandbox provides secure code execution in isolated Docker containers.
+  #     Available tools:
+  #     - run_python_code: Execute Python code safely (numpy, pandas, matplotlib included)
+  #     - run_javascript_code: Execute JavaScript/Node.js code safely
+  #     Use this for code execution, data analysis, calculations, and testing.
 
 # Definition of custom endpoints
 endpoints:
@@ -253,7 +253,7 @@ endpoints:
     # Minimum relevance score for sources
     minRelevanceScore: 0.45
     # Agent Capabilities
-    capabilities: ["file_search", "actions", "tools", "execute_code"]
+    capabilities: ["file_search", "actions", "tools"]
   # assistants:
   #   disableBuilder: false # Disable Assistants Builder Interface by setting to `true`
   #   pollIntervalMs: 3000  # Polling interval for checking assistant updates
