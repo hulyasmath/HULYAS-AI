@@ -82,7 +82,7 @@ interface:
 
       By using the Website, you acknowledge that you have read these Terms of Service and agree to be bound by them.
 
-  endpointsMenu: true
+  endpointsMenu: false
   modelSelect: true
   parameters: true
   sidePanel: true
@@ -294,18 +294,30 @@ endpoints:
 
     # Fireworks removed from active endpoints
 
-# Model Specs removed - using raw endpoints instead so both
-# "Zeq MI" (DeepSeek) and "My Agents" always appear in dropdown
-# modelSpecs:
-#   enforce: false
-#   prioritize: true
-#   list:
-#     - name: "zeq-mi"
-#       label: "Zeq MI"
-#       ...
-#     - name: "agents"
-#       label: "My Agents"
-#       ...
+# Model Specs - Two options: HULYAS chat + Agents
+modelSpecs:
+  enforce: false
+  prioritize: true
+  addedEndpoints:
+    - "agents"
+    - "DeepSeek"
+  list:
+    - name: "zeq-mi"
+      label: "Zeq MI"
+      description: "Zeq OS Mathematical Intelligence"
+      default: true
+      iconURL: "/assets/hulyas.gif"
+      preset:
+        endpoint: "DeepSeek"
+        model: "deepseek-chat"
+        modelLabel: "HULYAS"
+    - name: "agents"
+      label: "My Agents"
+      description: "Agents with MCP Tools"
+      preset:
+        endpoint: "agents"
+        model: "deepseek-chat"
+        modelLabel: "Zeq MI"
 
 # Example modelSpecs configuration showing grouping options
 # The 'group' field organizes model specs in the UI selector:
