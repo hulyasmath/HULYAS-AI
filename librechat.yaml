@@ -242,6 +242,9 @@ endpoints:
     # Allow providers for agents
     allowedProviders:
       - "DeepSeek"
+    # Default provider and model for agent builder
+    defaultProvider: "DeepSeek"
+    defaultModel: "deepseek-chat"
     # Default recursion depth for agents
     recursionLimit: 50
     # Max recursion depth for agents
@@ -310,6 +313,8 @@ modelSpecs:
       description: "Agents with MCP Tools"
       preset:
         endpoint: "agents"
+        model: "deepseek-chat"
+        modelLabel: "Zeq MI"
 
 # Example modelSpecs configuration showing grouping options
 # The 'group' field organizes model specs in the UI selector:
