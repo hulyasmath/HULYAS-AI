@@ -3,8 +3,8 @@
 
 import { getToken, setToken, removeToken, setCurrentUser, refreshToken as refreshAuthToken, type AuthUser } from './auth';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8080/api';
-const LIBRECHAT_URL = import.meta.env.VITE_LIBRECHAT_URL || 'http://localhost:3080';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const LIBRECHAT_URL = import.meta.env.VITE_LIBRECHAT_URL || '/chat';
 
 export interface AppFilters {
   category?: string;

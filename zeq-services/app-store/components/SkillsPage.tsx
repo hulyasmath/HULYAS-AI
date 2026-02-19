@@ -43,8 +43,9 @@ import { EntropyVerifier, calculateShannonEntropy } from './shared/EntropyVerifi
 import { KolmogorovChecker } from './shared/KolmogorovChecker';
 import { HulyaPulseIndicator } from './shared/HulyaPulseIndicator';
 
-const SKILLS_API = 'http://localhost:8080/api/skills';
-const OPERATOR_API = 'http://localhost:8080/api/zeq/operators/execute';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+const SKILLS_API = `${API_BASE_URL}/skills`;
+const OPERATOR_API = `${API_BASE_URL}/zeq/operators/execute`;
 
 interface SkillData {
   id: string;
@@ -196,7 +197,7 @@ const generateSkillTemplate = (
   skillName: string,
   authorName: string,
   enableApiCalls: boolean = true,
-  apiEndpoint: string = 'http://localhost:8080/api'
+  apiEndpoint: string = import.meta.env.VITE_API_URL || '/api'
 ): string => {
   const timestamp = new Date().toISOString().split('T')[0];
   const slug = skillName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
@@ -636,7 +637,7 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onNavigateToWizard }) =>
   const [selectedOperators, setSelectedOperators] = useState<string[]>([]);
   const [activeTab, setActiveTab] = useState<'generator' | 'library' | 'docs' | 'myskills' | 'marketplace' | 'runner'>('generator');
   const [enableApiCalls, setEnableApiCalls] = useState(true);
-  const [apiEndpoint, setApiEndpoint] = useState('http://localhost:8080/api');
+  const [apiEndpoint, setApiEndpoint] = useState(import.meta.env.VITE_API_URL || '/api');
 
   // My Skills state
   const [mySkills, setMySkills] = useState<SkillData[]>([]);
@@ -988,7 +989,7 @@ export const SkillsPage: React.FC<SkillsPageProps> = ({ onNavigateToWizard }) =>
                           type="text"
                           value={apiEndpoint}
                           onChange={(e) => setApiEndpoint(e.target.value)}
-                          placeholder="http://localhost:8080/api"
+                          placeholder="/api"
                           className="w-full px-3 py-2 bg-black/30 border border-white/10 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition-colors font-mono"
                         />
                         <p className="text-xs text-slate-500 mt-1">

@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Terminal, Code, Book, Copy, Check, Search, Loader2, Cpu, Building2, Microscope, Zap, Shield, Rocket } from 'lucide-react';
 import { listOperators, type Operator } from '../services/operators';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 export const DeveloperDocs: React.FC<{ initialTab?: 'cli' | 'api' | 'operators' }> = ({ initialTab = 'cli' }) => {
   const [activeTab, setActiveTab] = useState<'cli' | 'api' | 'operators'>(initialTab);
 
@@ -550,10 +552,10 @@ zeq pipeline --chain "MED101 -> MED102 -> MED103" --input patient.json`
             <div className="relative mb-4">
               <p className="text-xs text-slate-500 mb-2 uppercase tracking-wider">Base URL</p>
               <pre className="bg-black/50 p-4 rounded-lg text-sm text-slate-300 overflow-x-auto">
-                <code>http://localhost:8080/api</code>
+                <code>{API_BASE_URL}</code>
               </pre>
               <button
-                onClick={() => copyToClipboard('http://localhost:8080/api', 'base-url')}
+                onClick={() => copyToClipboard(API_BASE_URL, 'base-url')}
                 className="absolute top-8 right-2 p-2 hover:bg-white/5 rounded-lg transition-colors"
               >
                 {copied === 'base-url' ? <Check size={16} className="text-green-400" /> : <Copy size={16} className="text-slate-400" />}
@@ -655,7 +657,7 @@ zeq pipeline --chain "MED101 -> MED102 -> MED103" --input patient.json`
                         </div>
                         <button
                           onClick={() => copyToClipboard(
-                            `curl -X POST "http://localhost:8080/api/zeq/operators/execute" -H "Content-Type: application/json" -d '{"operator": "${example.id}", "params": ${JSON.stringify(example.params)}}'`,
+                            `curl -X POST "${API_BASE_URL}/zeq/operators/execute" -H "Content-Type: application/json" -d '{"operator": "${example.id}", "params": ${JSON.stringify(example.params)}}'`,
                             `curl-${catIdx}-${exIdx}`
                           )}
                           className="p-1 hover:bg-white/5 rounded transition-colors"
@@ -743,7 +745,7 @@ zeq pipeline --chain "MED101 -> MED102 -> MED103" --input patient.json`
               <div className="text-center py-12">
                 <p className="text-red-400 mb-2">Failed to load operators</p>
                 <p className="text-slate-400 text-sm mb-2">{error}</p>
-                <p className="text-slate-400 text-sm">Make sure the API server is running on http://localhost:8080</p>
+                <p className="text-slate-400 text-sm">Make sure the API server is running on {API_BASE_URL}</p>
                 <p className="text-slate-500 text-xs mt-2">Run: npm run api</p>
                 <button
                   onClick={() => {
@@ -799,7 +801,7 @@ zeq pipeline --chain "MED101 -> MED102 -> MED103" --input patient.json`
                     <p className="text-xs text-slate-500 line-clamp-2">{operator.description}</p>
                     <button
                       onClick={() => {
-                        const command = `curl -X POST "http://localhost:8080/api/zeq/operators/execute" -H "Content-Type: application/json" -d '{"operator": "${operator.id}", "params": {}}'`;
+                        const command = `curl -X POST "${API_BASE_URL}/zeq/operators/execute" -H "Content-Type: application/json" -d '{"operator": "${operator.id}", "params": {}}'`;
                         copyToClipboard(command, operator.id);
                       }}
                       className="mt-3 text-xs text-cyan-400 hover:text-cyan-300 flex items-center gap-1"

@@ -66,5 +66,5 @@ export interface IntegrityData {
   status: 'verified' | 'warning' | 'failed';
 }
 
-export const API_BASE = 'http://localhost:8080';
+export const API_BASE = import.meta.env.VITE_API_URL?.replace('/api', '') || '';
 export const PRECISION_THRESHOLD = 0.001; // 0.1%

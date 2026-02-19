@@ -1,6 +1,6 @@
 // services/zeqond.ts
 // Connect directly to daemon on port 2871 (not through API server)
-const DAEMON_URL = 'http://localhost:2871';
+const DAEMON_URL = import.meta.env.VITE_DAEMON_URL || '';
 
 export interface ZeqondStatus {
   running: boolean;

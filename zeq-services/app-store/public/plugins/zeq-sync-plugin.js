@@ -184,7 +184,7 @@
       this.options = {
         frequency: options.frequency || HULYAPULSE_HZ,
         autoStart: options.autoStart !== false,
-        daemonUrl: options.daemonUrl || 'http://localhost:2871',
+        daemonUrl: options.daemonUrl || '',
         useDaemon: options.useDaemon || false,
         amplitude: options.amplitude || 0.1,
         ...options

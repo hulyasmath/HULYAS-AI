@@ -3,7 +3,7 @@
 
 const TOKEN_KEY = 'zeq_token';
 const USER_KEY = 'zeq_user';
-const LIBRECHAT_URL = import.meta.env.VITE_LIBRECHAT_URL || 'http://localhost:3080';
+const LIBRECHAT_URL = import.meta.env.VITE_LIBRECHAT_URL || '/chat';
 
 export interface AuthUser {
   id: string;

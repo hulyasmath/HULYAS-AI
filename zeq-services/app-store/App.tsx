@@ -11451,7 +11451,7 @@ impl Drop for SecureChannel {
 {`import { ZeqBoard } from './tools/zeqboard';
 
 <ZeqBoard
-  apiUrl="http://localhost:8080/api"
+  apiUrl={import.meta.env.VITE_API_URL || '/api'}
   refreshInterval={5000}
 />`}
                         </pre>
@@ -11953,7 +11953,7 @@ print(f"Verified: {verification.passed}")
                   <h4 className="text-2xl font-bold font-futuristic mb-6 uppercase text-cyan-400">REST API Endpoints</h4>
                   <pre className="text-cyan-300 bg-slate-900/70 p-6 rounded-2xl text-sm overflow-x-auto border border-white/10">{`import requests
 
-BASE_URL = "http://localhost:8080/api/7step"
+BASE_URL = "${(import.meta.env.VITE_API_URL || '/api') + '/7step'}"
 
 # Parse natural language into 7-step structure
 response = requests.post(f"{BASE_URL}/parse", json={
@@ -12838,7 +12838,7 @@ console.log(\`Verified: \${result.verified}, Physics Score: \${result.physicsSco
                   <h4 className="text-2xl font-bold font-futuristic mb-6 uppercase text-cyan-400">REST API</h4>
                   <pre className="text-cyan-300 bg-slate-900/70 p-6 rounded-2xl text-sm overflow-x-auto border border-white/10">{`import requests
 
-BASE_URL = "http://localhost:8080/api/mi"
+BASE_URL = "${(import.meta.env.VITE_API_URL || '/api') + '/mi'}"
 
 # Process query through MI
 response = requests.post(f"{BASE_URL}/process", json={

@@ -5,7 +5,7 @@ import { CommunityApp } from '../types';
 import { X, Star, Download, ShieldCheck, Share2, Loader2, Sparkles, ExternalLink, Play, Package, Atom } from 'lucide-react';
 import { getAppInsights } from '../services/geminiService';
 
-const LIBRECHAT_URL = import.meta.env.VITE_LIBRECHAT_URL || 'http://localhost:3090';
+const LIBRECHAT_URL = import.meta.env.VITE_LIBRECHAT_URL || '/chat';
 
 const FibonacciSpiral: React.FC<{ size?: number; className?: string }> = ({ size = 24, className = "" }) => (
   <svg 

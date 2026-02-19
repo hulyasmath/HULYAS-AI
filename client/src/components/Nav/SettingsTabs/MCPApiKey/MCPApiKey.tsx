@@ -198,7 +198,7 @@ export default function MCPApiKey() {
         </h4>
         <ol className="list-decimal list-inside space-y-1 text-sm text-text-secondary">
           <li>{localize('com_ui_copy_api_key_above')}</li>
-          <li>{localize('com_ui_configure_mcp_client', { url: 'http://localhost:4005/mcp' })}</li>
+          <li>{localize('com_ui_configure_mcp_client', { url: `${window.location.origin}/mcp` })}</li>
           <li>{localize('com_ui_add_api_key_header', { header: 'X-API-Key' })}</li>
           <li>
             {localize('com_ui_use_mcp_tools', {

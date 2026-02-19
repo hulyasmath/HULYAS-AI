@@ -18,8 +18,8 @@ export interface RunResponse {
 
 const BASE =
   import.meta.env.VITE_7STEP_API_URL ||
-  import.meta.env.VITE_API_URL ||
-  'http://localhost:8080'; // Node API default (includes 7-step runner)
+  import.meta.env.VITE_API_URL?.replace('/api', '') ||
+  ''; // Node API default (includes 7-step runner)
 
 export const SEVENSTEP_BASE = BASE;
 

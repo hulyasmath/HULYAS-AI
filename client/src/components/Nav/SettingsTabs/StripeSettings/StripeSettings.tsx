@@ -220,7 +220,7 @@ export default function StripeSettings() {
           <div>
             <strong>Webhook URL:</strong>{' '}
             <code className="rounded bg-surface-tertiary px-1.5 py-0.5">
-              {stripeConfig.webhookUrl || 'http://localhost:3080/api/stripe/webhook'}
+              {stripeConfig.webhookUrl || `${window.location.origin}/api/stripe/webhook`}
             </code>
           </div>
           <div>
