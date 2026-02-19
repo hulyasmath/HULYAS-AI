@@ -219,18 +219,20 @@ mcpServers:
     env:
       PAPERS_DIR: /app/zeq-papers
 
-  code-sandbox:
-    type: sse
-    url: http://code_sandbox:8001/sse
-    timeout: 60000
-    headers:
-      Host: code_sandbox:8001
-    serverInstructions: |
-      Code Sandbox provides secure code execution in isolated Docker containers.
-      Available tools:
-      - run_python_code: Execute Python code safely (numpy, pandas, matplotlib included)
-      - run_javascript_code: Execute JavaScript/Node.js code safely
-      Use this for code execution, data analysis, calculations, and testing.
+  # code-sandbox: DISABLED - no code-sandbox service deployed on Railway
+  # To re-enable, deploy a code-sandbox service and uncomment below:
+  # code-sandbox:
+  #   type: sse
+  #   url: http://code_sandbox:8001/sse
+  #   timeout: 60000
+  #   headers:
+  #     Host: code_sandbox:8001
+  #   serverInstructions: |
+  #     Code Sandbox provides secure code execution in isolated Docker containers.
+  #     Available tools:
+  #     - run_python_code: Execute Python code safely (numpy, pandas, matplotlib included)
+  #     - run_javascript_code: Execute JavaScript/Node.js code safely
+  #     Use this for code execution, data analysis, calculations, and testing.
 
 # Definition of custom endpoints
 endpoints:
