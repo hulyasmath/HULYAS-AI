@@ -294,18 +294,23 @@ endpoints:
 
     # Fireworks removed from active endpoints
 
-# Model Specs - Two options: HULYAS chat + Agents
+# Model Specs - Zeq MI (default + always-visible) + Agents
 modelSpecs:
-  enforce: false
+  enforce: true
   prioritize: true
-  addedEndpoints:
-    - "agents"
-    - "DeepSeek"
   list:
     - name: "zeq-mi"
       label: "Zeq MI"
       description: "Zeq OS Mathematical Intelligence"
       default: true
+      iconURL: "/assets/hulyas.gif"
+      preset:
+        endpoint: "DeepSeek"
+        model: "deepseek-chat"
+        modelLabel: "HULYAS"
+    - name: "zeq-mi-select"
+      label: "Zeq MI"
+      description: "Zeq OS Mathematical Intelligence"
       iconURL: "/assets/hulyas.gif"
       preset:
         endpoint: "DeepSeek"
