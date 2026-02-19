@@ -10,18 +10,15 @@ async function initializeMCPs() {
       return;
     }
 
-    // Ensure MCPServersRegistry is initialized with mongoose before MCP init
+    // Set raw configs in MCPServersRegistry so the config endpoint can serve them
     try {
-      const { MCPServersRegistry } = require('@librechat/api');
-      const mongoose = require('mongoose');
-      const allowedDomains = (appConfig.actions && appConfig.actions.allowedDomains) || [];
-      MCPServersRegistry.createInstance(mongoose, allowedDomains);
-      logger.info('MCPServersRegistry created successfully');
-    } catch (regErr) {
-      // If already created, that's fine
-      if (!regErr.message.includes('already')) {
-        logger.warn('MCPServersRegistry pre-init: ' + regErr.message);
+      const { mcpServersRegistry } = require('@librechat/api');
+      if (mcpServersRegistry && typeof mcpServersRegistry.setRawConfigs === 'function') {
+        mcpServersRegistry.setRawConfigs(mcpServers);
+        logger.info('MCPServersRegistry raw configs set successfully');
       }
+    } catch (regErr) {
+      logger.warn('MCPServersRegistry init: ' + regErr.message);
     }
 
     const mcpManager = await createMCPManager(mcpServers);

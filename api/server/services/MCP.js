@@ -25,7 +25,7 @@ const { findToken, createToken, updateToken } = require('~/models');
 const { reinitMCPServer } = require('./Tools/mcp');
 const { getAppConfig } = require('./Config');
 const { getLogStores } = require('~/cache');
-const { MCPServersRegistry } = require('@librechat/api');
+const { mcpServersRegistry } = require('@librechat/api');
 
 /**
  * @param {object} params
@@ -451,7 +451,7 @@ async function getMCPSetupData(userId) {
     logger.error(`[MCP][User: ${userId}] Error getting app connections:`, error);
   }
   const userConnections = mcpManager.getUserConnections(userId) || new Map();
-  const oauthServers = await MCPServersRegistry.getInstance().getOAuthServers();
+  const oauthServers = await mcpServersRegistry.getOAuthServers();
 
   return {
     mcpConfig,

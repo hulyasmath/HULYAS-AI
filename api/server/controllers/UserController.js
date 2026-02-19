@@ -3,7 +3,7 @@ const { Tools, CacheKeys, Constants, FileSources } = require('librechat-data-pro
 const {
   MCPOAuthHandler,
   MCPTokenStorage,
-  MCPServersRegistry,
+  mcpServersRegistry,
   normalizeHttpError,
   extractWebSearchEnvVars,
 } = require('@librechat/api');
@@ -322,9 +322,9 @@ const maybeUninstallOAuthMCP = async (userId, pluginKey, appConfig) => {
 
   const serverName = pluginKey.replace(Constants.mcp_prefix, '');
   const serverConfig =
-    (await MCPServersRegistry.getInstance().getServerConfig(serverName, userId)) ??
+    (await mcpServersRegistry.getServerConfig(serverName, userId)) ??
     appConfig?.mcpServers?.[serverName];
-  const oauthServers = await MCPServersRegistry.getInstance().getOAuthServers();
+  const oauthServers = await mcpServersRegistry.getOAuthServers();
   if (!oauthServers.has(serverName)) {
     // this server does not use OAuth, so nothing to do here as well
     return;
