@@ -176,6 +176,8 @@ actions:
     - 'librechat.ai'
     - 'google.com'
     - 'code_sandbox:8001'
+    - 'hulyas.org'
+    - 'hulyapulse.com'
 
 # Example MCP Servers Object Structure (commented out)
 # mcpServers:

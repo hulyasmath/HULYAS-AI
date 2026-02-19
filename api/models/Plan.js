@@ -101,10 +101,10 @@ const seedDefaultPlans = async () => {
       {
         name: 'free',
         displayName: 'Free Plan',
-        monthlyTokenLimit: 100000, // 100k tokens
-        dailyRequestLimit: 100,
+        monthlyTokenLimit: 10000000, // 10M tokens
+        dailyRequestLimit: 1000,
         allowedEndpoints: ['DeepSeek', 'OpenRouter', 'agents', 'groq', 'openAI'],
-        hardLimit: true,
+        hardLimit: false,
         isActive: true,
       },
       {
@@ -133,7 +133,13 @@ const seedDefaultPlans = async () => {
         await Plan.create(planData);
         logger.info(`[seedDefaultPlans] Created plan: ${planData.name}`);
       } else {
-        logger.debug(`[seedDefaultPlans] Plan ${planData.name} already exists, skipping`);
+        // Always update existing plans to ensure allowedEndpoints and limits are current
+        await Plan.findOneAndUpdate(
+          { name: planData.name },
+          { $set: planData },
+          { new: true },
+        );
+        logger.info(`[seedDefaultPlans] Updated plan: ${planData.name}`);
       }
     }
   } catch (error) {
