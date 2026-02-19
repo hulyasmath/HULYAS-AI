@@ -294,7 +294,9 @@ endpoints:
 
     # Fireworks removed from active endpoints
 
-# Model Specs - Zeq MI + Agents (agents is default so Zeq MI always shows in dropdown)
+# Model Specs - Zeq MI (default) + Agents
+# Note: LibreChat hides the active spec from the dropdown by design.
+# "Zeq MI" shows as the active tab at the top; dropdown shows alternatives.
 modelSpecs:
   enforce: true
   prioritize: true
@@ -302,15 +304,16 @@ modelSpecs:
     - name: "zeq-mi"
       label: "Zeq MI"
       description: "Zeq OS Mathematical Intelligence"
+      default: true
       iconURL: "/assets/hulyas.gif"
+      showInSidebar: true
       preset:
         endpoint: "DeepSeek"
         model: "deepseek-chat"
-        modelLabel: "HULYAS"
+        modelLabel: "Zeq MI"
     - name: "agents"
       label: "My Agents"
       description: "Agents with MCP Tools"
-      default: true
       preset:
         endpoint: "agents"
         model: "deepseek-chat"
