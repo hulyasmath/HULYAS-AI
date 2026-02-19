@@ -41,10 +41,22 @@ async function buildEndpointOption(req, res, next) {
   }
 
   const appConfig = req.config;
+  const isAgentRequest =
+    isAgentsEndpoint(endpoint) || req.baseUrl.startsWith(EndpointURLs[EModelEndpoint.agents]);
+
   if (appConfig.modelSpecs?.list && appConfig.modelSpecs?.enforce) {
     /** @type {{ list: TModelSpec[] }}*/
     const { list } = appConfig.modelSpecs;
-    const { spec } = parsedBody;
+    let { spec } = parsedBody;
+
+    // Auto-assign spec for agent requests if not provided
+    if (!spec && isAgentRequest) {
+      const agentSpec = list.find((s) => s.preset?.endpoint === 'agents');
+      if (agentSpec) {
+        spec = agentSpec.name;
+        parsedBody.spec = spec;
+      }
+    }
 
     if (!spec) {
       return handleError(res, { text: 'No model spec selected' });
