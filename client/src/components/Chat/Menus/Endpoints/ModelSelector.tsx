@@ -91,9 +91,9 @@ function ModelSelectorContent() {
           renderSearchResults(searchResults, localize, searchValue)
         ) : (
           <>
-            {/* Render only "Zeq MI" modelSpec (hide Zeq MI Agent, Zeq MI Pro) */}
+            {/* Render Zeq MI modelSpec */}
             {renderModelSpecs(
-              modelSpecs?.filter((spec) => !spec.group && spec.name === 'deepseek') || [],
+              modelSpecs?.filter((spec) => !spec.group && spec.name === 'zeq-mi') || [],
               selectedValues.modelSpec || '',
             )}
             {/* Render only "My Agents" endpoint (hide DeepSeek, Fireworks raw endpoints) */}
