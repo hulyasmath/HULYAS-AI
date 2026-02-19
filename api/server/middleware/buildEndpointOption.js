@@ -76,11 +76,20 @@ async function buildEndpointOption(req, res, next) {
       if (currentModelSpec.iconURL != null && currentModelSpec.iconURL !== '') {
         currentModelSpec.preset.iconURL = currentModelSpec.iconURL;
       }
+
+      // Preserve agent_id from original request for agent requests
+      const originalAgentId = parsedBody.agent_id;
+
       parsedBody = parseCompactConvo({
         endpoint,
         endpointType,
         conversation: currentModelSpec.preset,
       });
+
+      // Restore agent_id after modelSpec override (it's not in the preset)
+      if (isAgentRequest && originalAgentId) {
+        parsedBody.agent_id = originalAgentId;
+      }
     } catch (error) {
       logger.error(`Error parsing model spec for endpoint ${endpoint}`, error);
       return handleError(res, { text: 'Error parsing model spec' });
