@@ -256,7 +256,7 @@ endpoints:
     # Minimum relevance score for sources
     minRelevanceScore: 0.45
     # Agent Capabilities
-    capabilities: ["file_search", "actions", "tools", "execute_code"]
+    capabilities: ["file_search", "actions", "tools"]
   # assistants:
   #   disableBuilder: false # Disable Assistants Builder Interface by setting to `true`
   #   pollIntervalMs: 3000  # Polling interval for checking assistant updates
