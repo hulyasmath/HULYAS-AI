@@ -44,6 +44,9 @@ const getMCPServers = async (payload, appConfig) => {
     if (!mcpManager) {
       return;
     }
+    if (!MCPServersRegistry || typeof MCPServersRegistry.getInstance !== 'function') {
+      return;
+    }
     const registry = MCPServersRegistry.getInstance();
     const mcpServers = await registry.getAllServerConfigs();
     if (!mcpServers) return;
