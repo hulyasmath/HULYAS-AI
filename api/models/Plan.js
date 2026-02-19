@@ -112,7 +112,7 @@ const seedDefaultPlans = async () => {
         displayName: 'Pro Plan',
         monthlyTokenLimit: 1000000, // 1M tokens
         dailyRequestLimit: 2000,
-        allowedEndpoints: ['DeepSeek', 'OpenRouter'],
+        allowedEndpoints: ['DeepSeek', 'OpenRouter', 'agents', 'groq', 'openAI'],
         hardLimit: true,
         isActive: true,
       },
@@ -121,7 +121,7 @@ const seedDefaultPlans = async () => {
         displayName: 'Enterprise Plan',
         monthlyTokenLimit: null, // Unlimited (or set a very high number)
         dailyRequestLimit: null, // Unlimited (or set a very high number)
-        allowedEndpoints: ['DeepSeek', 'OpenRouter'],
+        allowedEndpoints: ['DeepSeek', 'OpenRouter', 'agents', 'groq', 'openAI'],
         hardLimit: true,
         isActive: true,
       },

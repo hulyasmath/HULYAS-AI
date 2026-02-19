@@ -91,12 +91,12 @@ function ModelSelectorContent() {
           renderSearchResults(searchResults, localize, searchValue)
         ) : (
           <>
-            {/* Render Zeq MI modelSpec */}
+            {/* Render Zeq MI + Agents model specs */}
             {renderModelSpecs(
-              modelSpecs?.filter((spec) => !spec.group && spec.name === 'zeq-mi') || [],
+              modelSpecs?.filter((spec) => !spec.group && (spec.name === 'zeq-mi' || spec.name === 'agents')) || [],
               selectedValues.modelSpec || '',
             )}
-            {/* Render only "My Agents" endpoint (hide DeepSeek, Fireworks raw endpoints) */}
+            {/* Render agents endpoint for direct access */}
             {renderEndpoints(
               (mappedEndpoints ?? []).filter((ep) => ep.value === 'agents'),
             )}

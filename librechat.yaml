@@ -120,10 +120,10 @@ registration:
 # Subscribers ($20/month) get unlimited access
 rateLimits:
   messages:
-    ipMax: 10
-    ipWindowInMinutes: 1440  # 24 hours = 1 day
-    userMax: 10
-    userWindowInMinutes: 1440  # 24 hours = 1 day
+    ipMax: 200
+    ipWindowInMinutes: 60  # 1 hour
+    userMax: 200
+    userWindowInMinutes: 60  # 1 hour
 
 # Example Balance settings
 # balance:
