@@ -58,12 +58,12 @@ export default function Header() {
             } ${!navVisible ? 'translate-x-0' : 'translate-x-[-100px]'}`}
           >
             <a
-              href={import.meta.env.VITE_APP_STORE_URL || '/'}
+              href="https://zeqosecosystem-production.up.railway.app"
               className="my-1 flex h-10 items-center gap-2 rounded-xl border border-border-light bg-surface-secondary px-3 py-2 text-sm text-text-primary hover:bg-surface-tertiary transition-colors shrink-0"
-              title="Back to App Store"
+              title="Back to HulyaVerse"
             >
               <LayoutGrid className="h-4 w-4 shrink-0" />
-              <span className="hidden sm:inline whitespace-nowrap">App Store</span>
+              <span className="hidden sm:inline whitespace-nowrap">HulyaVerse</span>
             </a>
             <ModelSelector startupConfig={startupConfig} />
             {interfaceConfig.presets === true && interfaceConfig.modelSelect && <PresetsMenu />}
