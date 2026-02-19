@@ -294,21 +294,12 @@ endpoints:
 
     # Fireworks removed from active endpoints
 
-# Model Specs - Zeq MI (default + always-visible) + Agents
+# Model Specs - Zeq MI + Agents (agents is default so Zeq MI always shows in dropdown)
 modelSpecs:
   enforce: true
   prioritize: true
   list:
     - name: "zeq-mi"
-      label: "Zeq MI"
-      description: "Zeq OS Mathematical Intelligence"
-      default: true
-      iconURL: "/assets/hulyas.gif"
-      preset:
-        endpoint: "DeepSeek"
-        model: "deepseek-chat"
-        modelLabel: "HULYAS"
-    - name: "zeq-mi-select"
       label: "Zeq MI"
       description: "Zeq OS Mathematical Intelligence"
       iconURL: "/assets/hulyas.gif"
@@ -319,6 +310,7 @@ modelSpecs:
     - name: "agents"
       label: "My Agents"
       description: "Agents with MCP Tools"
+      default: true
       preset:
         endpoint: "agents"
         model: "deepseek-chat"
