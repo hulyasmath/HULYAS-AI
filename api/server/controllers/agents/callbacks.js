@@ -95,7 +95,7 @@ class ModelEndHandler {
       }
 
       // TEMPORARY: Log the output structure to find where finish_reason lives
-      logger.info('[ModelEndHandler] finish_reason debug', {
+      const _debugData = JSON.stringify({
         finishReason,
         hasResponseMetadata: !!data?.output?.response_metadata,
         responseMetadataKeys: data?.output?.response_metadata ? Object.keys(data.output.response_metadata) : [],
@@ -104,6 +104,7 @@ class ModelEndHandler {
         additionalKwargs: data?.output?.additional_kwargs ? JSON.stringify(data.output.additional_kwargs).slice(0, 500) : 'null',
         outputKeys: data?.output ? Object.keys(data.output).filter(k => typeof data.output[k] !== 'function') : [],
       });
+      logger.info('[ModelEndHandler] finish_reason debug: ' + _debugData);
 
       const usage = data?.output?.usage_metadata;
       if (!usage) {
