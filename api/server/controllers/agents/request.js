@@ -241,8 +241,6 @@ const AgentController = async (req, res, next, initializeClient, addTitle) => {
       // Create a new response object with minimal copies
       const finalResponse = { ...response };
 
-      logger.info('[ContinueBtn:8] Final SSE: finish_reason=' + (finalResponse.finish_reason || 'MISSING') + ', has_metadata=' + !!finalResponse.metadata + ', metadata.finish_reason=' + (finalResponse.metadata?.finish_reason || 'MISSING'));
-
       sendEvent(res, {
         final: true,
         conversation,

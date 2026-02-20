@@ -711,10 +711,6 @@ class BaseClient {
       metadata,
     };
 
-    if (this.clientName === 'agents') {
-      logger.info('[ContinueBtn:7b] BaseClient responseMessage: this.metadata=' + JSON.stringify(this.metadata || null) + ', responseMessage.finish_reason=' + (responseMessage.finish_reason || 'MISSING'));
-    }
-
     if (typeof completion === 'string') {
       responseMessage.text = completion;
     } else if (

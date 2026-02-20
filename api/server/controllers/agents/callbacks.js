@@ -92,20 +92,16 @@ class ModelEndHandler {
         data?.output?.additional_kwargs?.stop_reason;
       if (finishReason && this.finishReasonRef) {
         this.finishReasonRef.value = finishReason;
-        logger.info('[ContinueBtn:1] Direct finish_reason from LLM: ' + finishReason);
       }
 
       const usage = data?.output?.usage_metadata;
       if (!usage) {
-        logger.info('[ContinueBtn:2] No usage_metadata in CHAT_MODEL_END — finishReasonRef=' + (this.finishReasonRef?.value || 'undefined'));
         return this.finalize(errorMessage);
       }
       const modelName = metadata?.ls_model_name || agentContext.clientOptions?.model;
       if (modelName) {
         usage.model = modelName;
       }
-
-      logger.info('[ContinueBtn:3] CHAT_MODEL_END usage: output_tokens=' + (usage.output_tokens || 0) + ', model=' + (modelName || 'unknown'));
 
       this.collectedUsage.push(usage);
 
@@ -145,16 +141,14 @@ class ModelEndHandler {
         // Use 90% threshold to account for minor token counting differences
         const threshold = Math.floor(effectiveMax * 0.9);
 
-        logger.info('[ContinueBtn:4] Heuristic check: outputTokens=' + outputTokens + ', effectiveMax=' + effectiveMax + ', threshold=' + threshold + ', configuredMax=' + configuredMax + ', model=' + (co.model || 'none'));
-
         if (effectiveMax > 0 && outputTokens >= threshold) {
           this.finishReasonRef.value = 'length';
-          logger.info('[ContinueBtn:5] SET finish_reason=length via heuristic: ' + outputTokens + '>=' + threshold);
-        } else {
-          logger.info('[ContinueBtn:5] Heuristic did NOT trigger: ' + outputTokens + '<' + threshold + ' (or effectiveMax=0)');
+          logger.debug(
+            '[ModelEndHandler] Inferred finish_reason=length: ' +
+              outputTokens + '/' + effectiveMax +
+              (configuredMax === 0 ? ' (model default)' : ''),
+          );
         }
-      } else if (this.finishReasonRef?.value) {
-        logger.info('[ContinueBtn:4] Skipping heuristic, already have finish_reason=' + this.finishReasonRef.value);
       }
       if (!streamingDisabled) {
         return this.finalize(errorMessage);
