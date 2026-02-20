@@ -7434,7 +7434,7 @@ if (typeof window !== 'undefined') {
     function doLoad() {
         if (document.querySelector('#zeq-patterns-container')) return;
         var s = document.createElement('script');
-        s.src = '/zeq-patterns.js?v=4';
+        s.src = '/zeq-patterns.js?v=5';
         s.onload = function() { console.log('✅ Zeq OS: Pattern chips script loaded'); };
         s.onerror = function() { console.warn('⚠️ Zeq OS: Failed to load pattern chips'); };
         document.head.appendChild(s);
