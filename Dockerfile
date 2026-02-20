@@ -5,7 +5,7 @@
 # If not provided, use defaults that change on each build
 ARG RAILWAY_GIT_COMMIT
 ARG RAILWAY_GIT_BRANCH
-ARG CACHE_BUST=2026-02-18T14:45:00Z-librechat-deploy
+ARG CACHE_BUST=2026-02-20T18:30:00Z-pattern-merge-deploy
 
 # Base node image
 FROM node:20-alpine AS node
