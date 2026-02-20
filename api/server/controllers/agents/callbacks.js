@@ -94,6 +94,17 @@ class ModelEndHandler {
         this.finishReasonRef.value = finishReason;
       }
 
+      // DEBUG: Log the output structure to find where finish_reason lives
+      logger.debug('[ModelEndHandler] finish_reason debug', {
+        finishReason,
+        hasResponseMetadata: !!data?.output?.response_metadata,
+        responseMetadataKeys: data?.output?.response_metadata ? Object.keys(data.output.response_metadata) : [],
+        responseMetadata: data?.output?.response_metadata ? JSON.stringify(data.output.response_metadata).slice(0, 500) : 'null',
+        additionalKwargsKeys: data?.output?.additional_kwargs ? Object.keys(data.output.additional_kwargs) : [],
+        additionalKwargs: data?.output?.additional_kwargs ? JSON.stringify(data.output.additional_kwargs).slice(0, 500) : 'null',
+        outputKeys: data?.output ? Object.keys(data.output).filter(k => typeof data.output[k] !== 'function') : [],
+      });
+
       const usage = data?.output?.usage_metadata;
       if (!usage) {
         return this.finalize(errorMessage);
