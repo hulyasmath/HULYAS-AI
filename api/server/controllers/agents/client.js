@@ -1,7 +1,7 @@
 require('events').EventEmitter.defaultMaxListeners = 100;
 const { logger } = require('@librechat/data-schemas');
 const { DynamicStructuredTool } = require('@langchain/core/tools');
-const { getBufferString, HumanMessage } = require('@langchain/core/messages');
+const { getBufferString, HumanMessage, AIMessage } = require('@langchain/core/messages');
 const {
   createRun,
   Tokenizer,
@@ -927,6 +927,48 @@ class AgentClient extends BaseClient {
         this.indexTokenCountMap,
         toolSet,
       );
+
+      // Handle continuation: when this.continued is true, the last message in the payload
+      // is the AI's truncated response. Including it as-is can overflow the context window
+      // because @librechat/agents does its own message pruning. Instead, we:
+      // 1. Remove the last AI message from the messages sent to the model
+      // 2. Append a continuation instruction with the tail of the old response
+      // 3. The mergeEditedContent in BaseClient.sendMessage handles merging later
+      if (this.continued === true && initialMessages.length >= 2) {
+        const lastMsg = initialMessages[initialMessages.length - 1];
+        // Check if the last message is an AIMessage (the truncated response)
+        if (lastMsg && lastMsg._getType && lastMsg._getType() === 'ai') {
+          // Extract the text content from the AI message for continuation context
+          let oldText = '';
+          if (typeof lastMsg.content === 'string') {
+            oldText = lastMsg.content;
+          } else if (Array.isArray(lastMsg.content)) {
+            oldText = lastMsg.content
+              .filter((p) => p.type === 'text' || p.text)
+              .map((p) => p.text || p[ContentTypes.TEXT] || '')
+              .join('');
+          }
+
+          // Remove the AI message from the payload to free up context window
+          initialMessages = initialMessages.slice(0, -1);
+
+          // Take the last portion of the old text as continuation context (max ~800 chars)
+          const tailLength = Math.min(oldText.length, 800);
+          const continuationTail = oldText.slice(-tailLength);
+
+          // Add a human message instructing the model to continue
+          const continueInstruction = new HumanMessage(
+            `Continue your previous response from exactly where you left off. Here is the end of your previous response for context:\n\n...${continuationTail}\n\nContinue writing from exactly this point. Do not repeat any content, do not add greetings or preambles, just seamlessly continue.`,
+          );
+          initialMessages.push(continueInstruction);
+
+          logger.debug('[AgentClient] Continuation mode: removed AI message, added continue instruction', {
+            oldTextLength: oldText.length,
+            tailLength: continuationTail.length,
+            messagesCount: initialMessages.length,
+          });
+        }
+      }
 
       /**
        * @param {BaseMessage[]} messages
