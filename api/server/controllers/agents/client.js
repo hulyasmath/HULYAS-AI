@@ -928,31 +928,53 @@ class AgentClient extends BaseClient {
         toolSet,
       );
 
-      // Handle continuation: when this.continued is true, the last message in the payload
-      // is the AI's truncated response. Including it as-is can overflow the context window
-      // because @librechat/agents does its own message pruning. Instead, we:
-      // 1. Remove the last AI message from the messages sent to the model
-      // 2. Append a continuation instruction with the tail of the old response
-      // 3. The mergeEditedContent in BaseClient.sendMessage handles merging later
-      if (this.continued === true && initialMessages.length >= 2) {
-        const lastMsg = initialMessages[initialMessages.length - 1];
-        // Check if the last message is an AIMessage (the truncated response)
-        if (lastMsg && lastMsg._getType && lastMsg._getType() === 'ai') {
-          // Extract the text content from the AI message for continuation context
+      // === CONTINUATION HANDLING ===
+      // Log the state so we can debug whether the continuation path is triggered
+      logger.info('[AgentClient] Pre-continuation check', {
+        continued: this.continued,
+        messageCount: initialMessages.length,
+        messageTypes: initialMessages.map((m, i) => ({
+          index: i,
+          type: m._getType ? m._getType() : m.constructor?.name || 'unknown',
+          contentLength: typeof m.content === 'string' ? m.content.length :
+            Array.isArray(m.content) ? JSON.stringify(m.content).length : 0,
+        })),
+      });
+
+      if (this.continued === true && initialMessages.length >= 1) {
+        // Find the LAST AIMessage in the array (might not be at the very end if ToolMessages follow)
+        let aiMsgIndex = -1;
+        for (let i = initialMessages.length - 1; i >= 0; i--) {
+          const msg = initialMessages[i];
+          const msgType = msg._getType ? msg._getType() : null;
+          if (msgType === 'ai') {
+            aiMsgIndex = i;
+            break;
+          }
+        }
+
+        logger.info('[AgentClient] Continuation: found AI message at index', {
+          aiMsgIndex,
+          totalMessages: initialMessages.length,
+        });
+
+        if (aiMsgIndex >= 0) {
+          const aiMsg = initialMessages[aiMsgIndex];
+          // Extract text content from the AI message
           let oldText = '';
-          if (typeof lastMsg.content === 'string') {
-            oldText = lastMsg.content;
-          } else if (Array.isArray(lastMsg.content)) {
-            oldText = lastMsg.content
+          if (typeof aiMsg.content === 'string') {
+            oldText = aiMsg.content;
+          } else if (Array.isArray(aiMsg.content)) {
+            oldText = aiMsg.content
               .filter((p) => p.type === 'text' || p.text)
               .map((p) => p.text || p[ContentTypes.TEXT] || '')
               .join('');
           }
 
-          // Remove the AI message from the payload to free up context window
-          initialMessages = initialMessages.slice(0, -1);
+          // Remove the AI message (and any subsequent ToolMessages) from the payload
+          initialMessages = initialMessages.slice(0, aiMsgIndex);
 
-          // Take the last portion of the old text as continuation context (max ~800 chars)
+          // Take the last portion of the old text as continuation context
           const tailLength = Math.min(oldText.length, 800);
           const continuationTail = oldText.slice(-tailLength);
 
@@ -962,11 +984,19 @@ class AgentClient extends BaseClient {
           );
           initialMessages.push(continueInstruction);
 
-          logger.debug('[AgentClient] Continuation mode: removed AI message, added continue instruction', {
+          logger.info('[AgentClient] Continuation mode ACTIVATED: replaced AI message with continue instruction', {
+            aiMsgIndex,
             oldTextLength: oldText.length,
             tailLength: continuationTail.length,
             messagesCount: initialMessages.length,
           });
+        } else {
+          // No AI message found — still add a continuation instruction as a fallback
+          logger.warn('[AgentClient] Continuation mode: no AI message found, adding continue instruction as last resort');
+          const continueInstruction = new HumanMessage(
+            'Continue your previous response from exactly where you left off. Do not repeat any content, do not add greetings or preambles, just seamlessly continue.',
+          );
+          initialMessages.push(continueInstruction);
         }
       }
 
