@@ -122,13 +122,14 @@ class ModelEndHandler {
           0;
 
         // If no explicit max configured, use model-specific API defaults
+        // DeepSeek API docs: deepseek-chat defaults to 4096, deepseek-reasoner to 32768
         let effectiveMax = configuredMax;
         if (effectiveMax === 0 && co.model) {
           const m = (co.model || '').toLowerCase();
           if (m.includes('deepseek-reasoner') || m.includes('deepseek-r1')) {
-            effectiveMax = 8192;
+            effectiveMax = 32768;
           } else if (m.includes('deepseek')) {
-            effectiveMax = 8192;
+            effectiveMax = 4096;
           } else if (m.includes('gpt-4')) {
             effectiveMax = 16384;
           } else if (m.includes('gpt-3.5')) {
@@ -137,12 +138,23 @@ class ModelEndHandler {
           // For unknown models, effectiveMax stays 0 and heuristic is skipped
         }
 
-        if (effectiveMax > 0 && outputTokens >= effectiveMax) {
+        // Use 90% threshold to account for minor token counting differences
+        const threshold = Math.floor(effectiveMax * 0.9);
+
+        // Always log token count for diagnostics
+        logger.info(
+          '[ModelEndHandler] Token heuristic: outputTokens=' + outputTokens +
+            ', effectiveMax=' + effectiveMax +
+            ', threshold=' + threshold +
+            ', model=' + (co.model || 'unknown') +
+            (configuredMax === 0 ? ' (using model default)' : ''),
+        );
+
+        if (effectiveMax > 0 && outputTokens >= threshold) {
           this.finishReasonRef.value = 'length';
           logger.info(
             '[ModelEndHandler] Inferred finish_reason=length from token count: ' +
-              outputTokens + '/' + effectiveMax +
-              (configuredMax === 0 ? ' (model default)' : ''),
+              outputTokens + '/' + effectiveMax,
           );
         }
       }

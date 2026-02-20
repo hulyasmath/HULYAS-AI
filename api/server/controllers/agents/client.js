@@ -725,6 +725,13 @@ class AgentClient extends BaseClient {
 
     const completion = filterMalformedContentParts(this.contentParts);
     const finish_reason = this.finishReasonRef?.value;
+
+    // Set this.metadata so BaseClient spreads finish_reason at top level of the response message.
+    // The frontend reads message.finish_reason (top-level) to decide whether to show the Continue button.
+    if (finish_reason) {
+      this.metadata = { finish_reason };
+    }
+
     const metadata = {
       ...(finish_reason ? { finish_reason } : {}),
       ...(this.agentIdMap ? { agentIdMap: this.agentIdMap } : {}),
