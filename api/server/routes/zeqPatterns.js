@@ -34,6 +34,41 @@ const isAdmin = (req, res, next) => {
 // ============================
 
 /**
+ * GET /random
+ * Returns truly random patterns every request (no caching).
+ * Query params: count (default 8)
+ */
+router.get('/random', async (req, res) => {
+  try {
+    const count = Math.min(parseInt(req.query.count, 10) || 8, 20);
+    const allActive = await getActivePatterns();
+
+    if (!allActive || allActive.length === 0) {
+      return res.json([]);
+    }
+
+    // Fisher-Yates shuffle for true randomness each request
+    const shuffled = [...allActive];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    // Return compact format
+    res.json(shuffled.slice(0, count).map((p) => ({
+      icon: p.icon || '📋',
+      title: p.title,
+      content: p.promptText || '',
+      category: p.category || 'default',
+      id: p._id ? p._id.toString() : null,
+    })));
+  } catch (error) {
+    console.error('[zeqPatterns] GET /random error:', error.message);
+    res.status(500).json({ message: 'Failed to get random patterns', error: error.message });
+  }
+});
+
+/**
  * GET /today
  * Returns today's 6 patterns (generates if not yet selected)
  */
