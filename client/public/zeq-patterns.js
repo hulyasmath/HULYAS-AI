@@ -112,8 +112,8 @@
   // ═══════════════════════════════════════════════════
   var css = document.createElement('style');
   css.textContent = [
-    '#zeq-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px;max-width:768px;margin:0 auto;justify-content:center;opacity:0;transform:translateY(8px);animation:zIn .4s ease forwards}',
-    '@keyframes zIn{to{opacity:1;transform:translateY(0)}}',
+    '#zeq-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 0 4px;max-width:768px;margin:0 auto;justify-content:center;opacity:1;transform:translateY(0);animation:zChipIn .4s ease}',
+    '@keyframes zChipIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}',
     '.zc{display:inline-flex;align-items:center;gap:4px;padding:5px 12px;border-radius:16px;font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;border:1px solid transparent;white-space:nowrap;font-family:-apple-system,BlinkMacSystemFont,sans-serif;user-select:none;background:none;color:inherit}',
     '.zc i{font-size:13px;font-style:normal}',
     'html:not(.dark) .zc{background:#f3f4f6;color:#374151;border-color:#e5e7eb}',
