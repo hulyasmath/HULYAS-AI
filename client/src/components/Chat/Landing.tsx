@@ -231,6 +231,10 @@ export default function Landing({ centerFormOnLanding }: { centerFormOnLanding: 
           </div>
         )}
       </div>
+      {/* Build version indicator — tiny text for deployment verification */}
+      <span className="absolute bottom-1 right-2 text-[8px] text-gray-300/40 dark:text-gray-700/40 select-none" aria-hidden="true">
+        v9e0c
+      </span>
     </div>
   );
 }
