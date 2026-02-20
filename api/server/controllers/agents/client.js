@@ -169,6 +169,7 @@ class AgentClient extends BaseClient {
       agentConfigs,
       contentParts,
       collectedUsage,
+      finishReasonRef,
       artifactPromises,
       maxContextTokens,
       ...clientOptions
@@ -180,6 +181,8 @@ class AgentClient extends BaseClient {
     this.contentParts = contentParts;
     /** @type {Array<UsageMetadata>} */
     this.collectedUsage = collectedUsage;
+    /** @type {{ value: string | undefined }} */
+    this.finishReasonRef = finishReasonRef || { value: undefined };
     /** @type {ArtifactPromises} */
     this.artifactPromises = artifactPromises;
     /** @type {AgentClientOptions} */
@@ -721,7 +724,7 @@ class AgentClient extends BaseClient {
     });
 
     const completion = filterMalformedContentParts(this.contentParts);
-    const finish_reason = this.metadata?.finish_reason;
+    const finish_reason = this.finishReasonRef?.value;
     const metadata = {
       ...(finish_reason ? { finish_reason } : {}),
       ...(this.agentIdMap ? { agentIdMap: this.agentIdMap } : {}),

@@ -19,12 +19,15 @@ const { saveBase64Image } = require('~/server/services/Files/process');
 class ModelEndHandler {
   /**
    * @param {Array<UsageMetadata>} collectedUsage
+   * @param {{ value: string | undefined }} [finishReasonRef]
    */
-  constructor(collectedUsage) {
+  constructor(collectedUsage, finishReasonRef) {
     if (!Array.isArray(collectedUsage)) {
       throw new Error('collectedUsage must be an array');
     }
     this.collectedUsage = collectedUsage;
+    /** @type {{ value: string | undefined }} */
+    this.finishReasonRef = finishReasonRef || { value: undefined };
   }
 
   finalize(errorMessage) {
@@ -80,6 +83,15 @@ class ModelEndHandler {
       }
       if (isGoogle || streamingDisabled || hasUnprocessedToolCalls) {
         await handleToolCalls(toolCalls, metadata, graph);
+      }
+
+      // Extract finish_reason from the LLM response for Continue button support
+      const finishReason =
+        data?.output?.response_metadata?.finish_reason ??
+        data?.output?.additional_kwargs?.finish_reason ??
+        data?.output?.additional_kwargs?.stop_reason;
+      if (finishReason && this.finishReasonRef) {
+        this.finishReasonRef.value = finishReason;
       }
 
       const usage = data?.output?.usage_metadata;
@@ -151,17 +163,18 @@ function checkIfLastAgent(last_agent_id, langgraph_node) {
  * @param {ContentAggregator} options.aggregateContent - The options object.
  * @param {ToolEndCallback} options.toolEndCallback - Callback to use when tool ends.
  * @param {Array<UsageMetadata>} options.collectedUsage - The list of collected usage metadata.
+ * @param {{ value: string | undefined }} [options.finishReasonRef] - Shared ref for finish_reason.
  * @returns {Record<string, t.EventHandler>} The default handlers.
  * @throws {Error} If the request is not found.
  */
-function getDefaultHandlers({ res, aggregateContent, toolEndCallback, collectedUsage }) {
+function getDefaultHandlers({ res, aggregateContent, toolEndCallback, collectedUsage, finishReasonRef }) {
   if (!res || !aggregateContent) {
     throw new Error(
       `[getDefaultHandlers] Missing required options: res: ${!res}, aggregateContent: ${!aggregateContent}`,
     );
   }
   const handlers = {
-    [GraphEvents.CHAT_MODEL_END]: new ModelEndHandler(collectedUsage),
+    [GraphEvents.CHAT_MODEL_END]: new ModelEndHandler(collectedUsage, finishReasonRef),
     [GraphEvents.TOOL_END]: new ToolEndHandler(toolEndCallback, logger),
     [GraphEvents.CHAT_MODEL_STREAM]: new ChatModelStreamHandler(),
     [GraphEvents.ON_RUN_STEP]: {

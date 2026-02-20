@@ -68,6 +68,8 @@ const initializeClient = async ({ req, res, signal, endpointOption }) => {
   const collectedUsage = [];
   /** @type {ArtifactPromises} */
   const artifactPromises = [];
+  /** @type {{ value: string | undefined }} */
+  const finishReasonRef = { value: undefined };
   const { contentParts, aggregateContent } = createContentAggregator();
   const toolEndCallback = createToolEndCallback({ req, res, artifactPromises });
   const eventHandlers = getDefaultHandlers({
@@ -75,6 +77,7 @@ const initializeClient = async ({ req, res, signal, endpointOption }) => {
     aggregateContent,
     toolEndCallback,
     collectedUsage,
+    finishReasonRef,
   });
 
   if (!endpointOption.agent) {
@@ -239,6 +242,7 @@ const initializeClient = async ({ req, res, signal, endpointOption }) => {
     agentConfigs,
     eventHandlers,
     collectedUsage,
+    finishReasonRef,
     aggregateContent,
     artifactPromises,
     agent: primaryConfig,
