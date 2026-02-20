@@ -141,20 +141,12 @@ class ModelEndHandler {
         // Use 90% threshold to account for minor token counting differences
         const threshold = Math.floor(effectiveMax * 0.9);
 
-        // Always log token count for diagnostics
-        logger.info(
-          '[ModelEndHandler] Token heuristic: outputTokens=' + outputTokens +
-            ', effectiveMax=' + effectiveMax +
-            ', threshold=' + threshold +
-            ', model=' + (co.model || 'unknown') +
-            (configuredMax === 0 ? ' (using model default)' : ''),
-        );
-
         if (effectiveMax > 0 && outputTokens >= threshold) {
           this.finishReasonRef.value = 'length';
-          logger.info(
-            '[ModelEndHandler] Inferred finish_reason=length from token count: ' +
-              outputTokens + '/' + effectiveMax,
+          logger.debug(
+            '[ModelEndHandler] Inferred finish_reason=length: ' +
+              outputTokens + '/' + effectiveMax +
+              (configuredMax === 0 ? ' (model default)' : ''),
           );
         }
       }
