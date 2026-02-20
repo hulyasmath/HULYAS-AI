@@ -930,15 +930,9 @@ class AgentClient extends BaseClient {
 
       // === CONTINUATION HANDLING ===
       // Log the state so we can debug whether the continuation path is triggered
-      logger.info('[AgentClient] Pre-continuation check', {
+      logger.debug('[AgentClient] Pre-continuation check', {
         continued: this.continued,
         messageCount: initialMessages.length,
-        messageTypes: initialMessages.map((m, i) => ({
-          index: i,
-          type: m._getType ? m._getType() : m.constructor?.name || 'unknown',
-          contentLength: typeof m.content === 'string' ? m.content.length :
-            Array.isArray(m.content) ? JSON.stringify(m.content).length : 0,
-        })),
       });
 
       if (this.continued === true && initialMessages.length >= 1) {
@@ -953,7 +947,7 @@ class AgentClient extends BaseClient {
           }
         }
 
-        logger.info('[AgentClient] Continuation: found AI message at index', {
+        logger.debug('[AgentClient] Continuation: found AI message at index', {
           aiMsgIndex,
           totalMessages: initialMessages.length,
         });
@@ -984,7 +978,7 @@ class AgentClient extends BaseClient {
           );
           initialMessages.push(continueInstruction);
 
-          logger.info('[AgentClient] Continuation mode ACTIVATED: replaced AI message with continue instruction', {
+          logger.debug('[AgentClient] Continuation mode activated', {
             aiMsgIndex,
             oldTextLength: oldText.length,
             tailLength: continuationTail.length,
