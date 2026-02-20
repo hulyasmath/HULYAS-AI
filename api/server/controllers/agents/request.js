@@ -199,7 +199,7 @@ const AgentController = async (req, res, next, initializeClient, addTitle) => {
       parentMessageId,
       abortController,
       overrideParentMessageId,
-      isEdited: !!editedContent,
+      isEdited: !!editedContent || isContinued,
       userMCPAuthMap: result.userMCPAuthMap,
       responseMessageId: editedResponseMessageId,
       progressOptions: {

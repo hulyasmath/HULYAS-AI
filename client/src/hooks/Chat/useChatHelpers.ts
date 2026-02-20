@@ -99,7 +99,31 @@ export default function useChatHelpers(index = 0, paramId?: string) {
     );
 
     if (parentMessage && parentMessage.isCreatedByUser) {
-      ask({ ...parentMessage }, { isContinued: true, isRegenerate: true, isEdited: true });
+      // Build editedContent from the AI response so the server can merge old+new content
+      let editedContent = null;
+      if (latestMessage.content && Array.isArray(latestMessage.content)) {
+        for (let i = latestMessage.content.length - 1; i >= 0; i--) {
+          if (latestMessage.content[i]?.type === 'text') {
+            editedContent = {
+              index: i,
+              type: 'text' as const,
+              text: latestMessage.content[i].text,
+            };
+            break;
+          }
+        }
+      }
+
+      ask(
+        { ...parentMessage },
+        {
+          isContinued: true,
+          isRegenerate: true,
+          isEdited: true,
+          editedMessageId: latestMessage.messageId,
+          editedContent,
+        },
+      );
     } else {
       console.error(
         'Failed to regenerate the message: parentMessage not found, or not created by user.',
