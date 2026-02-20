@@ -54,6 +54,35 @@ router.get('/today', async (req, res) => {
 });
 
 /**
+ * GET /starters
+ * Returns patterns formatted as compact tab starters for the ConversationStarters component.
+ * Returns 8 patterns with icon, title, content, and category.
+ */
+router.get('/starters', async (req, res) => {
+  try {
+    let patterns = await getTodayPatterns();
+
+    // If no patterns for current window, generate them
+    if (!patterns || patterns.length === 0) {
+      patterns = await generateDailyPatterns(8);
+    }
+
+    // Map to compact starter format
+    const starters = (patterns || []).slice(0, 8).map((p) => ({
+      icon: p.icon || '📋',
+      title: p.title,
+      content: p.promptText || '',
+      category: p.category || 'default',
+    }));
+
+    res.json(starters);
+  } catch (error) {
+    console.error('[zeqPatterns] GET /starters error:', error.message);
+    res.status(500).json({ message: 'Failed to get starter patterns', error: error.message });
+  }
+});
+
+/**
  * GET /archive
  * Paginated archive with optional category and search filters
  * Query params: page, limit, category, search

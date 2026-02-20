@@ -95,7 +95,7 @@ export default function PatternCards() {
       return patterns.filter(Boolean);
     }
     // Hardcoded defaults — client-side rotation across 30 patterns
-    const dayIndex = Math.floor(Date.now() / 86400000) % 30;
+    const dayIndex = Math.floor(Date.now() / 10800000) % 30; // Rotate every 3 hours
     const categoryStart = Math.floor(dayIndex / 5) * 5;
     const todayPattern = patterns[dayIndex] || patterns[0];
     const categoryPatterns = patterns.slice(categoryStart, categoryStart + 5).filter(p => p._id !== todayPattern._id);
