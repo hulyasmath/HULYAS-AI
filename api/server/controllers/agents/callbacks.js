@@ -113,32 +113,36 @@ class ModelEndHandler {
         const co = agentContext.clientOptions || {};
         const configuredMax =
           co.maxTokens ||
+          co.maxCompletionTokens ||
           co.maxOutputTokens ||
           co.max_tokens ||
           co.modelKwargs?.max_completion_tokens ||
           co.modelKwargs?.max_output_tokens ||
+          co.modelKwargs?.max_tokens ||
           0;
 
-        if (configuredMax > 0 && outputTokens >= configuredMax) {
+        // If no explicit max configured, use model-specific API defaults
+        let effectiveMax = configuredMax;
+        if (effectiveMax === 0 && co.model) {
+          const m = (co.model || '').toLowerCase();
+          if (m.includes('deepseek-reasoner') || m.includes('deepseek-r1')) {
+            effectiveMax = 8192;
+          } else if (m.includes('deepseek')) {
+            effectiveMax = 8192;
+          } else if (m.includes('gpt-4')) {
+            effectiveMax = 16384;
+          } else if (m.includes('gpt-3.5')) {
+            effectiveMax = 4096;
+          }
+          // For unknown models, effectiveMax stays 0 and heuristic is skipped
+        }
+
+        if (effectiveMax > 0 && outputTokens >= effectiveMax) {
           this.finishReasonRef.value = 'length';
           logger.info(
             '[ModelEndHandler] Inferred finish_reason=length from token count: ' +
-              outputTokens + '/' + configuredMax,
-          );
-        } else if (configuredMax === 0 && outputTokens > 0) {
-          // No configured max found — log clientOptions and modelKwargs for debugging
-          const coKeys = Object.keys(co).filter((k) => typeof co[k] !== 'function');
-          const mkKeys = co.modelKwargs ? Object.keys(co.modelKwargs) : [];
-          const mkValues = co.modelKwargs
-            ? Object.fromEntries(
-              Object.entries(co.modelKwargs).filter(([, v]) => typeof v !== 'function'),
-            )
-            : {};
-          logger.info(
-            '[ModelEndHandler] No configuredMax found. outputTokens=' +
-              outputTokens +
-              ', clientOptions keys: ' + JSON.stringify(coKeys) +
-              ', modelKwargs: ' + JSON.stringify(mkValues),
+              outputTokens + '/' + effectiveMax +
+              (configuredMax === 0 ? ' (model default)' : ''),
           );
         }
       }
