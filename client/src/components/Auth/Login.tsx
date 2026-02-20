@@ -107,7 +107,7 @@ function Login() {
           </p>
           <a
             href={registerPage()}
-            className="inline-flex items-center justify-center rounded-lg border-2 border-green-500 bg-green-500/20 px-6 py-2.5 text-sm font-semibold text-green-600 transition-all hover:bg-green-500/30 hover:border-green-600 dark:text-green-400 dark:hover:text-green-300"
+            className="inline-flex items-center justify-center rounded-lg border-2 border-cyan-500 bg-cyan-500/20 px-6 py-2.5 text-sm font-semibold text-cyan-600 transition-all hover:bg-cyan-500/30 hover:border-cyan-600 dark:text-cyan-400 dark:hover:text-cyan-300"
           >
             {localize('com_auth_sign_up')}
           </a>
