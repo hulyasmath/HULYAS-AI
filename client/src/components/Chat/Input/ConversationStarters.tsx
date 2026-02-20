@@ -12,20 +12,21 @@ interface PatternStarter {
   category: string;
 }
 
+// Muted, subtle styling — all categories use the same neutral look
 const CATEGORY_COLORS: Record<string, string> = {
-  fundamentals: 'border-cyan-500/40 text-cyan-300 hover:bg-cyan-500/10',
-  operators: 'border-purple-500/40 text-purple-300 hover:bg-purple-500/10',
-  equations: 'border-orange-500/40 text-orange-300 hover:bg-orange-500/10',
-  forensic: 'border-red-500/40 text-red-300 hover:bg-red-500/10',
-  time: 'border-emerald-500/40 text-emerald-300 hover:bg-emerald-500/10',
-  advanced: 'border-violet-500/40 text-violet-300 hover:bg-violet-500/10',
-  quantum: 'border-indigo-500/40 text-indigo-300 hover:bg-indigo-500/10',
-  relativity: 'border-blue-500/40 text-blue-300 hover:bg-blue-500/10',
-  computation: 'border-teal-500/40 text-teal-300 hover:bg-teal-500/10',
-  hulyas: 'border-pink-500/40 text-pink-300 hover:bg-pink-500/10',
-  consciousness: 'border-fuchsia-500/40 text-fuchsia-300 hover:bg-fuchsia-500/10',
-  applications: 'border-amber-500/40 text-amber-300 hover:bg-amber-500/10',
-  default: 'border-slate-500/40 text-slate-300 hover:bg-slate-500/10',
+  fundamentals: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  operators: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  equations: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  forensic: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  time: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  advanced: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  quantum: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  relativity: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  computation: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  hulyas: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  consciousness: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  applications: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
+  default: 'border-border-medium text-text-secondary hover:bg-surface-tertiary hover:text-text-primary',
 };
 
 // Fallback patterns when API is unreachable
@@ -159,7 +160,7 @@ const ConversationStarters = () => {
           <button
             key={index}
             onClick={() => sendConversationStarter(pattern.content)}
-            className={`relative flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium shadow-sm transition-all duration-200 hover:shadow-md ${CATEGORY_COLORS[catKey]}`}
+            className={`relative flex cursor-pointer items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition-all duration-200 hover:shadow-md ${CATEGORY_COLORS[catKey]}`}
           >
             <span className="text-sm">{pattern.icon}</span>
             <span className="line-clamp-1">{pattern.title}</span>
