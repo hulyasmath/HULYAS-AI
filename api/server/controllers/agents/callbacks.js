@@ -94,12 +94,6 @@ class ModelEndHandler {
         this.finishReasonRef.value = finishReason;
       }
 
-      // Log finish_reason from ModelEndHandler (may be undefined in streaming mode - that's OK,
-      // StreamHandlerWithFinishReason captures it from chunks instead)
-      if (finishReason) {
-        logger.info('[ModelEndHandler] finish_reason from model end: ' + finishReason);
-      }
-
       const usage = data?.output?.usage_metadata;
       if (!usage) {
         return this.finalize(errorMessage);
@@ -110,6 +104,29 @@ class ModelEndHandler {
       }
 
       this.collectedUsage.push(usage);
+
+      // Token-count heuristic for finish_reason when LangGraph doesn't propagate it
+      // (common in streaming mode with DeepSeek/OpenAI-compatible providers).
+      // If output_tokens >= configured max output tokens, the response was truncated.
+      if (!this.finishReasonRef?.value && usage) {
+        const outputTokens = Number(usage.output_tokens) || 0;
+        const co = agentContext.clientOptions || {};
+        const configuredMax =
+          co.maxTokens ||
+          co.maxOutputTokens ||
+          co.max_tokens ||
+          co.modelKwargs?.max_completion_tokens ||
+          co.modelKwargs?.max_output_tokens ||
+          0;
+
+        if (configuredMax > 0 && outputTokens >= configuredMax) {
+          this.finishReasonRef.value = 'length';
+          logger.info(
+            '[ModelEndHandler] Inferred finish_reason=length from token count: ' +
+              outputTokens + '/' + configuredMax,
+          );
+        }
+      }
       if (!streamingDisabled) {
         return this.finalize(errorMessage);
       }
@@ -163,7 +180,6 @@ class StreamHandlerWithFinishReason {
   constructor(innerHandler, finishReasonRef) {
     this.innerHandler = innerHandler;
     this.finishReasonRef = finishReasonRef || { value: undefined };
-    this._loggedFirstChunk = false;
   }
 
   /**
@@ -174,8 +190,9 @@ class StreamHandlerWithFinishReason {
    * @returns {Promise<void>}
    */
   async handle(event, data, metadata, graph) {
-    // Check for finish_reason in the streaming chunk's response_metadata
-    // The chunk may be at data.chunk (LangGraph) or data itself
+    // Check for finish_reason in the streaming chunk's response_metadata.
+    // Currently LangChain/LangGraph does NOT propagate finish_reason in streaming chunks,
+    // but this handler is kept as a fallback for future versions that may include it.
     const chunk = data?.chunk || data;
     const finishReason =
       chunk?.response_metadata?.finish_reason ??
@@ -184,19 +201,6 @@ class StreamHandlerWithFinishReason {
       data?.response_metadata?.finish_reason;
     if (finishReason && this.finishReasonRef) {
       this.finishReasonRef.value = finishReason;
-      logger.info('[StreamHandler] finish_reason captured from stream: ' + finishReason);
-    }
-
-    // TEMPORARY: Log first chunk structure and any chunk with response_metadata keys
-    if (!this._loggedFirstChunk) {
-      this._loggedFirstChunk = true;
-      const chunkKeys = chunk ? Object.keys(chunk).filter(k => typeof chunk[k] !== 'function').slice(0, 15) : [];
-      const dataKeys = data ? Object.keys(data).filter(k => typeof data[k] !== 'function').slice(0, 15) : [];
-      logger.info('[StreamHandler] first chunk debug: ' + JSON.stringify({ chunkKeys, dataKeys }));
-    }
-    const rmKeys = chunk?.response_metadata ? Object.keys(chunk.response_metadata) : [];
-    if (rmKeys.length > 0 && rmKeys[0] !== undefined) {
-      logger.info('[StreamHandler] chunk response_metadata: ' + JSON.stringify(chunk.response_metadata).slice(0, 300));
     }
 
     // Delegate to the original ChatModelStreamHandler
