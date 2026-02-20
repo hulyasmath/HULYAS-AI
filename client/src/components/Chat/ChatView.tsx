@@ -97,13 +97,9 @@ function ChatView({ index = 0 }: { index?: number }) {
                       isLandingPage && 'max-w-3xl transition-all duration-200 xl:max-w-4xl',
                     )}
                   >
-                    <div className="order-2 sm:order-1">
-                      <ChatForm index={index} />
-                    </div>
+                    <ChatForm index={index} />
                     {isLandingPage ? (
-                      <div className="order-1 sm:order-2">
-                        <ConversationStarters />
-                      </div>
+                      <ConversationStarters />
                     ) : (
                       <Footer />
                     )}
