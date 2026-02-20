@@ -125,6 +125,13 @@ class ModelEndHandler {
             '[ModelEndHandler] Inferred finish_reason=length from token count: ' +
               outputTokens + '/' + configuredMax,
           );
+        } else if (configuredMax === 0 && outputTokens > 0) {
+          // No configured max found — log clientOptions keys for debugging
+          const coKeys = Object.keys(co).filter((k) => typeof co[k] !== 'function');
+          logger.info(
+            '[ModelEndHandler] No configuredMax found. outputTokens=' +
+              outputTokens + ', clientOptions keys: ' + JSON.stringify(coKeys),
+          );
         }
       }
       if (!streamingDisabled) {
