@@ -721,9 +721,13 @@ class AgentClient extends BaseClient {
     });
 
     const completion = filterMalformedContentParts(this.contentParts);
-    const metadata = this.agentIdMap ? { agentIdMap: this.agentIdMap } : undefined;
+    const finish_reason = this.metadata?.finish_reason;
+    const metadata = {
+      ...(finish_reason ? { finish_reason } : {}),
+      ...(this.agentIdMap ? { agentIdMap: this.agentIdMap } : {}),
+    };
 
-    return { completion, metadata };
+    return { completion, metadata: Object.keys(metadata).length > 0 ? metadata : undefined };
   }
 
   /**
