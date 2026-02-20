@@ -126,11 +126,19 @@ class ModelEndHandler {
               outputTokens + '/' + configuredMax,
           );
         } else if (configuredMax === 0 && outputTokens > 0) {
-          // No configured max found — log clientOptions keys for debugging
+          // No configured max found — log clientOptions and modelKwargs for debugging
           const coKeys = Object.keys(co).filter((k) => typeof co[k] !== 'function');
+          const mkKeys = co.modelKwargs ? Object.keys(co.modelKwargs) : [];
+          const mkValues = co.modelKwargs
+            ? Object.fromEntries(
+              Object.entries(co.modelKwargs).filter(([, v]) => typeof v !== 'function'),
+            )
+            : {};
           logger.info(
             '[ModelEndHandler] No configuredMax found. outputTokens=' +
-              outputTokens + ', clientOptions keys: ' + JSON.stringify(coKeys),
+              outputTokens +
+              ', clientOptions keys: ' + JSON.stringify(coKeys) +
+              ', modelKwargs: ' + JSON.stringify(mkValues),
           );
         }
       }
