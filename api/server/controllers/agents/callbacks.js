@@ -94,8 +94,8 @@ class ModelEndHandler {
         this.finishReasonRef.value = finishReason;
       }
 
-      // DEBUG: Log the output structure to find where finish_reason lives
-      logger.debug('[ModelEndHandler] finish_reason debug', {
+      // TEMPORARY: Log the output structure to find where finish_reason lives
+      logger.info('[ModelEndHandler] finish_reason debug', {
         finishReason,
         hasResponseMetadata: !!data?.output?.response_metadata,
         responseMetadataKeys: data?.output?.response_metadata ? Object.keys(data.output.response_metadata) : [],
