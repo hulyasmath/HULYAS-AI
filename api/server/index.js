@@ -82,6 +82,24 @@ const startServer = async () => {
 
   app.get('/health', (_req, res) => res.status(200).send('OK'));
 
+  // Build verification endpoint - returns deployed version info
+  app.get('/api/build-info', (_req, res) => {
+    const fs = require('fs');
+    const path = require('path');
+    let buildInfo = 'unknown';
+    try {
+      buildInfo = fs.readFileSync(path.join(__dirname, '../../.build-info'), 'utf-8');
+    } catch (e) { /* file may not exist */ }
+    res.json({
+      version: 'a6982ba',
+      buildTimestamp: new Date().toISOString(),
+      commit: process.env.RAILWAY_GIT_COMMIT_SHA || 'unknown',
+      branch: process.env.RAILWAY_GIT_BRANCH || 'unknown',
+      buildInfo: buildInfo.trim(),
+      uptime: process.uptime(),
+    });
+  });
+
   /* Middleware */
   app.use(noIndex);
   app.use(express.json({ limit: '3mb' }));

@@ -1,2 +1,2 @@
-# Auto-updated build ID
-BUILD_ID=2026-02-20T18:30:00.000Z-pattern-merge
+# Auto-updated build ID — change this to force Railway cache bust
+BUILD_ID=2026-02-20T22:00:00Z-build-verify-endpoint

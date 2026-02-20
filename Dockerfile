@@ -1,20 +1,21 @@
 # v0.8.1-rc1
-# CACHE_BUST: 2026-02-18T14:45:00Z-librechat-deploy - UPDATE THIS TIMESTAMP TO FORCE FRESH BUILD
-
-# Cache busting - Railway will automatically provide these build args
-# If not provided, use defaults that change on each build
-ARG RAILWAY_GIT_COMMIT
-ARG RAILWAY_GIT_BRANCH
-ARG CACHE_BUST=2026-02-20T18:30:00Z-pattern-merge-deploy
 
 # Base node image
 FROM node:20-alpine AS node
 
-# Use the cache bust arg to invalidate cache - this forces fresh builds
-RUN echo "Build cache bust: ${CACHE_BUST}" && \
-    echo "Git commit: ${RAILWAY_GIT_COMMIT:-local-build}" && \
+# Cache busting - Railway provides these as build args
+# ARGs must be AFTER FROM to be available in build steps
+ARG RAILWAY_GIT_COMMIT_SHA
+ARG RAILWAY_GIT_BRANCH
+ARG CACHE_BUST=2026-02-20T22:00:00Z-build-verify
+
+# Force cache invalidation on every build by printing unique info
+RUN echo "=== HULYAS-AI Build ===" && \
+    echo "Cache bust: ${CACHE_BUST}" && \
+    echo "Git commit: ${RAILWAY_GIT_COMMIT_SHA:-local}" && \
     echo "Git branch: ${RAILWAY_GIT_BRANCH:-unknown}" && \
-    echo "Timestamp: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+    echo "Build time: $(date -u +'%Y-%m-%dT%H:%M:%SZ')" && \
+    echo "======================"
 
 # Install jemalloc
 RUN apk add --no-cache jemalloc
