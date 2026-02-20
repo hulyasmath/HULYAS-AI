@@ -207,6 +207,20 @@ const AgentController = async (req, res, next, initializeClient, addTitle) => {
       },
     };
 
+    if (isContinued) {
+      logger.debug('[AgentController] Continue request details:', {
+        isContinued,
+        isRegenerate,
+        isEdited: messageOptions.isEdited,
+        conversationId,
+        parentMessageId,
+        overrideParentMessageId,
+        editedResponseMessageId,
+        hasEditedContent: !!editedContent,
+        editedContentType: editedContent?.type,
+      });
+    }
+
     let response = await client.sendMessage(text, messageOptions);
 
     // Extract what we need and immediately break reference

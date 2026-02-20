@@ -258,7 +258,7 @@ class BaseClient {
       responseMessageId,
     } = await this.setMessageOptions(opts);
 
-    const userMessage = opts.isEdited
+    let userMessage = opts.isEdited
       ? this.currentMessages[this.currentMessages.length - 2]
       : this.createUserMessage({
           messageId: userMessageId,
@@ -266,6 +266,29 @@ class BaseClient {
           conversationId,
           text: message,
         });
+
+    if (opts.isEdited) {
+      logger.debug('[BaseClient.handleStartMethods] isEdited=true, currentMessages.length=' + this.currentMessages.length + ', userMessage defined=' + !!userMessage + ', head=' + head + ', responseMessageId=' + responseMessageId + ', isContinued=' + !!opts.isContinued);
+      if (!userMessage) {
+        logger.error('[BaseClient.handleStartMethods] userMessage is UNDEFINED for edit/continue! currentMessages:', JSON.stringify(this.currentMessages.map(m => ({ messageId: m.messageId, parentMessageId: m.parentMessageId, isCreatedByUser: m.isCreatedByUser })).slice(0, 5)));
+        // Fallback: reconstruct userMessage from currentMessages or create a minimal one
+        const lastMsg = this.currentMessages[this.currentMessages.length - 1];
+        if (lastMsg && lastMsg.parentMessageId) {
+          // Try to find the user message in currentMessages by parentMessageId
+          userMessage = this.currentMessages.find(m => m.messageId === lastMsg.parentMessageId);
+        }
+        if (!userMessage) {
+          // Last resort: create a minimal userMessage to prevent crash
+          userMessage = this.createUserMessage({
+            messageId: userMessageId,
+            parentMessageId,
+            conversationId,
+            text: message,
+          });
+          logger.warn('[BaseClient.handleStartMethods] Created fallback userMessage with messageId=' + userMessageId);
+        }
+      }
+    }
 
     if (typeof opts?.getReqData === 'function') {
       opts.getReqData({
