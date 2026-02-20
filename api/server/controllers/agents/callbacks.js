@@ -94,17 +94,11 @@ class ModelEndHandler {
         this.finishReasonRef.value = finishReason;
       }
 
-      // TEMPORARY: Log the output structure to find where finish_reason lives
-      const _debugData = JSON.stringify({
-        finishReason,
-        hasResponseMetadata: !!data?.output?.response_metadata,
-        responseMetadataKeys: data?.output?.response_metadata ? Object.keys(data.output.response_metadata) : [],
-        responseMetadata: data?.output?.response_metadata ? JSON.stringify(data.output.response_metadata).slice(0, 500) : 'null',
-        additionalKwargsKeys: data?.output?.additional_kwargs ? Object.keys(data.output.additional_kwargs) : [],
-        additionalKwargs: data?.output?.additional_kwargs ? JSON.stringify(data.output.additional_kwargs).slice(0, 500) : 'null',
-        outputKeys: data?.output ? Object.keys(data.output).filter(k => typeof data.output[k] !== 'function') : [],
-      });
-      logger.info('[ModelEndHandler] finish_reason debug: ' + _debugData);
+      // Log finish_reason from ModelEndHandler (may be undefined in streaming mode - that's OK,
+      // StreamHandlerWithFinishReason captures it from chunks instead)
+      if (finishReason) {
+        logger.info('[ModelEndHandler] finish_reason from model end: ' + finishReason);
+      }
 
       const usage = data?.output?.usage_metadata;
       if (!usage) {
@@ -156,6 +150,61 @@ class ModelEndHandler {
 }
 
 /**
+ * Wrapper around ChatModelStreamHandler that captures finish_reason from streaming chunks.
+ * In streaming mode, the CHAT_MODEL_END event's AIMessage does NOT contain finish_reason
+ * in response_metadata (only usage data). The finish_reason is only available on the
+ * last streaming chunk, so we capture it here.
+ */
+class StreamHandlerWithFinishReason {
+  /**
+   * @param {ChatModelStreamHandler} innerHandler
+   * @param {{ value: string | undefined }} finishReasonRef
+   */
+  constructor(innerHandler, finishReasonRef) {
+    this.innerHandler = innerHandler;
+    this.finishReasonRef = finishReasonRef || { value: undefined };
+    this._loggedFirstChunk = false;
+  }
+
+  /**
+   * @param {string} event
+   * @param {StreamEventData} data
+   * @param {Record<string, unknown> | undefined} metadata
+   * @param {StandardGraph} graph
+   * @returns {Promise<void>}
+   */
+  async handle(event, data, metadata, graph) {
+    // Check for finish_reason in the streaming chunk's response_metadata
+    // The chunk may be at data.chunk (LangGraph) or data itself
+    const chunk = data?.chunk || data;
+    const finishReason =
+      chunk?.response_metadata?.finish_reason ??
+      chunk?.additional_kwargs?.finish_reason ??
+      chunk?.additional_kwargs?.stop_reason ??
+      data?.response_metadata?.finish_reason;
+    if (finishReason && this.finishReasonRef) {
+      this.finishReasonRef.value = finishReason;
+      logger.info('[StreamHandler] finish_reason captured from stream: ' + finishReason);
+    }
+
+    // TEMPORARY: Log first chunk structure and any chunk with response_metadata keys
+    if (!this._loggedFirstChunk) {
+      this._loggedFirstChunk = true;
+      const chunkKeys = chunk ? Object.keys(chunk).filter(k => typeof chunk[k] !== 'function').slice(0, 15) : [];
+      const dataKeys = data ? Object.keys(data).filter(k => typeof data[k] !== 'function').slice(0, 15) : [];
+      logger.info('[StreamHandler] first chunk debug: ' + JSON.stringify({ chunkKeys, dataKeys }));
+    }
+    const rmKeys = chunk?.response_metadata ? Object.keys(chunk.response_metadata) : [];
+    if (rmKeys.length > 0 && rmKeys[0] !== undefined) {
+      logger.info('[StreamHandler] chunk response_metadata: ' + JSON.stringify(chunk.response_metadata).slice(0, 300));
+    }
+
+    // Delegate to the original ChatModelStreamHandler
+    return this.innerHandler.handle(event, data, metadata, graph);
+  }
+}
+
+/**
  * @deprecated Agent Chain helper
  * @param {string | undefined} [last_agent_id]
  * @param {string | undefined} [langgraph_node]
@@ -188,7 +237,7 @@ function getDefaultHandlers({ res, aggregateContent, toolEndCallback, collectedU
   const handlers = {
     [GraphEvents.CHAT_MODEL_END]: new ModelEndHandler(collectedUsage, finishReasonRef),
     [GraphEvents.TOOL_END]: new ToolEndHandler(toolEndCallback, logger),
-    [GraphEvents.CHAT_MODEL_STREAM]: new ChatModelStreamHandler(),
+    [GraphEvents.CHAT_MODEL_STREAM]: new StreamHandlerWithFinishReason(new ChatModelStreamHandler(), finishReasonRef),
     [GraphEvents.ON_RUN_STEP]: {
       /**
        * Handle ON_RUN_STEP event.
