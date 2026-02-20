@@ -131,7 +131,7 @@ const ConversationStarters = () => {
   // If agent has its own starters, show those (original behavior)
   if (conversation_starters.length > 0) {
     return (
-      <div className="mt-4 flex flex-wrap justify-center gap-2 px-4">
+      <div className="mb-3 flex flex-wrap justify-center gap-2 px-4 sm:mb-0 sm:mt-4">
         {conversation_starters
           .slice(0, Constants.MAX_CONVO_STARTERS)
           .map((text: string, index: number) => (
@@ -153,7 +153,7 @@ const ConversationStarters = () => {
   const starters = patternStarters.length > 0 ? patternStarters : FALLBACK_PATTERNS;
 
   return (
-    <div className="mt-4 flex flex-wrap justify-center gap-2 px-4">
+    <div className="mb-3 flex flex-wrap justify-center gap-2 px-4 sm:mb-0 sm:mt-4">
       {starters.slice(0, 10).map((pattern, index) => {
         const catKey = CATEGORY_COLORS[pattern.category] ? pattern.category : 'default';
         return (

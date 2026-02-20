@@ -48,6 +48,8 @@ export default defineConfig(({ command }) => ({
       useCredentials: true,
       includeManifestIcons: false,
       workbox: {
+        skipWaiting: true,
+        clientsClaim: true,
         globPatterns: [
           '**/*.{js,css,html}',
           'assets/favicon*.png',
