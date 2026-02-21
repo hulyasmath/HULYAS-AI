@@ -15,7 +15,7 @@ export const useGenerateMCPApiKeyMutation = () => {
   return useMutation<MCPApiKeyResponse, Error, void>({
     mutationFn: async () => {
       const response = await request.post<MCPApiKeyResponse>(mcpApiKeyEndpoints.generate());
-      return response.data;
+      return response as MCPApiKeyResponse;
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['mcpApiKey']);
@@ -28,7 +28,7 @@ export const useGetMCPApiKeyQuery = (userId: string, options?: { enabled?: boole
     queryKey: ['mcpApiKey', userId],
     queryFn: async () => {
       const response = await request.get<MCPApiKeyResponse>(mcpApiKeyEndpoints.get());
-      return response.data;
+      return response as MCPApiKeyResponse;
     },
     enabled: options?.enabled !== false && !!userId,
     ...options,
@@ -40,7 +40,7 @@ export const useRevokeMCPApiKeyMutation = () => {
   return useMutation<{ message: string }, Error, void>({
     mutationFn: async () => {
       const response = await request.delete<{ message: string }>(mcpApiKeyEndpoints.revoke());
-      return response.data;
+      return response as { message: string };
     },
     onSuccess: () => {
       queryClient.invalidateQueries(['mcpApiKey']);
