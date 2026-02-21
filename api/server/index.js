@@ -28,7 +28,7 @@ const { getAppConfig } = require('./services/Config');
 const staticCache = require('./utils/staticCache');
 const noIndex = require('./middleware/noIndex');
 const { seedDatabase } = require('~/models');
-const { assignProPlanToAdmins } = require('~/models/Plan');
+const { assignProPlanToAdmins, promoteConfiguredAdmin } = require('~/models/Plan');
 // Zeq Patterns system
 const { seedDefaultPatterns } = require('~/models/ZeqPattern');
 const { seedDefaultCategories } = require('~/models/ZeqPatternCategory');
@@ -60,7 +60,8 @@ const startServer = async () => {
   app.set('trust proxy', trusted_proxy);
 
   await seedDatabase();
-  // Ensure admin users get Pro plan access for API key generation
+  // Promote configured admin email, then assign Pro plan to all admins
+  try { await promoteConfiguredAdmin(); } catch(e) { logger.warn('[ZEQ] promoteConfiguredAdmin failed:', e.message); }
   try { await assignProPlanToAdmins(); } catch(e) { logger.warn('[ZEQ] assignProPlanToAdmins failed:', e.message); }
   const appConfig = await getAppConfig();
   initializeFileStorage(appConfig);

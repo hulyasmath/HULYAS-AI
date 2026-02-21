@@ -187,6 +187,41 @@ const assignProPlanToAdmins = async () => {
   }
 };
 
+/**
+ * Promote a user to ADMIN role by email address.
+ * Reads from ADMIN_EMAIL env var. Called on server startup so the site
+ * owner is always promoted regardless of how their account was created.
+ * @returns {Promise<void>}
+ */
+const promoteConfiguredAdmin = async () => {
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL;
+    if (!adminEmail) {
+      logger.debug('[promoteConfiguredAdmin] No ADMIN_EMAIL env var set — skipping');
+      return;
+    }
+
+    const { User } = require('~/db/models');
+    const user = await User.findOne({ email: adminEmail.toLowerCase() });
+    if (!user) {
+      logger.warn(`[promoteConfiguredAdmin] User not found: ${adminEmail}`);
+      return;
+    }
+
+    if (user.role === 'ADMIN') {
+      logger.debug(`[promoteConfiguredAdmin] ${adminEmail} is already ADMIN`);
+      return;
+    }
+
+    user.role = 'ADMIN';
+    await user.save();
+    logger.info(`[promoteConfiguredAdmin] Promoted ${adminEmail} to ADMIN role`);
+  } catch (error) {
+    logger.error('[promoteConfiguredAdmin] Error:', error);
+    // Non-fatal — server should still start
+  }
+};
+
 module.exports = {
   getPlanByName,
   getPlanById,
@@ -196,5 +231,6 @@ module.exports = {
   deletePlan,
   seedDefaultPlans,
   assignProPlanToAdmins,
+  promoteConfiguredAdmin,
 };
 
