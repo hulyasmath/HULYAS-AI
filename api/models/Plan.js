@@ -148,6 +148,45 @@ const seedDefaultPlans = async () => {
   }
 };
 
+/**
+ * Assign the Pro plan to all admin users who don't already have a paid plan.
+ * Called once on server startup so the site owner can generate API keys
+ * without needing a Stripe subscription.
+ * @returns {Promise<void>}
+ */
+const assignProPlanToAdmins = async () => {
+  try {
+    // Avoid circular dependency — require User here, not at top level
+    const { User } = require('~/db/models');
+    const proPlan = await Plan.findOne({ name: 'pro', isActive: true }).lean();
+    if (!proPlan) {
+      logger.warn('[assignProPlanToAdmins] Pro plan not found — skipping admin plan assignment');
+      return;
+    }
+
+    // Find admins without a paid plan (planId is null or points to free plan)
+    const freeplan = await Plan.findOne({ name: 'free', isActive: true }).lean();
+    const adminUsers = await User.find({
+      role: { $in: ['ADMIN', 'admin'] },
+      $or: [{ planId: null }, { planId: { $exists: false } }, ...(freeplan ? [{ planId: freeplan._id }] : [])],
+    }).lean();
+
+    if (adminUsers.length === 0) {
+      logger.debug('[assignProPlanToAdmins] All admin users already have a paid plan');
+      return;
+    }
+
+    const adminIds = adminUsers.map((u) => u._id);
+    await User.updateMany({ _id: { $in: adminIds } }, { $set: { planId: proPlan._id } });
+    logger.info(`[assignProPlanToAdmins] Assigned Pro plan to ${adminUsers.length} admin user(s)`, {
+      emails: adminUsers.map((u) => u.email),
+    });
+  } catch (error) {
+    logger.error('[assignProPlanToAdmins] Error:', error);
+    // Non-fatal — server should still start
+  }
+};
+
 module.exports = {
   getPlanByName,
   getPlanById,
@@ -156,5 +195,6 @@ module.exports = {
   updatePlan,
   deletePlan,
   seedDefaultPlans,
+  assignProPlanToAdmins,
 };
 

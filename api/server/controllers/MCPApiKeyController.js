@@ -5,14 +5,28 @@ const MCPApiKey = require('~/server/models/MCPApiKey');
 const { getPlanById } = require('~/models/Plan');
 
 /**
- * Check if user has a paid plan (Pro or Enterprise)
+ * Check if user has a paid plan (Pro or Enterprise) OR is an admin/owner.
+ * Admins always get access regardless of their assigned plan, so the site
+ * owner can generate API keys without needing a Stripe subscription.
  */
 async function hasPaidPlan(userId) {
   try {
     const user = await User.findById(userId).populate('planId').lean();
-    if (!user || !user.planId) {
+    if (!user) {
       return false;
     }
+
+    // Admins always have access — owner/operator of the platform
+    const adminRoles = ['ADMIN', 'admin'];
+    if (adminRoles.includes(user.role)) {
+      logger.debug('[hasPaidPlan] Admin user — granting API key access', { userId });
+      return true;
+    }
+
+    if (!user.planId) {
+      return false;
+    }
+
     const plan = user.planId;
     // Check if plan name indicates paid tier
     const paidPlans = ['pro', 'enterprise'];
