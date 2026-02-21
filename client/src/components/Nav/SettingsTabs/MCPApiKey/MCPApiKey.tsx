@@ -79,6 +79,7 @@ export default function MCPApiKey() {
 
   const displayKey = newlyGeneratedKey || apiKeyData?.apiKey;
   const maskedKey = apiKeyData?.prefix ? `${apiKeyData.prefix}••••••••••••` : null;
+  const hasExistingKey = !!(displayKey || maskedKey);
 
   return (
     <div className="flex flex-col gap-6">
@@ -98,7 +99,7 @@ export default function MCPApiKey() {
           <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-text-secondary" />
           </div>
-        ) : displayKey ? (
+        ) : hasExistingKey ? (
           <div className="space-y-4">
             <div>
               <label className="mb-2 block text-sm font-medium text-text-primary">
@@ -109,17 +110,20 @@ export default function MCPApiKey() {
                 <input
                   type="text"
                   readOnly
-                  value={displayKey}
+                  value={displayKey || maskedKey || ''}
                   className="flex-1 rounded-md border border-border-medium bg-surface-primary px-3 py-2 font-mono text-sm text-text-primary"
                 />
                 <button
                   type="button"
-                  onClick={() => handleCopy(displayKey)}
+                  onClick={() => displayKey && handleCopy(displayKey)}
+                  disabled={!displayKey}
                   className={cn(
                     'flex items-center gap-2 rounded-md border border-border-medium bg-surface-primary px-4 py-2 text-sm transition-colors',
-                    copied
-                      ? 'border-green-500 text-green-600 dark:text-green-400'
-                      : 'hover:bg-surface-hover text-text-secondary',
+                    !displayKey
+                      ? 'opacity-50 cursor-not-allowed text-text-tertiary'
+                      : copied
+                        ? 'border-green-500 text-green-600 dark:text-green-400'
+                        : 'hover:bg-surface-hover text-text-secondary',
                   )}
                 >
                   {copied ? <CheckCircle2 className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
