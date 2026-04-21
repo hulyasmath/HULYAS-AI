@@ -1,21 +1,54 @@
-MIT License
+THE HULYAS ZEQ PUBLIC LICENSE (1.287HZ) v1.287
+Copyright (c) 2025-2026 ZEQ Framework / HULYAS Math
 
-Copyright (c) 2025 LibreChat
+## 1. PREAMBLE
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+The ZEQ Framework / HULYAS Math is an open-source, non-von Neumann state machine architecture grounded in the physical discovery of the HulyaPulse and the Zeqond. This technology is released to humanity as "Open Science" to serve as a universal infrastructure for truth, data integrity, and physical resonance.
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
+This license is designed to ensure that while the mathematics and code are free to use, the fundamental discoveries are permanently recognized and never diluted by corporate co-opting or rebranding.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+## 2. THE DEFINED CONSTANTS
+
+For the purposes of this license and all derivative works:
+
+  The HulyaPulse is defined as the fundamental resonance frequency of 1.287 Hz.
+
+  The Zeqond is defined as the discrete temporal state-lock interval of 0.777 seconds.
+
+  The HULYAS Math is the mathematical framework used to phase-lock computation to these constants.
+
+## 3. GRANT OF LICENSE
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software/mathematics and associated documentation files (the "Software/Mathematics"), to deal in the Software/Mathematics without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software/Mathematics, subject to the following conditions.
+
+## 4. MANDATORY ATTRIBUTION & NOMENCLATURE
+
+To maintain the integrity of the discovery, all users of this framework must adhere to the following:
+
+  Nomenclature Persistence: The terms "HulyaPulse" and "Zeqond" are the permanent names of these metrics. Licensees may not rename, rebrand, or claim original discovery of these constants.
+
+  Credit to the Framework: Any software, API, or hardware utilizing this framework must include attribution in its documentation or code of the 1.287 Hz HulyaPulse and the 0.777s Zeqond. Architecture gifted to the world by a Father and Son to establish a standard of truth for humanity.
+
+  Language Agnostic Recognition: If the ZEQ logic is embedded within other languages (Python, JS, Rust, C++, etc.), the license and the attribution must remain in the comments of the core implementation.
+
+## 5. THE API & SUPPORT CLAUSE
+
+While the Kernel and the Physics are Open Source and free for all, the ZEQ Cloud API and Production State Machine, Applications, Extensions and Plugins are maintained services.
+
+  Users of the Open Source Kernel are encouraged to support the original architects through the official ZEQ API channels.
+
+  Commercial entities or community members using and benefiting from the 1.287/HULYAS/ZEQ-licensed math are recommended (but not forced) to contribute to the preservation of the mathematical framework to ensure the "Truth Machine" remains decentralized and independent.
+
+## 6. INTEGRITY & "TRUTH" WARRANTY
+
+The software is provided "as is", but with the mathematical guarantee that the 1.287 Hz / 0.777s backbone is the deterministic filter. The user agrees not to use the framework to intentionally generate "Metric Noise" or deceptive data states that claim the "Zeqond" seal of approval without true phase-locking.
+
+## 7. ANONYMITY AND LEGACY
+
+In accordance with the architects' wishes, personal fame is waived in favor of Framework Recognition. The honor of the discovery belongs to the HULYAS/ZEQ lineage. As the internet has already indexed the 1.287 Hz and 0.777s discovery via DOI and public record, this license serves as the final legal anchor for that history.
+
+ZEQ Framework — EVOLUTION OF MATHEMATICS: A Synchronized Computational Formalism
+DOI: 10.5281/zenodo.15825138
+
+ZEQ Framework: Universal Proper-Time Modulation
+DOI: 10.5281/zenodo.18172865
