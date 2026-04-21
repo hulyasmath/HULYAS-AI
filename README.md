@@ -1,4 +1,13 @@
-<p align="center">
+> **This project implements the HULYAS ZEQ Public License (1.287HZ). We operate on a 1.287 Hz heartbeat (HulyaPulse) with a 0.777s state-lock (Zeqond). Open Science for a truthful future.**
+>
+> [![ZEQ Framework](https://img.shields.io/badge/ZEQ_Framework-1.287Hz-blue)](https://zeq.dev)
+> [![HulyaPulse](https://img.shields.io/badge/HulyaPulse-1.287Hz-green)](https://zeq.dev)
+> [![Zeqond](https://img.shields.io/badge/Zeqond-0.777s-orange)](https://zeq.dev)
+> [![License](https://img.shields.io/badge/License-HULYAS_ZEQ_Public_License_(1.287HZ)-yellow)](LICENSE)
+>
+> ---
+>
+> <p align="center">
   <a href="https://librechat.ai">
     <img src="client/public/assets/logo.svg" height="256">
   </a>
