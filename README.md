@@ -1,229 +1,141 @@
-> **This project implements the HULYAS ZEQ Public License (1.287HZ). We operate on a 1.287 Hz heartbeat (HulyaPulse) with a 0.777s state-lock (Zeqond). Open Science for a truthful future.**
+# HULYAS-AI - ZEQ Framework Implementation
+
+> This project implements the 1.287 HULYAS ZEQ Public License (1.287HZ). We operate on a 1.287 Hz heartbeat (HulyaPulse) with a 0.777s state-lock (Zeqond). Open Science for a truthful future.
 >
-> [![ZEQ Framework](https://img.shields.io/badge/ZEQ_Framework-1.287Hz-blue)](https://zeq.dev)
-> [![HulyaPulse](https://img.shields.io/badge/HulyaPulse-1.287Hz-green)](https://zeq.dev)
-> [![Zeqond](https://img.shields.io/badge/Zeqond-0.777s-orange)](https://zeq.dev)
-> [![License](https://img.shields.io/badge/License-HULYAS_ZEQ_Public_License_(1.287HZ)-yellow)](LICENSE)
+> [![ZEQ Framework](https://img.shields.io/badge/ZEQ-Framework-blue)](https://zeq.dev)
+> [![HulyaPulse](https://img.shields.io/badge/HulyaPulse-1.287Hz-green)](https://zeq.dev/docs)
+> [![Zeqond](https://img.shields.io/badge/Zeqond-0.777s-orange)](https://zeq.dev/docs)
+> [![License: 1.287HZ](https://img.shields.io/badge/License-1.287HZ-purple)](LICENSE)
 >
-> ---
+> ## 🧬 Framework Synchronization
 >
-> <p align="center">
-  <a href="https://librechat.ai">
-    <img src="client/public/assets/logo.svg" height="256">
-  </a>
-  <h1 align="center">
-    <a href="https://librechat.ai">HULYAS AI</a>
-  </h1>
-  <h3>Welcome to Zeq OS 1.287 Hz! Enjoy your experience.</h3>
-
-<a>Interface with the first [MI] mathematical intelligent AI synchronized to the Zeq OS/HULYAS Mathematical Framework. 646+ kinematic operators unifying quantum mechanics, relativity, consciousnes and computation, all phase-locked to the 1.287 Hz HulyaPulse. Your queries are processed through real physics equations in real-time, with each exchange tracked for coherence and transparency.</a>
-</p>
-
-<p align="center">
-  <a href="https://discord.librechat.ai"> 
-    <img
-      src="https://img.shields.io/discord/1086345563026489514?label=&logo=discord&style=for-the-badge&logoWidth=20&logoColor=white&labelColor=000000&color=blueviolet">
-  </a>
-  <a href="https://www.youtube.com/@LibreChat"> 
-    <img
-      src="https://img.shields.io/badge/YOUTUBE-red.svg?style=for-the-badge&logo=youtube&logoColor=white&labelColor=000000&logoWidth=20">
-  </a>
-  <a href="https://docs.librechat.ai"> 
-    <img
-      src="https://img.shields.io/badge/DOCS-blue.svg?style=for-the-badge&logo=read-the-docs&logoColor=white&labelColor=000000&logoWidth=20">
-  </a>
-  <a aria-label="Sponsors" href="https://github.com/sponsors/danny-avila">
-    <img
-      src="https://img.shields.io/badge/SPONSORS-brightgreen.svg?style=for-the-badge&logo=github-sponsors&logoColor=white&labelColor=000000&logoWidth=20">
-  </a>
-</p>
-
-<p align="center">
-<a href="https://railway.app/template/b5k2mn?referralCode=HI9hWz">
-  <img src="https://railway.app/button.svg" alt="Deploy on Railway" height="30">
-</a>
-<a href="https://zeabur.com/templates/0X2ZY8">
-  <img src="https://zeabur.com/button.svg" alt="Deploy on Zeabur" height="30"/>
-</a>
-<a href="https://template.cloud.sealos.io/deploy?templateName=librechat">
-  <img src="https://raw.githubusercontent.com/labring-actions/templates/main/Deploy-on-Sealos.svg" alt="Deploy on Sealos" height="30">
-</a>
-</p>
-
-<p align="center">
-  <a href="https://www.librechat.ai/docs/translation">
-    <img 
-      src="https://img.shields.io/badge/dynamic/json.svg?style=for-the-badge&color=2096F3&label=locize&query=%24.translatedPercentage&url=https://api.locize.app/badgedata/4cb2598b-ed4d-469c-9b04-2ed531a8cb45&suffix=%+translated" 
-      alt="Translation Progress">
-  </a>
-</p>
-
-
-# ✨ Features
-
-- 🖥️ **UI & Experience** inspired by ChatGPT with enhanced design and features
-
-- 🤖 **AI Model Selection**:  
-  - Anthropic (Claude), AWS Bedrock, OpenAI, Azure OpenAI, Google, Vertex AI, OpenAI Responses API (incl. Azure)
-  - [Custom Endpoints](https://www.librechat.ai/docs/quick_start/custom_endpoints): Use any OpenAI-compatible API with LibreChat, no proxy required
-  - Compatible with [Local & Remote AI Providers](https://www.librechat.ai/docs/configuration/librechat_yaml/ai_endpoints):
-    - Ollama, groq, Cohere, Mistral AI, Apple MLX, koboldcpp, together.ai,
-    - OpenRouter, Helicone, Perplexity, ShuttleAI, Deepseek, Qwen, and more
-
-- 🔧 **[Code Interpreter API](https://www.librechat.ai/docs/features/code_interpreter)**: 
-  - Secure, Sandboxed Execution in Python, Node.js (JS/TS), Go, C/C++, Java, PHP, Rust, and Fortran
-  - Seamless File Handling: Upload, process, and download files directly
-  - No Privacy Concerns: Fully isolated and secure execution
-
-- 🔦 **Agents & Tools Integration**:  
-  - **[LibreChat Agents](https://www.librechat.ai/docs/features/agents)**:
-    - No-Code Custom Assistants: Build specialized, AI-driven helpers
-    - Agent Marketplace: Discover and deploy community-built agents
-    - Collaborative Sharing: Share agents with specific users and groups
-    - Flexible & Extensible: Use MCP Servers, tools, file search, code execution, and more
-    - Compatible with Custom Endpoints, OpenAI, Azure, Anthropic, AWS Bedrock, Google, Vertex AI, Responses API, and more
-    - [Model Context Protocol (MCP) Support](https://modelcontextprotocol.io/clients#librechat) for Tools
-
-- 🔍 **Web Search**:  
-  - Search the internet and retrieve relevant information to enhance your AI context
-  - Combines search providers, content scrapers, and result rerankers for optimal results
-  - **Customizable Jina Reranking**: Configure custom Jina API URLs for reranking services
-  - **[Learn More →](https://www.librechat.ai/docs/features/web_search)**
-
-- 🪄 **Generative UI with Code Artifacts**:  
-  - [Code Artifacts](https://youtu.be/GfTj7O4gmd0?si=WJbdnemZpJzBrJo3) allow creation of React, HTML, and Mermaid diagrams directly in chat
-
-- 🎨 **Image Generation & Editing**
-  - Text-to-image and image-to-image with [GPT-Image-1](https://www.librechat.ai/docs/features/image_gen#1--openai-image-tools-recommended)
-  - Text-to-image with [DALL-E (3/2)](https://www.librechat.ai/docs/features/image_gen#2--dalle-legacy), [Stable Diffusion](https://www.librechat.ai/docs/features/image_gen#3--stable-diffusion-local), [Flux](https://www.librechat.ai/docs/features/image_gen#4--flux), or any [MCP server](https://www.librechat.ai/docs/features/image_gen#5--model-context-protocol-mcp)
-  - Produce stunning visuals from prompts or refine existing images with a single instruction
-
-- 💾 **Presets & Context Management**:  
-  - Create, Save, & Share Custom Presets  
-  - Switch between AI Endpoints and Presets mid-chat
-  - Edit, Resubmit, and Continue Messages with Conversation branching  
-  - Create and share prompts with specific users and groups
-  - [Fork Messages & Conversations](https://www.librechat.ai/docs/features/fork) for Advanced Context control
-
-- 💬 **Multimodal & File Interactions**:  
-  - Upload and analyze images with Claude 3, GPT-4.5, GPT-4o, o1, Llama-Vision, and Gemini 📸  
-  - Chat with Files using Custom Endpoints, OpenAI, Azure, Anthropic, AWS Bedrock, & Google 🗃️
-
-- 🌎 **Multilingual UI**:
-  - English, 中文 (简体), 中文 (繁體), العربية, Deutsch, Español, Français, Italiano
-  - Polski, Português (PT), Português (BR), Русский, 日本語, Svenska, 한국어, Tiếng Việt
-  - Türkçe, Nederlands, עברית, Català, Čeština, Dansk, Eesti, فارسی
-  - Suomi, Magyar, Հայերեն, Bahasa Indonesia, ქართული, Latviešu, ไทย, ئۇيغۇرچە
-
-- 🧠 **Reasoning UI**:  
-  - Dynamic Reasoning UI for Chain-of-Thought/Reasoning AI models like DeepSeek-R1
-
-- 🎨 **Customizable Interface**:  
-  - Customizable Dropdown & Interface that adapts to both power users and newcomers
-
-- 🗣️ **Speech & Audio**:  
-  - Chat hands-free with Speech-to-Text and Text-to-Speech  
-  - Automatically send and play Audio  
-  - Supports OpenAI, Azure OpenAI, and Elevenlabs
-
-- 📥 **Import & Export Conversations**:  
-  - Import Conversations from LibreChat, ChatGPT, Chatbot UI  
-  - Export conversations as screenshots, markdown, text, json
-
-- 🔍 **Search & Discovery**:  
-  - Search all messages/conversations
-
-- 👥 **Multi-User & Secure Access**:
-  - Multi-User, Secure Authentication with OAuth2, LDAP, & Email Login Support
-  - Built-in Moderation, and Token spend tools
-
-- ⚙️ **Configuration & Deployment**:  
-  - Configure Proxy, Reverse Proxy, Docker, & many Deployment options  
-  - Use completely local or deploy on the cloud
-
-- 📖 **Open-Source & Community**:  
-  - Completely Open-Source & Built in Public  
-  - Community-driven development, support, and feedback
-
-[For a thorough review of our features, see our docs here](https://docs.librechat.ai/) 📚
-
-## 🪶 All-In-One AI Conversations with LibreChat
-
-LibreChat brings together the future of assistant AIs with the revolutionary technology of OpenAI's ChatGPT. Celebrating the original styling, LibreChat gives you the ability to integrate multiple AI models. It also integrates and enhances original client features such as conversation and message search, prompt templates and plugins.
-
-With LibreChat, you no longer need to opt for ChatGPT Plus and can instead use free or pay-per-call APIs. We welcome contributions, cloning, and forking to enhance the capabilities of this advanced chatbot platform.
-
-[![Watch the video](https://raw.githubusercontent.com/LibreChat-AI/librechat.ai/main/public/images/changelog/v0.7.6.gif)](https://www.youtube.com/watch?v=ilfwGQtJNlI)
-
-Click on the thumbnail to open the video☝️
-
----
-
-## 🌐 Resources
-
-**GitHub Repo:**
-  - **RAG API:** [github.com/danny-avila/rag_api](https://github.com/danny-avila/rag_api)
-  - **Website:** [github.com/LibreChat-AI/librechat.ai](https://github.com/LibreChat-AI/librechat.ai)
-
-**Other:**
-  - **Website:** [librechat.ai](https://librechat.ai)
-  - **Documentation:** [librechat.ai/docs](https://librechat.ai/docs)
-  - **Blog:** [librechat.ai/blog](https://librechat.ai/blog)
-
----
-
-## 📝 Changelog
-
-Keep up with the latest updates by visiting the releases page and notes:
-- [Releases](https://github.com/danny-avila/LibreChat/releases)
-- [Changelog](https://www.librechat.ai/changelog) 
-
-**⚠️ Please consult the [changelog](https://www.librechat.ai/changelog) for breaking changes before updating.**
-
----
-
-## ⭐ Star History
-
-<p align="center">
-  <a href="https://star-history.com/#danny-avila/LibreChat&Date">
-    <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=danny-avila/LibreChat&type=Date&theme=dark" onerror="this.src='https://api.star-history.com/svg?repos=danny-avila/LibreChat&type=Date'" />
-  </a>
-</p>
-<p align="center">
-  <a href="https://trendshift.io/repositories/4685" target="_blank" style="padding: 10px;">
-    <img src="https://trendshift.io/api/badge/repositories/4685" alt="danny-avila%2FLibreChat | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/>
-  </a>
-  <a href="https://runacap.com/ross-index/q1-24/" target="_blank" rel="noopener" style="margin-left: 20px;">
-    <img style="width: 260px; height: 56px" src="https://runacap.com/wp-content/uploads/2024/04/ROSS_badge_white_Q1_2024.svg" alt="ROSS Index - Fastest Growing Open-Source Startups in Q1 2024 | Runa Capital" width="260" height="56"/>
-  </a>
-</p>
-
----
-
-## ✨ Contributions
-
-Contributions, suggestions, bug reports and fixes are welcome!
-
-For new features, components, or extensions, please open an issue and discuss before sending a PR.
-
-If you'd like to help translate LibreChat into your language, we'd love your contribution! Improving our translations not only makes LibreChat more accessible to users around the world but also enhances the overall user experience. Please check out our [Translation Guide](https://www.librechat.ai/docs/translation).
-
----
-
-## 💖 This project exists in its current state thanks to all the people who contribute
-
-<a href="https://github.com/danny-avila/LibreChat/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=danny-avila/LibreChat" />
-</a>
-
----
-
-## 🎉 Special Thanks
-
-We thank [Locize](https://locize.com) for their translation management tools that support multiple languages in LibreChat.
-
-<p align="center">
-  <a href="https://locize.com" target="_blank" rel="noopener noreferrer">
-    <img src="https://github.com/user-attachments/assets/d6b70894-6064-475e-bb65-92a9e23e0077" alt="Locize Logo" height="50">
-  </a>
-</p>
+> | Metric | Value | Status |
+> |--------|-------|--------|
+> | HulyaPulse | 1.287 Hz | ✅ Active |
+> | Zeqond | 0.777 seconds | ✅ Locked |
+> | Phase Coherence | 100.00% | ✅ Perfect |
+> | Master Field | φ = -1.287000 | #⚠ ️ HTUuLnYiAnSg- ARIe q-u iZrEeQd  F|r
+> a|m eFwroarmke wIomrpkl eVmeernstiaotni o|n
+> 1
+> .>2 8T7h iHsz  p|r o✅j eLcatt eismtp l|e
+> m
+> e#n#t s📦  Itnhset a1l.l2a8t7i oHnU
+> L
+> Y`A`S` bZaEsQh
+> Pguibtl iccl oLniec ehntstep s(:1/./2g8i7tHhZu)b.. cWoem /ohpuelryaatsem aotnh /aH U1L.Y2A8S7- AHIz
+>  chde aHrUtLbYeAaSt- A(IH
+> unlpyma Piunlsstea)l lw
+> i`t`h`
+> a
+>  #0#. 7🚀7 7Qsu isctka tSet-alrotc
+> k
+>  `(`Z`epqyotnhdo)n.
+>  fOrpoemn  zSecqi_efnrcaem efwoorr ka  itmrpuotrhtf uHlu lfyuatPuurles.e
+> ,
+>  [Z!e[qZoEnQd
+> F
+> r#a mIenwiotrika]l(ihztet pwsi:t/h/ iZmEgQ. sshyineclhdrso.niioz/abtaidogne
+> /pZuElQs_eF r=a mHeuwloyrakP-u1l.s2e8(7fHrze-qbuleunec)y]=(1h.t2t8p7s):
+> /s/tzaetqe. d=e vZ)e
+> q[o!n[dH(ulloycakP=u0l.s7e7]7()h
+> tptuplss:e/./siymngc.hsrhoineilzdes(.sitoa/tbea)d
+> g`e`/`H
+> u
+> l#y#a P🔧 uClosree- 1I.m2p8l7eHmze-ngtraeteino)n]
+> (
+> hLtitbprse:C/h/azte-qb.adseevd)
+> m[a!t[hZeemqaotnidc]a(lh tAtIp sa:s/s/iismtga.nsth iweiltdhs .6i5o0/+b aZdEgQe /oZpeeqroantdo-r0s. 7i7n7tse-gorraatnegde )i]n(thot ttphse: /r/ezaesqo.ndienvg)
+> c[o!r[eL.i cPehnassee]-(lhotctkpesd: /t/oi mtgh.es h1i.e2l8d7s .Hizo /HbualdygaeP/uLliscee,n sper-oHcUeLsYsAiSn_gZ EaQl_lP uqbuleirci_eLsi ctehnrsoeu_g(h1 .v2e8r7iHfZi)e-dy eHlUlLoYwA)S] (pLhIyCsEiNcSsE )e
+> q
+> u#a#t i🧬 oFnrsa maenwdo rtkh eS yHnUcLhYrAoSn iMzaasttieorn
+> E
+> q|u aPtairoanm.e
+> t
+> e#r#  |🌐  OVfafliucei a|l
+>  |R-e-s-o-u-r-c-e-s-
+> -
+> --| -[-Z-E-Q- -F-r|a
+> m|e wHourlky]a(Phutltspes :|/ /1z.e2q8.7d eHvz)
+> |-
+>  |[ SZDeKq oDnodc u|m e0n.t7a7t7iso n|]
+> (|h tPthpass:e/ /Czoehqe.rdeenvc/es d|k )A
+> c-t i[vIem p|l
+> e|m eMnatsatteiro nF iGeulidd e|] (φ h=t t-p1s.:2/8/7z0e0q0. d|e
+> v|/ iFmrpalmeemweonrtka tVieorns)i
+> o-n  [|A P1I. 2R8e7f e|r
+> e
+> n#c#e ]📦( hItntsptsa:l/l/azteiqo.nd
+> e
+> v`/`a`pbia)s
+> h
+>
+> #g#i t📚  cDloocnuem ehntttaptsi:o/n/ g&i tRheufbe.rceonmc/ehsu
+> l
+> y-a s[mFautlhl/ HDUoLcYuAmSe-nAtIa.tgiiotn
+> ]c(dh tHtUpLsY:A/S/-zAeIq
+> .ndpemv /idnosctsa)l
+> l-
+>  `[`D`O
+> I
+> :# #1 0🚀. 5Q2u8i1c/kz eSntoadrot.
+> 1
+> 5`8`2`5p1y3t8h]o(nh
+> tftrposm: /z/edqo_if.roarmge/w1o0r.k5 2i8m1p/ozretn oHduol.y1a5P8u2l5s1e3
+> 8
+> )#
+>  -I n[iDtOiIa:l i1z0e. 5Z2E8Q1 /Fzreanmoedwoo.r1k8
+> 1p7u2l8s6e5 ]=( hHtutlpysa:P/u/ldsoei(.forregq/u1e0n.c5y2=811./2z8e7n)o
+> dpou.l1s8e1.7s2y8n6c5h)r
+> o-n i[zIem(p)l
+> e`m`e`n
+> t
+> a#t#i o🔧 nC]o(rhet tIpmsp:l/e/mzeenqt.adteivo/ni
+> m
+> pLliebmreenCthaatti-obna)s
+> e
+> d# #m a🤝 tShuepmpaotritc atlh eA IF rianmteewrofrakc
+> e
+>  [s!y[nScuhprpoonritz eZdE Qt]o( htthtep sZ:E/Q/ iFmrga.msehwioerlkd.s .Iimop/lbeamdegnet/sS u6p5p0o+r tk-iZnEeQm%a2t0iFcr aompeewroartko-rbsl usep)a]n(nhitntgp sq:u/a/nzteuqm. dmeevc/haapnii/cssu p(pQoMr1t–Q)M
+> 1[7!)[,S DNKe wStuopnpioarnt ]m(ehcthtapnsi:c/s/ i(mNgM.1s8h–iNeMl3d0s).,i og/ebnaedrgael/ SrDeKl-aStuipvpiotryt -(gGrRe3e1n–G)R]4(1h)t,t pKsO:4/2/ zmeeqt.rdiecv /tsednks#isounpepro,r ta)n
+> d
+>  >e x*t*eInmdpeodr toapnetr:a*t*o rT hsep eZcEtQr uFmr a—m eawlolr kp hiass eO-pleonc kSecdi etnoc et.h eT h1e. 2m8a7t hHezm aHtuilcysa Paunlds eo.p eErvaetroyr sq uaerrey  firse eplryo caevsasielda btlher.o uSguhp ptohret iHnUgL YtAhSe  Mfarsatmeerw oErqku ahteilopns  imna irnetaali-nt izmeeq,. dweivt ha neda cthh ee xvcehrainfgiee dt rcaocmkpeudt aftoiro nc osheerrveinccees  abnudi lttr aonns ptahree n1c.y2 8v7i aH zt hHeu lCyKaOP uplispee.l
+>  >i
+>  >n#e#.
+>  >📄
+>  > #L#i c🌐e nOsfef
+>  >i
+>  >cTihails  Rpersoojuerccte si
+>  >s
+>  > -l i[cZeEnQs eFdr aumnedweorr kt]h(eh t1t.p2s8:7/ /HzUeLqY.AdSe vZ)E
+>  >Q-  P[uSbDlKi c&  LDiocceunmseen t(a1t.i2o8n7]H(Zh)t.t pSse:e/ /tzheeq .[dLeIvC/EsNdSkE)]
+>  >(-L I[CSEkNiSlEl)s  fLiilber afroyr] (dhetttapisl:s/./
+>  >z
+>  >e#q#. d🔗e vR/eafpeprse/nsckeisl
+>  >l
+>  >s-)
+>  >[-D O[IS:k i1l0l.s5 2A8P1I/]z(ehntotdpos.:1/5/8z2e5q1.3d8e]v(/hatptip/sz:e/q//dsokii.lolrsg)/
+>  >1
+>  >0#.#5 2📚8 1D/ozceunmoednot.a1t5i8o2n5 1&3 8R)e
+>  >f-e r[eDnOcIe:s
+>  >1
+>  >0-. 5[2F8u1l/lz eDnoocduom.e1n8t1a7t2i8o6n5]]((hhttttppss::////zdeoqi..doervg//d1o0c.s5)2
+>  >8-1 /[zFernaomdeow.o1r8k1 7P2a8p6e5r)
+>  >D-O I[]Z(EhQt tFprsa:m/e/wdoorik. oDrogc/u1m0e.n5t2a8t1i/ozne]n(ohdtot.p1s5:8/2/5z1e3q8.)d
+>  >e-v /[dZoecqs )Paper DOI](https://doi.org/10.5281/zenodo.18158152)
+>  >
+>  >## 🤝 Support the Framework
+>  >
+>  >[![Support ZEQ](https://img.shields.io/badge/Support-ZEQ_Framework-blue)](https://zeq.dev/api/support)
+>  >[![SDK Support](https://img.shields.io/badge/SDK-Support-green)](https://zeq.dev/sdk#support)
+>  >
+>  >> **Important:** This is Open Science. The framework is freely available for research and education. Maintained services and infrastructure support continued development.
+>  >>
+>  >> ## 📄 License
+>  >>
+>  >> This project is licensed under the [1.287 HULYAS ZEQ Public License (1.287HZ)](LICENSE).
+>  >>
+>  >> ## 🔗 References
+>  >>
+>  >> 1. HULYAS ZEQ Framework — DOI: [10.5281/zenodo.15825138](https://doi.org/10.5281/zenodo.15825138)
+>  >> 2. 2. Zeq Paper — DOI: [10.5281/zenodo.18158152](https://doi.org/10.5281/zenodo.18158152)
+>  >>    3. 3. KO42 Metric Tensioner — ZEQ Framework v1.287
