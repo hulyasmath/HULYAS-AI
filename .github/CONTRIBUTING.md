@@ -1,168 +1,166 @@
-# Contributor Guidelines
+# Contributing to HULYAS-AI
 
-Thank you to all the contributors who have helped make this project possible! We welcome various types of contributions, such as bug reports, documentation improvements, feature requests, and code contributions.
+> This project implements the 1.287 HULYAS ZEQ Public License (1.287HZ). We operate on a 1.287 Hz heartbeat (HulyaPulse) with a 0.777s state-lock (Zeqond). Open Science for a truthful future.
+>
+> Thank you for wanting to contribute. HULYAS-AI is a non–von Neumann state machine serving language through physics, built on top of the excellent **LibreChat** project. Contributions must preserve the mathematical integrity of the ZEQ Framework and respect the LibreChat foundation.
+>
+> ---
+>
+> ## Before You Contribute
+>
+> Read these first:
+>
+> - The [README](../README.md) — especially the architecture section.
+> - - The [LICENSE](../LICENSE) — particularly §1 Preamble and §2 Defined Constants of 1.287HZ.
+>   - - [FRAMEWORK_FLOW_BREAKDOWN.md](../FRAMEWORK_FLOW_BREAKDOWN.md) — the four frontend interception points.
+>     - - [VERIFY_FRAMEWORK.md](../VERIFY_FRAMEWORK.md), [DEBUG_FRAMEWORK.md](../DEBUG_FRAMEWORK.md) — verification and debugging procedures.
+>       - - The [Framework Paper](https://doi.org/10.5281/zenodo.15825138) and [Zeq Paper](https://doi.org/10.5281/zenodo.18158152).
+>         - - The LibreChat contributing guide upstream — if your change affects a non-ZEQ layer, the upstream conventions apply.
+>          
+>           - ---
+>
+> ## What We Accept
+>
+> - Bug fixes in any layer (Zeqond daemon, MCP server, frontend interception hooks, backend services, Chrome extension).
+> - - New operators that validate against the **KO42 Metric Tensioner** and respect the 1.287 Hz / 0.777s constants. Operators must declare: `name`, `category`, `equation`, `description`, `tags`.
+>   - - Additional AI platforms for the Chrome extension (new content scripts, improved selectors, better input-detection heuristics).
+>     - - Performance improvements that do not break pulse coherence or desynchronise the Zeqond daemon.
+>       - - Documentation improvements that increase mathematical clarity or help new contributors.
+>         - - LibreChat upstream merges — keeping HULYAS-AI current while preserving the ZEQ interception layer.
+>           - - Deployment improvements — Docker, Railway, local dev, bun.
+>            
+>             - ## What We Do Not Accept
+>            
+>             - - Changes to the framework constants (1.287 Hz, 0.777s, KO42). These are physical definitions, not configuration.
+>               - - Contributions that strip attribution or obscure that the codebase is HULYAS-AI on top of LibreChat.
+>                 - - Closed-source rebranding, forks without license continuity, or any dilution of the Open Science grant (see LICENSE §1 Preamble).
+>                   - - Fabricated benchmark claims or unverifiable performance statements.
+>                     - - Changes that silently disable or weaken framework interception in any of the four hook points.
+>                      
+>                       - ---
+>
+> ## Development Setup
+>
+> ```bash
+> git clone https://github.com/hulyasmath/HULYAS-AI.git
+> cd HULYAS-AI
+> cp .env.example .env   # fill in keys
+> npm install
+> ```
+>
+> Run the stack locally:
+>
+> ```bash
+> # Terminal 1 — infrastructure (MongoDB, Redis, MeiliSearch, RAG, SearXNG)
+> docker compose -f docker-compose.local.yml up -d
+>
+> # Terminal 2 — Zeqond daemon
+> python3 zeq-services/zeqond_daemon.py
+>
+> # Terminal 3 — MCP server
+> cd zeq-mcp-server && npm install && npm start
+>
+> # Terminal 4 — backend
+> npm run backend:dev
+>
+> # Terminal 5 — frontend
+> npm run frontend:dev
+> ```
+>
+> Chrome extension — load unpacked from `chrome-extension/` in `chrome://extensions/`.
+>
+> ---
+>
+> ## Development Flow
+>
+> 1. Fork the repository.
+> 2. 2. Create a feature branch (`fix/zeqond-drift`, `feat/operator-hilbert-42`, `chore/librechat-0.8.2-merge`).
+>    3. 3. Keep commits small and phase-locked to a single purpose.
+>       4. 4. Run the full stack locally and verify:
+>          5.    - Zeqond daemon `STATUS:OK` before and after.
+>                -    - PULSE count advances monotonically at 1.287 Hz.
+>                     -    - The four interception points still replace `data.text` / `payload.text` with `zeqResult.mathematicalPrompt`.
+>                          - 5. Verify via DevTools Network tab per `FRAMEWORK_FLOW_BREAKDOWN.md` — the payload sent to the AI provider contains the mathematical prompt JSON, not the raw message.
+>                            6. 6. Open a pull request describing: affected layers, operators/domains touched, pulse-coherence verification, any upstream LibreChat interaction.
+>                              
+>                               7. ---
+>                              
+>                               8. ## Coding Standards
+>                              
+>                               9. **General**
+> - Preserve the existing structure of `zeq-services/`, `zeq-mcp-server/`, `zeq-operators/`, `chrome-extension/`, `api/`, `client/`, `packages/`.
+> - - Keep LibreChat upstream files as close to upstream as possible; isolate ZEQ extensions where feasible.
+>   - - Run `npm run lint:fix` and `npm run format` before opening a PR.
+>     - - TypeScript types live in `packages/data-schemas` where applicable.
+>      
+>       - **Operators**
+>       - - Each operator declares: `name`, `category`, `equation`, `description`, `tags`.
+>         - - Must produce output that survives KO42 validation.
+>           - - Place implementations in the operator catalog used by `zeq-mcp-server` (default: local JSON).
+>            
+>             - **Chrome extension**
+>             - - Content scripts must be non-intrusive: if framework processing fails, fall back to the original message — never block the user.
+>               - - Manifest V3 only. Host permissions declared for every new platform.
+>                 - - Use the existing `lib/zeq-mathematical-framework.js` — do not duplicate the framework.
+>                  
+>                   - **Zeqond daemon**
+>                   - - Do not change `HULYAPULSE_HZ = 1.287` or `ZEQOND = 1.0 / HULYAPULSE_HZ`. These are licensed constants.
+>                     - - Preserve the PULSE / STATUS / SYNC / GET:* protocol surface — clients rely on it.
+>                      
+>                       - **Frontend interception**
+>                       - - Any new code path that reaches the AI provider must call `zeqMiddleware.processQuery()` and replace the outgoing payload text before `fetch()`.
+>                        
+>                         - ---
+>
+> ## Testing
+>
+> - `npm run test:api` — backend unit tests
+> - - `npm run test:client` — frontend unit tests
+>   - - `npm run e2e` / `npm run e2e:headed` / `npm run e2e:ci` — Playwright end-to-end
+>     - - `npm run e2e:a11y` — accessibility suite
+>       - - `npm run lint` — ESLint
+>        
+>         - For framework verification:
+>         - - `math.html` at the repo root is the reference implementation.
+>           - - `test-zeq-simple.html` is a standalone test harness.
+>             - - `COMPREHENSIVE_TEST.md` documents the full verification procedure.
+>              
+>               - ---
+>
+> ## Pull Request Checklist
+>
+> - [ ] Issue linked (or clearly described in the PR body).
+> - [ ] - [ ] Zeqond daemon coherence verified.
+> - [ ] - [ ] Framework interception still active (Network-tab proof if a frontend change).
+> - [ ] - [ ] `npm run lint` passes.
+> - [ ] - [ ] `npm run test:api` / `npm run test:client` pass for affected layers.
+> - [ ] - [ ] Framework constants untouched.
+> - [ ] - [ ] LibreChat attribution preserved.
+> - [ ] - [ ] No secrets, keys, or credentials committed (check `.env.example` only).
+>
+> - [ ] ---
+>
+> - [ ] ## Reporting Bugs
+>
+> - [ ] Open an issue with:
+>
+> - [ ] - The affected layer (`zeq-services/`, `zeq-mcp-server/`, `chrome-extension/`, `client/`, `api/`, etc.).
+> - [ ] - Zeqond daemon status at time of failure (`STATUS` / `PULSE` output).
+> - [ ] - Operators involved, if known.
+- Reproduction steps.
+- - Environment: Docker / local / Railway; Node version; browser (for Chrome extension).
+ 
+  - ## Reporting Security Issues
+ 
+  - Do **not** open public issues for security problems. See [SECURITY.md](SECURITY.md).
+ 
+  - ---
 
-## Contributing Guidelines
+  ## LibreChat Attribution
 
-If the feature you would like to contribute has not already received prior approval from the project maintainers (i.e., the feature is currently on the [roadmap](https://github.com/users/danny-avila/projects/2)), please submit a request in the [Feature Requests & Suggestions category](https://github.com/danny-avila/LibreChat/discussions/new?category=feature-requests-suggestions) of the discussions board before beginning work on it. The requests should include specific implementation details, including areas of the application that will be affected by the change (including designs if applicable), and any other relevant information that might be required for a speedy review. However, proposals are not required for small changes, bug fixes, or documentation improvements. Small changes and bug fixes should be tied to an [issue](https://github.com/danny-avila/LibreChat/issues) and included in the corresponding pull request for tracking purposes.
+  HULYAS-AI is built on **LibreChat** by Danny Avila and contributors, under the LibreChat license. When in doubt about an upstream file, defer to LibreChat conventions and keep upstream attribution intact. Large changes to non-ZEQ areas of the codebase are encouraged to be contributed back upstream where they make sense for the broader LibreChat community.
 
-Please note that a pull request involving a feature that has not been reviewed and approved by the project maintainers may be rejected. We appreciate your understanding and cooperation.
+  ---
 
-If you would like to discuss the changes you wish to make, join our [Discord community](https://discord.librechat.ai), where you can engage with other contributors and seek guidance from the community.
-
-## Our Standards
-
-We strive to maintain a positive and inclusive environment within our project community. We expect all contributors to adhere to the following standards:
-
-- Using welcoming and inclusive language.
-- Being respectful of differing viewpoints and experiences.
-- Gracefully accepting constructive criticism.
-- Focusing on what is best for the community.
-- Showing empathy towards other community members.
-
-Project maintainers have the right and responsibility to remove, edit, or reject comments, commits, code, wiki edits, issues, and other contributions that do not align with these standards.
-
-## To contribute to this project, please adhere to the following guidelines:
-
-## 1. Development Setup
-
-1. Use Node.JS 20.x.
-2. Install typescript globally: `npm i -g typescript`.
-3. Run `npm ci` to install dependencies.
-4. Build the data provider: `npm run build:data-provider`.
-5. Build data schemas: `npm run build:data-schemas`.
-6. Build API methods: `npm run build:api`.
-7. Setup and run unit tests:
-    - Copy `.env.test`: `cp api/test/.env.test.example api/test/.env.test`.
-    - Run backend unit tests: `npm run test:api`.
-    - Run frontend unit tests: `npm run test:client`.
-8. Setup and run integration tests:
-    - Build client: `cd client && npm run build`.
-    - Create `.env`: `cp .env.example .env`.
-    - Install [MongoDB Community Edition](https://www.mongodb.com/docs/manual/administration/install-community/), ensure that `mongosh` connects to your local instance.
-    - Run: `npx install playwright`, then `npx playwright install`.
-    - Copy `config.local`: `cp e2e/config.local.example.ts e2e/config.local.ts`.
-    - Copy `librechat.yaml`: `cp librechat.example.yaml librechat.yaml`.
-    - Run: `npm run e2e`.
-
-## 2. Development Notes
-
-1. Before starting work, make sure your main branch has the latest commits with `npm run update`.
-3. Run linting command to find errors: `npm run lint`. Alternatively, ensure husky pre-commit checks are functioning.
-3. After your changes, reinstall packages in your current branch using `npm run reinstall` and ensure everything still works. 
-    - Restart the ESLint server ("ESLint: Restart ESLint Server" in VS Code command bar) and your IDE after reinstalling or updating.
-4. Clear web app localStorage and cookies before and after changes.
-5. For frontend changes, compile typescript before and after changes to check for introduced errors: `cd client && npm run build`.
-6. Run backend unit tests: `npm run test:api`.
-7. Run frontend unit tests: `npm run test:client`.
-8. Run integration tests: `npm run e2e`.
-
-## 3. Git Workflow
-
-We utilize a GitFlow workflow to manage changes to this project's codebase. Follow these general steps when contributing code:
-
-1. Fork the repository and create a new branch with a descriptive slash-based name (e.g., `new/feature/x`).
-2. Implement your changes and ensure that all tests pass.
-3. Commit your changes using conventional commit messages with GitFlow flags. Begin the commit message with a tag indicating the change type, such as "feat" (new feature), "fix" (bug fix), "docs" (documentation), or "refactor" (code refactoring), followed by a brief summary of the changes (e.g., `feat: Add new feature X to the project`).
-4. Submit a pull request with a clear and concise description of your changes and the reasons behind them.
-5. We will review your pull request, provide feedback as needed, and eventually merge the approved changes into the main branch.
-
-## 4. Commit Message Format
-
-We follow the [semantic format](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) for commit messages.
-
-### Example
-
-```
-feat: add hat wobble
-^--^  ^------------^
-|     |
-|     +-> Summary in present tense.
-|
-+-------> Type: chore, docs, feat, fix, refactor, style, or test.
-```
-
-### Commit Guidelines
-- Do your best to reduce the number of commits, organizing them as much possible. Look into [squashing commits](https://www.freecodecamp.org/news/git-squash-commits/) in order to keep a neat history.
-- For those that care about maximizing commits for stats, adhere to the above as I 'squash and merge' an unorganized and/or unformatted commit history, which reduces the number of your commits to 1,:
-```
-* Update Br.tsx
-
-* Update Es.tsx
-
-* Update Br.tsx
-```
-
-
-## 5. Pull Request Process
-
-When submitting a pull request, please follow these guidelines:
-
-- Ensure that any installation or build dependencies are removed before the end of the layer when doing a build.
-- Update the README.md with details of changes to the interface, including new environment variables, exposed ports, useful file locations, and container parameters.
-- Increase the version numbers in any example files and the README.md to reflect the new version that the pull request represents. We use [SemVer](http://semver.org/) for versioning.
-
-Ensure that your changes meet the following criteria:
-
-- All tests pass as highlighted [above](#1-development-notes).
-- The code is well-formatted and adheres to our coding standards.
-- The commit history is clean and easy to follow. You can use `git rebase` or `git merge --squash` to clean your commit history before submitting the pull request.
-- The pull request description clearly outlines the changes and the reasons behind them. Be sure to include the steps to test the pull request.
-
-## 6. Naming Conventions
-
-Apply the following naming conventions to branches, labels, and other Git-related entities:
-
-- **Branch names:** Descriptive and slash-based (e.g., `new/feature/x`).
-- **Labels:** Descriptive and kebab case (e.g., `bug-fix`).
-- **JS/TS:** Directories and file names: Descriptive and camelCase. First letter uppercased for React files (e.g., `helperFunction.ts, ReactComponent.tsx`).
-- **Docs:** Directories and file names: Descriptive and snake_case (e.g., `config_files.md`).
-
-## 7. TypeScript Conversion
-
-1. **Original State**: The project was initially developed entirely in JavaScript (JS).
-
-2. **Frontend Transition**:
-   - We are in the process of transitioning the frontend from JS to TypeScript (TS).
-   - The transition is nearing completion.
-   - This conversion is feasible due to React's capability to intermix JS and TS prior to code compilation. It's standard practice to compile/bundle the code in such scenarios.
-
-3. **Backend Considerations**:
-   - Transitioning the backend to TypeScript would be a more intricate process, especially for an established Express.js server.
-   
-   - **Options for Transition**:
-      - **Single Phase Overhaul**: This involves converting the entire backend to TypeScript in one go. It's the most straightforward approach but can be disruptive, especially for larger codebases.
-      
-      - **Incremental Transition**: Convert parts of the backend progressively. This can be done by:
-         - Maintaining a separate directory for TypeScript files.
-         - Gradually migrating and testing individual modules or routes.
-         - Using a build tool like `tsc` to compile TypeScript files independently until the entire transition is complete.
-         
-   - **Compilation Considerations**: 
-      - Introducing a compilation step for the server is an option. This would involve using tools like `ts-node` for development and `tsc` for production builds.
-      - However, this is not a conventional approach for Express.js servers and could introduce added complexity, especially in terms of build and deployment processes.
-      
-   - **Current Stance**: At present, this backend transition is of lower priority and might not be pursued.
-
-## 8. Module Import Conventions
-
-- `npm` packages first, 
-     - from longest line (top) to shortest (bottom)
-
-- Followed by typescript types (pertains to data-provider and client workspaces)
-     - longest line (top) to shortest (bottom)
-     - types from package come first
-
-- Lastly, local imports
-     - longest line (top) to shortest (bottom)
-     - imports with alias `~` treated the same as relative import with respect to line length
-
-**Note:** ESLint will automatically enforce these import conventions when you run `npm run lint --fix` or through pre-commit hooks.
-
----
-
-Please ensure that you adapt this summary to fit the specific context and nuances of your project.
-
----
-
-## [Go Back to ReadMe](../README.md)
+  Framework: LICENCE [1.287HZ]
+  
