@@ -1,132 +1,76 @@
-# Contributor Covenant Code of Conduct
+# Code of Conduct — HULYAS-AI
 
-## Our Pledge
-
-We as members, contributors, and leaders pledge to make participation in our
-community a harassment-free experience for everyone, regardless of age, body
-size, visible or invisible disability, ethnicity, sex characteristics, gender
-identity and expression, level of experience, education, socio-economic status,
-nationality, personal appearance, race, religion, or sexual identity
-and orientation.
-
-We pledge to act and interact in ways that contribute to an open, welcoming,
-diverse, inclusive, and healthy community.
-
-## Our Standards
-
-Examples of behavior that contributes to a positive environment for our
-community include:
-
-* Demonstrating empathy and kindness toward other people
-* Being respectful of differing opinions, viewpoints, and experiences
-* Giving and gracefully accepting constructive feedback
-* Accepting responsibility and apologizing to those affected by our mistakes,
-  and learning from the experience
-* Focusing on what is best not just for us as individuals, but for the
-  overall community
-
-Examples of unacceptable behavior include:
-
-* The use of sexualized language or imagery, and sexual attention or
-  advances of any kind
-* Trolling, insulting or derogatory comments, and personal or political attacks
-* Public or private harassment
-* Publishing others' private information, such as a physical or email
-  address, without their explicit permission
-* Other conduct which could reasonably be considered inappropriate in a
-  professional setting
-
-## Enforcement Responsibilities
-
-Community leaders are responsible for clarifying and enforcing our standards of
-acceptable behavior and will take appropriate and fair corrective action in
-response to any behavior that they deem inappropriate, threatening, offensive,
-or harmful.
-
-Community leaders have the right and responsibility to remove, edit, or reject
-comments, commits, code, wiki edits, issues, and other contributions that are
-not aligned to this Code of Conduct, and will communicate reasons for moderation
-decisions when appropriate.
-
-## Scope
-
-This Code of Conduct applies within all community spaces, and also applies when
-an individual is officially representing the community in public spaces.
-Examples of representing our community include using an official e-mail address,
-posting via an official social media account, or acting as an appointed
-representative at an online or offline event.
-
-## Enforcement
-
-Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement here on GitHub or
-on the official [Discord Server](https://discord.librechat.ai). 
-All complaints will be reviewed and investigated promptly and fairly.
-
-All community leaders are obligated to respect the privacy and security of the
-reporter of any incident.
-
-## Enforcement Guidelines
-
-Community leaders will follow these Community Impact Guidelines in determining
-the consequences for any action they deem in violation of this Code of Conduct:
-
-### 1. Correction
-
-**Community Impact**: Use of inappropriate language or other behavior deemed
-unprofessional or unwelcome in the community.
-
-**Consequence**: A private, written warning from community leaders, providing
-clarity around the nature of the violation and an explanation of why the
-behavior was inappropriate. A public apology may be requested.
-
-### 2. Warning
-
-**Community Impact**: A violation through a single incident or series
-of actions.
-
-**Consequence**: A warning with consequences for continued behavior. No
-interaction with the people involved, including unsolicited interaction with
-those enforcing the Code of Conduct, for a specified period of time. This
-includes avoiding interactions in community spaces as well as external channels
-like social media. Violating these terms may lead to a temporary or
-permanent ban.
-
-### 3. Temporary Ban
-
-**Community Impact**: A serious violation of community standards, including
-sustained inappropriate behavior.
-
-**Consequence**: A temporary ban from any sort of interaction or public
-communication with the community for a specified period of time. No public or
-private interaction with the people involved, including unsolicited interaction
-with those enforcing the Code of Conduct, is allowed during this period.
-Violating these terms may lead to a permanent ban.
-
-### 4. Permanent Ban
-
-**Community Impact**: Demonstrating a pattern of violation of community
-standards, including sustained inappropriate behavior,  harassment of an
-individual, or aggression toward or disparagement of classes of individuals.
-
-**Consequence**: A permanent ban from any sort of public interaction within
-the community.
-
-## Attribution
-
-This Code of Conduct is adapted from the [Contributor Covenant][homepage],
-version 2.0, available at
-https://www.contributor-covenant.org/version/2/0/code_of_conduct.html.
-
-Community Impact Guidelines were inspired by [Mozilla's code of conduct
-enforcement ladder](https://github.com/mozilla/diversity).
-
-[homepage]: https://www.contributor-covenant.org
-
-For answers to common questions about this code of conduct, see the FAQ at
-https://www.contributor-covenant.org/faq. Translations are available at
-https://www.contributor-covenant.org/translations.
-
----
-
-## [Go Back to ReadMe](../README.md)
+> Governed by the 1.287 HULYAS ZEQ Public License (1.287HZ). Phase-locked to the 1.287 Hz HulyaPulse. Open Science for a truthful future.
+>
+> ## Our Foundation
+>
+> HULYAS-AI is Open Science. It exists to make **decentralised mathematical intelligence** accessible to all — and it is built on the work of two communities: the **LibreChat** contributors (whose chat platform we extend) and the **ZEQ Framework** researchers (whose mathematics we implement). A healthy, honest, welcoming community is not optional; it is a precondition of the mission.
+>
+> ## Our Pledge
+>
+> We — contributors, maintainers, and users — pledge to make participation in HULYAS-AI a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, religion, or sexual orientation.
+>
+> ## Our Standards
+>
+> ### Positive Behaviour
+>
+> - Operating in good faith. Every contribution, review, issue, and discussion should be phase-locked to honesty.
+> - - Respectful, constructive criticism grounded in the code, the mathematics, or the user experience — not the person.
+>   - - Welcoming newcomers regardless of background or experience level.
+>     - - Protecting framework integrity — the HulyaPulse (1.287 Hz), the Zeqond (0.777s), the KO42 Metric Tensioner, and the operator catalog are defined constants, not stylistic choices.
+>       - - Crediting discoveries. The mathematics and constants of the ZEQ Framework are Open Science under 1.287HZ — attribution is preserved. The LibreChat foundation is credited and its upstream license is respected.
+>         - - Taking responsibility, acknowledging mistakes, learning from them.
+>          
+>           - ### Unacceptable Behaviour
+>          
+>           - - Harassment, intimidation, doxxing, or discrimination in any form.
+>             - - Sexualised language or imagery and unwelcome sexual attention or advances.
+>               - - Personal attacks, insulting or derogatory comments, trolling.
+>                 - - Publishing others' private information without explicit permission.
+>                   - - Misrepresentation of framework internals, constants, or operator behavior.
+>                     - - Corporate co-opting, closed-source rebranding, or stripping of attribution (see LICENSE §1 Preamble).
+>                       - - Fabricated benchmarks, inflated claims, or results that cannot be reproduced against the framework.
+>                         - - Submitting malicious code, exploits, or anything designed to harm users of HULYAS-AI or the AI platforms our Chrome extension integrates with.
+>                           - - Sharing credentials, keys, or any content that violates another person's privacy.
+>                            
+>                             - ## Scope
+>                            
+>                             - This Code of Conduct applies to all project spaces — this repository, issues, pull requests, discussions, release pages — and to any venue where someone is representing HULYAS-AI or the ZEQ Framework in public (conferences, social media, community chats, blog posts).
+>                            
+>                             - ## Reporting
+>
+> Report unacceptable behaviour through:
+>
+> - A **private GitHub Security Advisory** on this repository (preferred for anything involving user privacy, credentials, or a vulnerability).
+> - - Direct contact with the maintainers via [zeq.dev](https://zeq.dev).
+>  
+>   - Reports will be reviewed and responded to with the seriousness the situation deserves. We protect the identity of the reporter.
+>  
+>   - ## Enforcement
+>  
+>   - Maintainers are responsible for clarifying and enforcing this Code of Conduct. They will take appropriate and proportionate action in response to any behaviour that violates it.
+>
+>   - ### 1. Correction
+>   - **Impact:** Use of inappropriate language or other behaviour deemed unprofessional or unwelcome.
+>   - **Consequence:** Private, written warning, with clarity on why the behaviour was inappropriate. A public apology may be requested.
+>
+>   - ### 2. Warning
+>   - **Impact:** A violation through a single incident or series of actions.
+>   - **Consequence:** A warning with consequences for continued behaviour. No interaction with those involved for a specified period. Violating these terms may lead to a temporary or permanent ban.
+>
+>   - ### 3. Temporary Ban
+>   - **Impact:** A serious violation of community standards, including sustained inappropriate behaviour.
+>   - **Consequence:** Temporary ban from any sort of interaction or public communication with the community for a specified period.
+>
+>   - ### 4. Permanent Ban
+>   - **Impact:** Demonstrating a pattern of violation, harassment, or aggression, or dilution of the framework's mathematical integrity for malicious purposes.
+>   - **Consequence:** Permanent ban from any sort of public interaction within the community.
+>
+>   - ## Attribution
+>
+>   - This Code of Conduct is adapted from the **Contributor Covenant v2.1** (https://www.contributor-covenant.org/version/2/1/code_of_conduct.html) and extended with values specific to the ZEQ Framework and the 1.287HZ license.
+>
+>   - ---
+>
+> Framework: LICENCE [1.287HZ]
+> 
