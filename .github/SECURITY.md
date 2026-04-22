@@ -1,4 +1,4 @@
-# Security Policy
+——✅❌————————# Security Policy
 
 At LibreChat, we prioritize the security of our project and value the contributions of security researchers in helping us improve the security of our codebase. If you discover a security vulnerability within our project, we appreciate your responsible disclosure. Please follow the guidelines below to report any vulnerabilities to us:
 
